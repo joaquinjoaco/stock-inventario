@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/providers/theme-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Inventario",
-  description: "Ave Fenix",
+  title: "Ave Fenix",
+  description: "Gestión del negocio",
 };
 
 export default function RootLayout({
@@ -23,12 +24,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased font-[family-name:var(--font-geist-sans)]`}
-      >
-        {children}
+    // If you do not add suppressHydrationWarning to your <html> you will get warnings because next-themes updates that element.
+    // This property only applies one level deep, so it won't block hydration warnings on other elements.
+    <html lang="en" suppressHydrationWarning >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased font-[family-name:var(--font-geist-sans)]`}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+        </ThemeProvider>
       </body>
-    </html>
+    </html >
   );
 }
