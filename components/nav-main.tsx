@@ -17,11 +17,12 @@ import {
     SidebarMenuSubButton,
     SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
-import { TooltipWrapper } from "./ui/tooltip-wrapper"
 
 export function NavMain({
     items,
+    title,
 }: {
+    title: string,
     items: {
         title: string
         url: string
@@ -35,7 +36,7 @@ export function NavMain({
 }) {
     return (
         <SidebarGroup>
-            <SidebarGroupLabel>Negocio</SidebarGroupLabel>
+            <SidebarGroupLabel>{title}</SidebarGroupLabel>
             <SidebarMenu>
                 {items.map((item) => (
                     <Collapsible

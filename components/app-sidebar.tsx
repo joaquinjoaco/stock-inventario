@@ -3,25 +3,15 @@
 import * as React from "react"
 import {
     BookOpen,
-    Bot,
-    Box,
-    Command,
-    Eye,
-    Frame,
-    Ham,
     LifeBuoy,
     Map,
     Package,
-    PieChart,
-    Plus,
     Send,
     Settings2,
-    SquareTerminal,
     User,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
 import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
 import {
@@ -32,8 +22,10 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    SidebarRail,
 } from "@/components/ui/sidebar"
 import Image from "next/image"
+import { SidebarThemeToggle } from "./sidebar-theme-toggle"
 
 const data = {
     user: {
@@ -41,7 +33,7 @@ const data = {
         email: "m@example.com",
         avatar: "/avatars/shadcn.jpg",
     },
-    navMain: [
+    navMain1: [
         {
             title: "Inventario",
             url: "/inventario",
@@ -53,11 +45,7 @@ const data = {
                     url: "#",
                 },
                 {
-                    title: "Cargar stock",
-                    url: "#",
-                },
-                {
-                    title: "Ver inventario",
+                    title: "Inventario",
                     url: "#",
                 },
             ],
@@ -68,15 +56,17 @@ const data = {
             icon: Settings2,
             items: [
                 {
-                    title: "Registrar compra",
+                    title: "Cargar stock",
                     url: "#",
                 },
                 {
-                    title: "Ver compras",
+                    title: "Historial de compras",
                     url: "#",
                 }
             ],
         },
+    ],
+    navMain2: [
         {
             title: "Clientes",
             url: "/clientes",
@@ -87,7 +77,7 @@ const data = {
                     url: "#",
                 },
                 {
-                    title: "Ver clientes",
+                    title: "Mis clientes",
                     url: "#",
                 },
             ],
@@ -102,7 +92,7 @@ const data = {
                     url: "#",
                 },
                 {
-                    title: "Ver ventas",
+                    title: "Historial de ventas",
                     url: "#",
                 },
             ],
@@ -120,23 +110,6 @@ const data = {
             icon: Send,
         },
     ],
-    projects: [
-        {
-            name: "Design Engineering",
-            url: "#",
-            icon: Frame,
-        },
-        {
-            name: "Sales & Marketing",
-            url: "#",
-            icon: PieChart,
-        },
-        {
-            name: "Travel",
-            url: "#",
-            icon: Map,
-        },
-    ],
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -149,6 +122,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                             <a href="/">
                                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                                     <Image
+                                        className="rounded-lg"
                                         src={"/avefenix.jpg"}
                                         alt="ave fenix congelados"
                                         width={100}
@@ -157,7 +131,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                 </div>
                                 <div className="grid flex-1 text-left text-sm leading-tight">
                                     <span className="truncate font-semibold">Ave Fenix</span>
-                                    <span className="truncate text-xs">Empresa</span>
+                                    <span className="truncate text-xs">Panel</span>
                                 </div>
                             </a>
                         </SidebarMenuButton>
@@ -165,13 +139,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </SidebarMenu>
             </SidebarHeader>
             <SidebarContent>
-                <NavMain items={data.navMain} />
-                <NavProjects projects={data.projects} />
-                <NavSecondary items={data.navSecondary} className="mt-auto" />
+                <NavMain title="Stock" items={data.navMain1} />
+                <NavMain title="Ventas" items={data.navMain2} />
+                <>
+                    <NavSecondary items={data.navSecondary} className="mt-auto" />
+                    <SidebarThemeToggle />
+                </>
             </SidebarContent>
             <SidebarFooter>
                 <NavUser user={data.user} />
             </SidebarFooter>
+            <SidebarRail />
         </Sidebar>
     )
 }

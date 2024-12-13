@@ -13,7 +13,6 @@ model Product {
   weight       Decimal
   description  String     @db.VarChar(255)
   brand        String
-  cost         Decimal
   sellingPrice Decimal
   stock        Int
   isArchived   Boolean
