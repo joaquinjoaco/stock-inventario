@@ -49,7 +49,7 @@ const data = {
             isActive: true,
             items: [
                 {
-                    title: "Nuevo producto",
+                    title: "Registrar producto",
                     url: "#",
                 },
                 {
@@ -68,7 +68,7 @@ const data = {
             icon: Settings2,
             items: [
                 {
-                    title: "Nueva compra",
+                    title: "Registrar compra",
                     url: "#",
                 },
                 {
@@ -83,7 +83,7 @@ const data = {
             icon: User,
             items: [
                 {
-                    title: "Nuevo cliente",
+                    title: "Registrar cliente",
                     url: "#",
                 },
                 {
@@ -98,7 +98,7 @@ const data = {
             icon: BookOpen,
             items: [
                 {
-                    title: "Nueva venta",
+                    title: "Registrar venta",
                     url: "#",
                 },
                 {

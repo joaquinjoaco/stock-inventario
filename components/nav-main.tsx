@@ -17,6 +17,7 @@ import {
     SidebarMenuSubButton,
     SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
+import { TooltipWrapper } from "./ui/tooltip-wrapper"
 
 export function NavMain({
     items,
@@ -43,6 +44,7 @@ export function NavMain({
                         defaultOpen={item.isActive}
                         className="group/collapsible"
                     >
+
                         <SidebarMenuItem>
                             <CollapsibleTrigger asChild>
                                 <SidebarMenuButton tooltip={item.title}>
@@ -51,6 +53,7 @@ export function NavMain({
                                     <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                                 </SidebarMenuButton>
                             </CollapsibleTrigger>
+
                             <CollapsibleContent>
                                 <SidebarMenuSub>
                                     {item.items?.map((subItem) => (
@@ -65,6 +68,7 @@ export function NavMain({
                                 </SidebarMenuSub>
                             </CollapsibleContent>
                         </SidebarMenuItem>
+
                     </Collapsible>
                 ))}
             </SidebarMenu>
