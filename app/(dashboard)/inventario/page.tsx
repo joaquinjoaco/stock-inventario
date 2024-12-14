@@ -6,6 +6,7 @@ import { formatterUYU } from "@/lib/utils";
 import { ProductClient } from "./components/client";
 import { ProductColumn } from "./components/columns";
 import { es } from "date-fns/locale";
+import { Header } from "@/components/ui/header";
 
 
 export const metadata = {
@@ -21,25 +22,40 @@ const ProductsPage = async () => {
     });
 
     const formattedProducts: ProductColumn[] = products.map((item) => ({
-        id: item.id.toString(),
-        name: item.name,
-        sellingPrice: formatterUYU.format(item.sellingPrice.toNumber()),
-        stock: item.stock.toNumber(),
-        unitType: item.unitType.toUpperCase(),
-        brand: item.brand,
+        "ID": item.id.toString(),
+        "Nombre": item.name,
+        "Precio de venta": formatterUYU.format(item.sellingPrice.toNumber()),
+        "Stock": item.stock.toNumber(),
+        "Unidad": item.unitType.toUpperCase(),
+        "Marca": item.brand,
         isArchived: item.isArchived,
         isArchivedText: item.isArchived ? "Archivado" : "-",
 
-        createdAt: format(item.createdAt, "dd MMMM, yyyy", { locale: es }),
-        updatedAt: format(item.updatedAt, "dd MMMM, yyyy", { locale: es })
+        "Fecha de creación": format(item.createdAt, "dd MMMM, yyyy", { locale: es }),
+        "Fecha de actualización": format(item.updatedAt, "dd MMMM, yyyy", { locale: es })
     }));
 
+    const breadcrumbs = [
+        {
+            name: 'Panel',
+            url: '/'
+        },
+        {
+            name: 'Inventario',
+            url: '/inventario'
+        },
+    ]
+
     return (
-        <div className="flex-col">
-            <div className="flex-1 space-y-4 p-8 pt-6t">
-                <ProductClient data={formattedProducts} />
+        <>
+            {/* Header with breadcrumbs and Sidebar trigger */}
+            <Header breadcrumbs={breadcrumbs} withSideBarTrigger />
+            <div className="flex-col">
+                <div className="flex-1 space-y-4 p-8 pt-6t">
+                    <ProductClient data={formattedProducts} />
+                </div>
             </div>
-        </div>
+        </>
     );
 }
 
