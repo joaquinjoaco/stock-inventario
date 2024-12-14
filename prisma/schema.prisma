@@ -7,14 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UnitType {
+  UNIDAD
+  PESO
+}
+
 model Product {
   id           Int        @id @default(autoincrement())
   name         String
-  weight       Decimal
   description  String     @db.VarChar(255)
   brand        String
   sellingPrice Decimal
-  stock        Int
+  unitType     UnitType // UNIDAD | PESO
+  stock        Decimal
   isArchived   Boolean
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
@@ -25,7 +30,7 @@ model Product {
 model Purchase {
   id        Int      @id @default(autoincrement())
   cost      Decimal
-  amount    Int
+  amount    Decimal // kilos or units
   supplier  String?
   productId Int
   product   Product  @relation(fields: [productId], references: [id])
@@ -54,13 +59,14 @@ model Sale {
 }
 
 model SaleItem {
-  id              Int     @id @default(autoincrement())
+  id              Int      @id @default(autoincrement())
   calculatedPrice Decimal
-  quantity        Int
+  quantity        Decimal // kilos or units
+  unitType        UnitType
   saleId          Int
-  sale            Sale    @relation(fields: [saleId], references: [id])
+  sale            Sale     @relation(fields: [saleId], references: [id])
   productId       Int
-  product         Product @relation(fields: [productId], references: [id])
+  product         Product  @relation(fields: [productId], references: [id])
 
   @@index([saleId])
   @@index([productId])

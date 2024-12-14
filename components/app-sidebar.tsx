@@ -3,56 +3,46 @@
 import * as React from "react"
 import {
     BookOpen,
-    LifeBuoy,
-    Map,
+    Import,
     Package,
-    Send,
+    Save,
     Settings2,
     User,
 } from "lucide-react"
+import Image from "next/image"
 
 import { NavMain } from "@/components/nav-main"
 import { NavSecondary } from "@/components/nav-secondary"
-import { NavUser } from "@/components/nav-user"
 import {
     Sidebar,
     SidebarContent,
-    SidebarFooter,
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
     SidebarRail,
 } from "@/components/ui/sidebar"
-import Image from "next/image"
 import { SidebarThemeToggle } from "./sidebar-theme-toggle"
 
 const data = {
-    user: {
-        name: "shadcn",
-        email: "m@example.com",
-        avatar: "/avatars/shadcn.jpg",
-    },
     navMain1: [
         {
             title: "Inventario",
-            url: "/inventario",
             icon: Package,
             isActive: true,
             items: [
                 {
                     title: "Registrar producto",
-                    url: "#",
+                    url: "/inventario/nuevo",
                 },
                 {
                     title: "Inventario",
-                    url: "#",
+                    url: "/inventario",
                 },
             ],
         },
         {
             title: "Compras",
-            url: "/compras",
             icon: Settings2,
             items: [
                 {
@@ -69,7 +59,6 @@ const data = {
     navMain2: [
         {
             title: "Clientes",
-            url: "/clientes",
             icon: User,
             items: [
                 {
@@ -84,7 +73,6 @@ const data = {
         },
         {
             title: "Ventas",
-            url: "/ventas",
             icon: BookOpen,
             items: [
                 {
@@ -100,14 +88,14 @@ const data = {
     ],
     navSecondary: [
         {
-            title: "Support",
-            url: "#",
-            icon: LifeBuoy,
+            title: "Exportar datos",
+            url: "/exportar",
+            icon: Save,
         },
         {
-            title: "Feedback",
-            url: "#",
-            icon: Send,
+            title: "Importar datos",
+            url: "/importar",
+            icon: Import,
         },
     ],
 }
@@ -141,14 +129,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarContent>
                 <NavMain title="Stock" items={data.navMain1} />
                 <NavMain title="Ventas" items={data.navMain2} />
-                <>
-                    <NavSecondary items={data.navSecondary} className="mt-auto" />
-                    <SidebarThemeToggle />
-                </>
+                <NavSecondary items={data.navSecondary} className="mt-auto" />
+                <SidebarThemeToggle />
             </SidebarContent>
-            <SidebarFooter>
-                <NavUser user={data.user} />
-            </SidebarFooter>
             <SidebarRail />
         </Sidebar>
     )
