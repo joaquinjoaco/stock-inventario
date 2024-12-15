@@ -22,15 +22,15 @@ export const Header = ({
                 <Breadcrumb>
                     <BreadcrumbList>
                         {breadcrumbs.map((breadcrumb, index) => (
-                            <>
-                                <BreadcrumbItem key={index} className="hidden md:block">
+                            <div key={index} className="flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5" >
+                                <BreadcrumbItem className="hidden md:block">
                                     <BreadcrumbLink href={breadcrumb.url}>
                                         {breadcrumb.name}
                                     </BreadcrumbLink>
                                 </BreadcrumbItem>
                                 {/* Show the separator only if it's not the last item */}
                                 {index < breadcrumbs.length - 1 && <BreadcrumbSeparator className="hidden md:block" />}
-                            </>
+                            </div>
                         ))}
 
                     </BreadcrumbList>
