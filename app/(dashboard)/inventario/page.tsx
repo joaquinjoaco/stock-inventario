@@ -14,7 +14,7 @@ export const metadata = {
 }
 
 const ProductsPage = async () => {
-    // fetch all products from the store
+
     const products = await prismadb.product.findMany({
         orderBy: {
             createdAt: 'desc'

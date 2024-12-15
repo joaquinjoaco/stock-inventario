@@ -1,6 +1,7 @@
 import { SidebarTrigger } from "./sidebar";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "./breadcrumb";
 import { Separator } from "./separator";
+import { TooltipWrapper } from "./tooltip-wrapper";
 
 export const Header = ({
     breadcrumbs,
@@ -12,13 +13,17 @@ export const Header = ({
     return (
         <header className="flex h-16 shrink-0 items-center gap-2">
             <div className="flex items-center gap-2 px-4">
-                {withSideBarTrigger && <SidebarTrigger className="-ml-1" />}
+                {withSideBarTrigger &&
+                    <TooltipWrapper content="Barra lateral">
+                        <SidebarTrigger className="-ml-1" />
+                    </TooltipWrapper>
+                }
                 <Separator orientation="vertical" className="mr-2 h-4" />
                 <Breadcrumb>
                     <BreadcrumbList>
                         {breadcrumbs.map((breadcrumb, index) => (
                             <>
-                                <BreadcrumbItem className="hidden md:block">
+                                <BreadcrumbItem key={index} className="hidden md:block">
                                     <BreadcrumbLink href={breadcrumb.url}>
                                         {breadcrumb.name}
                                     </BreadcrumbLink>

@@ -60,7 +60,7 @@ export const ProductClient: React.FC<ProductClientProps> = ({
                     description="Administra los productos del negocio"
                 />
                 <div className="flex gap-x-2">
-                    <Button onClick={() => { router.push(`/${params.storeId}/productos/nuevo`) }}>
+                    <Button onClick={() => { router.push(`/inventario/nuevo`) }}>
                         <Plus className="mr-2 h-4 w-4" />
                         Nuevo producto
                     </Button>

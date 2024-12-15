@@ -15,8 +15,8 @@ enum UnitType {
 model Product {
   id           Int        @id @default(autoincrement())
   name         String
-  description  String     @db.VarChar(255)
-  brand        String
+  description  String?    @db.VarChar(255)
+  brand        String?
   sellingPrice Decimal
   unitType     UnitType // UNIDAD | PESO
   stock        Decimal

@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Moon, MoreHorizontal, Sun } from "lucide-react"
+import { Moon, MoreHorizontal, Sun, SunMoon } from "lucide-react"
 import { useTheme } from "next-themes"
 
 import {
@@ -41,7 +41,7 @@ export function SidebarThemeToggle({
                                     <Moon className="h-4 w-4" /> Oscuro
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => setTheme("system")}>
-                                    Sistema
+                                    <SunMoon className="h-4 w-4" /> Sistema
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </SidebarMenuItem>
