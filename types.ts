@@ -11,4 +11,15 @@ export type SerializedProduct = {
     isArchived: boolean;
     createdAt: Date;
     updatedAt: Date;
-}
+} | null
+
+export type SerializedPurchase = {
+    id: number;
+    productId: number;
+    totalCost: Number;
+    amount: Number;
+    supplier: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+    product: SerializedProduct;
+} | null

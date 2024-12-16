@@ -25,7 +25,7 @@ export async function PATCH(
             name,
             description, // optional
             brand, // optional
-            sellingPrice,
+            sellingPrice, // can be 0 
             unitType,
             stock, // can be 0
             isArchived
@@ -37,10 +37,10 @@ export async function PATCH(
             return new NextResponse("name is required", { status: 400 });
         }
 
-        // Check for the sellingPrice.
-        if (!sellingPrice) {
-            return new NextResponse("sellingPrice is required", { status: 400 });
-        }
+        // // Check for the sellingPrice.
+        // if (!sellingPrice) {
+        //     return new NextResponse("sellingPrice is required", { status: 400 });
+        // }
 
         // Check for the unitType.
         if (!unitType) {

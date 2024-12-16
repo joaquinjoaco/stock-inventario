@@ -21,18 +21,18 @@ const ProductsPage = async () => {
         }
     });
 
-    const formattedProducts: ProductColumn[] = products.map((item) => ({
-        "ID": item.id.toString(),
-        "Nombre": item.name,
-        "Precio de venta": formatterUYU.format(item.sellingPrice.toNumber()),
-        "Stock": item.stock.toNumber(),
-        "Unidad": item.unitType.toUpperCase(),
-        "Marca": item.brand || '-',
-        isArchived: item.isArchived,
-        isArchivedText: item.isArchived ? 'Archivado' : '-',
+    const formattedProducts: ProductColumn[] = products.map((product) => ({
+        "ID": product.id.toString(),
+        "Nombre": product.name,
+        "Precio de venta": formatterUYU.format(product.sellingPrice.toNumber()),
+        "Stock": product.stock.toNumber(),
+        "Unidad": product.unitType === 'PESO' ? 'PESO (KG)' : product.unitType.toUpperCase(),
+        "Marca": product.brand || '-',
+        isArchived: product.isArchived,
+        isArchivedText: product.isArchived ? 'Archivado' : '-',
 
-        "Fecha de creación": format(item.createdAt, "dd MMMM, yyyy", { locale: es }),
-        "Fecha de actualización": format(item.updatedAt, "dd MMMM, yyyy", { locale: es })
+        "Fecha de creación": format(product.createdAt, "dd MMMM, yyyy", { locale: es }),
+        "Fecha de actualización": format(product.updatedAt, "dd MMMM, yyyy", { locale: es })
     }));
 
     const breadcrumbs = [

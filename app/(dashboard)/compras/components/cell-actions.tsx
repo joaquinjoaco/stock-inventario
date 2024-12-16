@@ -13,13 +13,13 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { ProductColumn } from "./columns";
+import { PurchaseColumn } from "./columns";
 import { AlertModal } from "@/components/modals/alert-modal";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
 
 interface CellActionProps {
-    data: ProductColumn;
+    data: PurchaseColumn;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({
@@ -35,20 +35,21 @@ export const CellAction: React.FC<CellActionProps> = ({
     const onDelete = async () => {
         try {
             setLoading(true);
-            await axios.delete(`/api/inventario/${data["ID"]}`);
+            await axios.delete(`/api/compras/${data["ID"]}`);
             router.refresh(); // Refresh the component so it refetches the data.
             toast({
                 title: <div className="flex items-center text-green-500">
                     <Check className="h-4 w-4 mr-2" />
-                    Producto eliminado con éxito
+                    Compra eliminada con éxito
                 </div>
             })
         } catch (error: any) {
             if (error.response.status === 409) {
                 if (error.response.data === "fk-constraint-failed") {
+                    // should never happen but still...
                     toast({
-                        title: "No se puede eliminar el producto",
-                        description: "No se puede eliminar el producto. Aparece en ventas o compras registradas.",
+                        title: "No se puede eliminar la compra",
+                        description: "No se puede eliminar la compra.",
                         variant: "destructive",
                     })
                 } else {
@@ -72,8 +73,8 @@ export const CellAction: React.FC<CellActionProps> = ({
                 onClose={() => setOpen(false)}
                 onConfirm={onDelete}
                 loading={loading}
-                title="¿Borrar producto?"
-                description="Se borrará el producto, esta acción no se puede deshacer."
+                title="¿Borrar compra?"
+                description="Se borrará la compra, esta acción no se puede deshacer."
                 buttonMessage="Confirmar"
             />
             {/*
@@ -92,7 +93,7 @@ export const CellAction: React.FC<CellActionProps> = ({
                     <DropdownMenuLabel>
                         Acciones
                     </DropdownMenuLabel>
-                    <DropdownMenuItem onClick={() => router.push(`/inventario/${data["ID"]}`)}>
+                    <DropdownMenuItem onClick={() => router.push(`/compras/${data["ID"]}`)}>
                         <Edit className="mr-2 h-4 w-4" />
                         Editar
                     </DropdownMenuItem>

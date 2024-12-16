@@ -1,4 +1,4 @@
-import { Product } from "@prisma/client";
+import { Product, Purchase } from "@prisma/client";
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -24,5 +24,28 @@ export const serializeProduct = (product: Product | null) => {
     ...product,
     sellingPrice: product.sellingPrice.toNumber(), // Convert Decimal to number
     stock: product.stock.toNumber(), // Convert Decimal to number
+  };
+};
+
+// Helper to convert an array of products's Decimal fields to numbers
+export const serializeProducts = (products: (Product | null)[]) => {
+  return products.map((product) => {
+    if (!product) return null;
+    return {
+      ...product,
+      sellingPrice: product.sellingPrice.toNumber(), // Convert Decimal to number
+      stock: product.stock.toNumber(), // Convert Decimal to number
+    };
+  });
+};
+
+// Helper to convert a purchase's Decimal fields to numbers
+export const serializePurchase = (purchase: Purchase & { product: Product } | null) => {
+  if (!purchase) return null;
+  return {
+    ...purchase,
+    totalCost: purchase.totalCost.toNumber(), // Convert Decimal to number
+    amount: purchase.amount.toNumber(), // Convert Decimal to number
+    product: serializeProduct(purchase.product)
   };
 };

@@ -47,11 +47,11 @@ const data = {
             items: [
                 {
                     title: "Cargar stock",
-                    url: "#",
+                    url: "/compras/nueva",
                 },
                 {
                     title: "Historial de compras",
-                    url: "#",
+                    url: "/compras",
                 }
             ],
         },
