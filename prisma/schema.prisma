@@ -18,7 +18,7 @@ model Product {
   description  String?    @db.VarChar(255)
   brand        String?
   sellingPrice Decimal
-  unitType     UnitType // UNIDAD | PESO (MERELY REPRESENTATIVE)
+  unitType     UnitType // UNIDAD | PESO (merely used for a more clear UX, could be discarded)
   stock        Decimal
   isArchived   Boolean
   createdAt    DateTime   @default(now())

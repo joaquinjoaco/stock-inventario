@@ -2,6 +2,7 @@ import prismadb from "@/lib/prismadb";
 import { ProductForm } from "./components/product-form";
 import { Product } from "@prisma/client";
 import { Header } from "@/components/ui/header";
+import { serializeProduct } from "@/lib/utils";
 
 const ProductPage = async (
     props: {
@@ -24,6 +25,9 @@ const ProductPage = async (
             }
         })
 
+    // Use a helper function to convert 'Decimal' fields to 'Number'.
+    const serializedProduct = serializeProduct(product)
+
     const breadcrumbs = [
         {
             name: 'Panel',
@@ -45,7 +49,7 @@ const ProductPage = async (
             <Header breadcrumbs={breadcrumbs} withSideBarTrigger />
             <div className="flex-col">
                 <div className="flex-1 space-y-4 p-8 pt-6">
-                    <ProductForm initialData={product} />
+                    <ProductForm initialData={serializedProduct} />
                 </div>
             </div>
         </>

@@ -10,7 +10,7 @@ import { Header } from "@/components/ui/header";
 
 
 export const metadata = {
-    title: "Productos",
+    title: "Inventario",
 }
 
 const ProductsPage = async () => {
@@ -27,9 +27,9 @@ const ProductsPage = async () => {
         "Precio de venta": formatterUYU.format(item.sellingPrice.toNumber()),
         "Stock": item.stock.toNumber(),
         "Unidad": item.unitType.toUpperCase(),
-        "Marca": item.brand,
+        "Marca": item.brand || '-',
         isArchived: item.isArchived,
-        isArchivedText: item.isArchived ? "Archivado" : "-",
+        isArchivedText: item.isArchived ? 'Archivado' : '-',
 
         "Fecha de creación": format(item.createdAt, "dd MMMM, yyyy", { locale: es }),
         "Fecha de actualización": format(item.updatedAt, "dd MMMM, yyyy", { locale: es })
