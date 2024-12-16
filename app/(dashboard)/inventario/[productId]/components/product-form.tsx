@@ -109,7 +109,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
             setLoading(true)
             if (initialData) {
                 // Update the book.
-                await axios.patch(`/api/inventario/${params.inventario}`, data)
+                await axios.patch(`/api/inventario/${params.productId}`, data)
             } else {
                 // Create the book.
                 await axios.post(`/api/inventario`, data)
@@ -150,7 +150,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
             setLoading(true)
             await axios.delete(`/api/inventario/${params.productId}`)
             // COULD USE FETCHING AGAIN AND JUST REVALIDATE THE ROUTE INSTEAD OF GOING BACK.
-            router.back()
+            router.push('/inventario')
             router.refresh() // Refresh the component so it refetches the patched data.
             toast({
                 title: <div className="flex items-center text-green-500">

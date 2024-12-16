@@ -1,7 +1,7 @@
 "use client";
 
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
+import { Check, Edit, MoreHorizontal, Trash } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 
@@ -15,6 +15,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { ProductColumn } from "./columns";
 import { AlertModal } from "@/components/modals/alert-modal";
+import axios from "axios";
+import { useToast } from "@/hooks/use-toast";
 
 interface CellActionProps {
     data: ProductColumn;
@@ -24,44 +26,57 @@ export const CellAction: React.FC<CellActionProps> = ({
     data
 }) => {
 
-    const params = useParams();
     const router = useRouter();
 
+    const { toast } = useToast();
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
 
-    // const onDelete = async () => {
-    //     try {
-    //         setLoading(true);
-    //         await axios.delete(`/api/${params.storeId}/productos/${data.id}`);
-    //         router.refresh(); // Refresh the component so it refetches the data.
-    //         toast.success("Producto eliminado.");
-    //         router.refresh();
-    //     } catch (error: any) {
-    //         if (error.response.status === 409) {
-    //             if (error.response.data === "fk-constraint-failed") {
-    //                 toast.error("No se puede eliminar el producto. Aparece en pedidos registrados.");
-    //             } else {
-    //                 toast.error("Ocurrió un error inesperado.");
-    //             }
-    //         }
-    //     } finally {
-    //         setLoading(false);
-    //         setOpen(false);
-    //     }
-    // }
+    const onDelete = async () => {
+        try {
+            setLoading(true);
+            await axios.delete(`/api/inventario/${data["ID"]}`);
+            router.refresh(); // Refresh the component so it refetches the data.
+            toast({
+                title: <div className="flex items-center text-green-500">
+                    <Check className="h-4 w-4 mr-2" />
+                    Producto eliminado con éxito
+                </div>
+            })
+            router.refresh();
+        } catch (error: any) {
+            if (error.response.status === 409) {
+                if (error.response.data === "fk-constraint-failed") {
+                    toast({
+                        title: "No se puede eliminar el producto",
+                        description: "No se puede eliminar el producto. Aparece en ventas o compras registradas.",
+                        variant: "destructive",
+                    })
+                } else {
+                    toast({
+                        title: "Ocurrió un error inesperado",
+                        description: "Por favor comunícate con el soporte para solucionar el inconveniente",
+                        variant: "destructive",
+                    })
+                }
+            }
+        } finally {
+            setLoading(false);
+            setOpen(false);
+        }
+    }
 
     return (
         <>
-            {/* <AlertModal
-                    isOpen={open}
-                    onClose={() => setOpen(false)}
-                    onConfirm={onDelete}
-                    loading={loading}
-                    title="¿Borrar producto?"
-                    description="Se borrará el producto, esta acción no se puede deshacer."
-                    buttonMessage="Confirmar"
-                /> */}
+            <AlertModal
+                isOpen={open}
+                onClose={() => setOpen(false)}
+                onConfirm={onDelete}
+                loading={loading}
+                title="¿Borrar producto?"
+                description="Se borrará el producto, esta acción no se puede deshacer."
+                buttonMessage="Confirmar"
+            />
 
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>

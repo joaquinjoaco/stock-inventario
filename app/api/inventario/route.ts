@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
 
-// local imports.
 import prismadb from "@/lib/prismadb";
 
 export async function POST(
