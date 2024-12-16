@@ -8,14 +8,14 @@ export async function POST(
 ) {
     try {
         const body = await req.json();
-
+        console.log(body)
         const {
             name,
             description, // optional
             brand, // optional
             sellingPrice,
             unitType,
-            stock,
+            stock, // can be 0
             isArchived
         } = body;
 
@@ -33,11 +33,6 @@ export async function POST(
         // Check for the unitType.
         if (!unitType) {
             return new NextResponse("unitType is required", { status: 400 });
-        }
-
-        // Check for the stock.
-        if (!stock) {
-            return new NextResponse("stock is required", { status: 400 });
         }
 
         // If all the checks were passed, we can create the book.

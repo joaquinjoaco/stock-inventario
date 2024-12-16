@@ -43,7 +43,6 @@ export const CellAction: React.FC<CellActionProps> = ({
                     Producto eliminado con éxito
                 </div>
             })
-            router.refresh();
         } catch (error: any) {
             if (error.response.status === 409) {
                 if (error.response.data === "fk-constraint-failed") {
@@ -78,7 +77,7 @@ export const CellAction: React.FC<CellActionProps> = ({
                 buttonMessage="Confirmar"
             />
 
-            <DropdownMenu>
+            <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="h-8 w-8 p-0">
                         {/* accesibility fature, screenreaders only 'open menu' */}

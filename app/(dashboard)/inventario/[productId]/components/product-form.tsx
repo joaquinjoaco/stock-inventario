@@ -41,7 +41,7 @@ const formSchema = z.object({
         required_error: 'El tipo de unidad es obligatorio',
         invalid_type_error: 'El tipo de unidad debe ser UNIDAD o PESO'
     }),
-    stock: z.coerce.number().gt(0, { message: 'La cantidad de stock debe ser mayor a 0' }), // coerce because we are using a decimal
+    stock: z.coerce.number().gte(0, { message: 'La cantidad de stock debe ser mayor a 0' }), // coerce because we are using a decimal
     isArchived: z.boolean().default(false).optional(),
 }).superRefine((data, ctx) => {
     if (data.unitType === 'UNIDAD' && !Number.isInteger(data.stock)) {
@@ -119,12 +119,13 @@ export const ProductForm: React.FC<ProductFormProps> = ({
             router.push('/inventario')
             router.refresh() // Refresh the component so it refetches the patched data.
             toast({
-                action: <div className="flex items-center text-green-500">
+                title: <div className="flex items-center text-green-500">
                     <Check className="h-4 w-4 mr-2" />
                     {toastMessage}
                 </div>,
                 description: `${data.name} ${data.brand}`
             })
+
 
         } catch (error: any) {
             if (error.response.status === 409) {
@@ -345,7 +346,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                             name="sellingPrice"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Precio del producto (UYU)</FormLabel>
+                                    <FormLabel>Precio de venta (UYU)</FormLabel>
                                     <FormControl>
                                         <Input type="number" disabled={loading} placeholder="Precio en pesos uruguayos" {...field} />
                                     </FormControl>
