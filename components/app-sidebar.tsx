@@ -32,13 +32,14 @@ const data = {
             isActive: true,
             items: [
                 {
-                    title: "Registrar producto",
-                    url: "/inventario/nuevo",
-                },
-                {
                     title: "Inventario",
                     url: "/inventario",
                 },
+                {
+                    title: "Registrar producto",
+                    url: "/inventario/nuevo",
+                },
+
             ],
         },
         {
@@ -46,13 +47,14 @@ const data = {
             icon: Settings2,
             items: [
                 {
+                    title: "Historial de compras",
+                    url: "/compras",
+                },
+                {
                     title: "Cargar stock",
                     url: "/compras/nueva",
                 },
-                {
-                    title: "Historial de compras",
-                    url: "/compras",
-                }
+
             ],
         },
     ],
@@ -62,11 +64,11 @@ const data = {
             icon: User,
             items: [
                 {
-                    title: "Registrar cliente",
+                    title: "Mis clientes",
                     url: "#",
                 },
                 {
-                    title: "Mis clientes",
+                    title: "Registrar cliente",
                     url: "#",
                 },
             ],
@@ -76,11 +78,11 @@ const data = {
             icon: BookOpen,
             items: [
                 {
-                    title: "Registrar venta",
+                    title: "Historial de ventas",
                     url: "#",
                 },
                 {
-                    title: "Historial de ventas",
+                    title: "Registrar venta",
                     url: "#",
                 },
             ],
