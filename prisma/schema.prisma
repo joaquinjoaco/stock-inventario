@@ -38,35 +38,35 @@ model Purchase {
   updatedAt DateTime @updatedAt
 }
 
-model Client {
-  id         Int      @id @default(autoincrement())
-  name       String
-  phone      String
-  address    String? // optional
-  isArchived Boolean
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  Sale       Sale[] // client sales history
-}
+// model Client {
+//   id         Int      @id @default(autoincrement())
+//   name       String
+//   phone      String
+//   address    String? // optional
+//   isArchived Boolean
+//   createdAt  DateTime @default(now())
+//   updatedAt  DateTime @updatedAt
+//   Sale       Sale[] // client sales history
+// }
 
 model Sale {
-  id        Int        @id @default(autoincrement())
-  clientId  Int
-  client    Client     @relation(fields: [clientId], references: [id])
-  SaleItem  SaleItem[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id         Int        @id @default(autoincrement())
+  totalPrice Decimal
+  // clientId   Int
+  // client     Client     @relation(fields: [clientId], references: [id])
+  saleItems  SaleItem[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
 }
 
 model SaleItem {
-  id              Int      @id @default(autoincrement())
+  id              Int     @id @default(autoincrement())
   calculatedPrice Decimal
   quantity        Decimal // kilos or units
-  unitType        UnitType
   saleId          Int
-  sale            Sale     @relation(fields: [saleId], references: [id])
+  sale            Sale    @relation(fields: [saleId], references: [id])
   productId       Int
-  product         Product  @relation(fields: [productId], references: [id])
+  product         Product @relation(fields: [productId], references: [id])
 
   @@index([saleId])
   @@index([productId])

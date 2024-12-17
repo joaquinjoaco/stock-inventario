@@ -23,7 +23,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { AlertModal } from "@/components/modals/alert-modal"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Product, UnitType } from "@prisma/client"
+import { UnitType } from "@prisma/client"
 import { useToast } from "@/hooks/use-toast"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
@@ -51,7 +51,7 @@ const formSchema = z.object({
             message: 'El stock debe ser un número entero cuando el tipo de unidad es UNIDAD.'
         });
     }
-});
+})
 
 type ProductFormValues = z.infer<typeof formSchema>
 

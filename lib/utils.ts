@@ -1,4 +1,4 @@
-import { Product, Purchase } from "@prisma/client";
+import { Product, Purchase, Sale, SaleItem } from "@prisma/client";
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -24,17 +24,18 @@ export const serializeProduct = (product: Product | null) => {
     ...product,
     sellingPrice: product.sellingPrice.toNumber(), // Convert Decimal to number
     stock: product.stock.toNumber(), // Convert Decimal to number
+    brand: product.brand || "sin marca"
   };
 };
 
 // Helper to convert an array of products's Decimal fields to numbers
-export const serializeProducts = (products: (Product | null)[]) => {
+export const serializeProducts = (products: Product[]) => {
   return products.map((product) => {
-    if (!product) return null;
     return {
       ...product,
       sellingPrice: product.sellingPrice.toNumber(), // Convert Decimal to number
       stock: product.stock.toNumber(), // Convert Decimal to number
+      brand: product.brand || "sin marca"
     };
   });
 };
@@ -47,5 +48,25 @@ export const serializePurchase = (purchase: Purchase & { product: Product } | nu
     totalCost: purchase.totalCost.toNumber(), // Convert Decimal to number
     amount: purchase.amount.toNumber(), // Convert Decimal to number
     product: serializeProduct(purchase.product)
+  };
+};
+
+
+// Helper to convert a sale's Decimal fields to numbers
+export const serializeSale = (sale: Sale & { saleItems: (SaleItem & { product: Product })[] } | null) => {
+  if (!sale) return null;
+  return {
+    ...sale,
+    totalPrice: sale.totalPrice.toNumber(), // Convert Decimal to number
+    saleItems: sale.saleItems.map((item) => {
+      return {
+        ...item,
+        calculatedPrice: item.calculatedPrice.toNumber(),
+        quantity: item.quantity.toNumber(),
+        name: item.product.name,
+        brand: item.product.brand || "sin marca",
+        unitType: item.product.unitType,
+      }
+    })
   };
 };

@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { AlertModal } from "@/components/modals/alert-modal"
-import { Checkbox } from "@/components/ui/checkbox"
 import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
@@ -80,8 +79,6 @@ export const PurchaseForm: React.FC<PurchaseFormProps> = ({
         resolver: zodResolver(formSchema),
         defaultValues
     })
-
-    const { watch } = form
 
     const onSubmit = async (data: PurchaseFormValues) => {
         try {

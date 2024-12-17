@@ -5,17 +5,14 @@ import { CellAction } from "./cell-actions"
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 
-export type PurchaseColumn = {
+export type SalesColumn = {
     "ID": string;
-    "Nombre del producto": string;
-    "Cantidad": string;
-    "Costo total": string; // we format it into a string.
-    "Proveedor": string;
+    "Total": string; // we format it into a string.
     "Fecha de creación": string;
     "Fecha de actualización": string;
 }
 
-export const columns: ColumnDef<PurchaseColumn>[] = [
+export const columns: ColumnDef<SalesColumn>[] = [
     {
         accessorKey: "ID",
         header: ({ column }) => {
@@ -31,56 +28,14 @@ export const columns: ColumnDef<PurchaseColumn>[] = [
         },
     },
     {
-        accessorKey: "Nombre del producto",
+        accessorKey: "Total",
         header: ({ column }) => {
             return (
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Nombre del producto
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-    },
-    {
-        accessorKey: "Cantidad",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Cantidad
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-    },
-    {
-        accessorKey: "Costo unitario",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Costo unitario (UYU)
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-    },
-    {
-        accessorKey: "Proveedor",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Proveedor
+                    Total
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )

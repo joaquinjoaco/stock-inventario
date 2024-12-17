@@ -59,31 +59,31 @@ const data = {
         },
     ],
     navMain2: [
-        {
-            title: "Clientes",
-            icon: User,
-            items: [
-                {
-                    title: "Mis clientes",
-                    url: "#",
-                },
-                {
-                    title: "Registrar cliente",
-                    url: "#",
-                },
-            ],
-        },
+        // {
+        //     title: "Clientes",
+        //     icon: User,
+        //     items: [
+        //         {
+        //             title: "Mis clientes",
+        //             url: "#",
+        //         },
+        //         {
+        //             title: "Registrar cliente",
+        //             url: "#",
+        //         },
+        //     ],
+        // },
         {
             title: "Ventas",
             icon: BookOpen,
             items: [
                 {
                     title: "Historial de ventas",
-                    url: "#",
+                    url: "/ventas",
                 },
                 {
                     title: "Registrar venta",
-                    url: "#",
+                    url: "/ventas/nueva",
                 },
             ],
         },

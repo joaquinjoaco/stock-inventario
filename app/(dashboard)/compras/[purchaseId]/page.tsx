@@ -28,7 +28,7 @@ const PurchasePage = async (
             }
         })
 
-    // get all products.
+    // Get all non archived products.
     const products = await prismadb.product.findMany({
         where: {
             isArchived: false
