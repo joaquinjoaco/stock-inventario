@@ -12,7 +12,7 @@ interface AlertModalProps {
     onConfirm: () => void;
     loading: boolean;
     title: string;
-    description: string;
+    description: string | React.ReactNode;
     buttonMessage: string;
 }
 

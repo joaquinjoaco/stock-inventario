@@ -29,7 +29,11 @@ const PurchasePage = async (
         })
 
     // get all products.
-    const products = await prismadb.product.findMany()
+    const products = await prismadb.product.findMany({
+        where: {
+            isArchived: false
+        }
+    })
 
     // Use a helper function to convert 'Decimal' fields to 'Number'.
     const serializedPurchase = serializePurchase(purchase)

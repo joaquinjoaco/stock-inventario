@@ -10,7 +10,7 @@ import {
 
 interface ModalProps {
     title: string;
-    description: string;
+    description: string | React.ReactNode;
     isOpen: boolean;
     onClose: () => void;
     children?: React.ReactNode;

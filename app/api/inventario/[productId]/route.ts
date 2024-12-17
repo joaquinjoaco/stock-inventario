@@ -20,7 +20,7 @@ export async function PATCH(
         }
 
         const body = await req.json();
-        console.log(body)
+
         const {
             name,
             description, // optional
@@ -89,13 +89,13 @@ export async function DELETE(
             return new NextResponse("productId is required", { status: 400 });
         }
 
-        const book = await prismadb.product.deleteMany({
+        const product = await prismadb.product.deleteMany({
             where: {
                 id: Number(productId),
             }
         });
 
-        return NextResponse.json(book);
+        return NextResponse.json(product);
     } catch (error: any) {
         console.log('[INVENTARIO_DELETE]', error);
         if (error.code === 'P2003') {

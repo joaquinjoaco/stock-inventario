@@ -25,7 +25,7 @@ const ProductsPage = async () => {
         "ID": product.id.toString(),
         "Nombre": product.name,
         "Precio de venta": formatterUYU.format(product.sellingPrice.toNumber()),
-        "Stock": product.stock.toNumber(),
+        "Stock": `${product.stock.toNumber()} ${product.unitType === 'PESO' ? 'KG' : 'UNIDADES'}`,
         "Unidad": product.unitType === 'PESO' ? 'PESO (KG)' : product.unitType.toUpperCase(),
         "Marca": product.brand || '-',
         isArchived: product.isArchived,

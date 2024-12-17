@@ -8,7 +8,7 @@ import { ArrowUpDown } from "lucide-react";
 export type PurchaseColumn = {
     "ID": string;
     "Nombre del producto": string;
-    "Cantidad": Number;
+    "Cantidad": string;
     "Costo total": string; // we format it into a string.
     "Proveedor": string;
     "Fecha de creación": string;

@@ -9,7 +9,7 @@ export type ProductColumn = {
     "ID": string;
     "Nombre": string;
     "Precio de venta": string; // we format it into a string.
-    "Stock": number;
+    "Stock": string;
     "Unidad": string; // PESO | UNIDAD
     "Marca": string;
     isArchived: boolean;
