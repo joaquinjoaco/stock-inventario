@@ -87,6 +87,7 @@ export const SaleForm: React.FC<SaleFormProps> = ({
         totalPrice: initialData.totalPrice,
     } : {
         totalPrice: 0,
+        selectedProducts: [],
     }
 
     const form = useForm<SaleFormValues>({
@@ -102,6 +103,10 @@ export const SaleForm: React.FC<SaleFormProps> = ({
 
 
     const { watch } = form
+
+    const totalPrice = watch('selectedProducts').reduce((total, product) => {
+        return total + (Number(product.calculatedPrice) * Number(product.quantity))
+    }, 0)
 
     const onSubmit = async (data: SaleFormValues) => {
         try {
@@ -248,10 +253,8 @@ export const SaleForm: React.FC<SaleFormProps> = ({
 
             <Form {...form}>
                 <form id="sale-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
-                    <div className="grid grid-cols-2 gap-8">
-
+                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
                         <div className="space-y-8">
-
                             <FormItem>
                                 <FormLabel>ID de la venta</FormLabel>
                                 <FormControl>
@@ -262,7 +265,6 @@ export const SaleForm: React.FC<SaleFormProps> = ({
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
-
                             <FormItem>
                                 <FormLabel>Productos</FormLabel>
                                 <Popover open={popoverOpen} onOpenChange={setPopoverOpen} >
@@ -309,7 +311,7 @@ export const SaleForm: React.FC<SaleFormProps> = ({
                                                         >
                                                             <PlusCircle className="flex-none h-4 w-4 mr-2" />
                                                             <p className="truncate">
-                                                                {product?.name}
+                                                                {product?.name} {product?.brand}
                                                                 <span className="truncate text-muted-foreground"> ({product?.stock.toString()} {product?.unitType === 'PESO' ? "KG" : "Unidades"})</span>
                                                             </p>
                                                             <p className="ml-auto">{formatterUYU.format(Number(product?.sellingPrice))}</p>
@@ -323,60 +325,79 @@ export const SaleForm: React.FC<SaleFormProps> = ({
                             </FormItem>
                         </div>
 
-                        {selectedProductsFields.map((item, idx) =>
-                            <li key={item.uid} className="flex justify-between">
-                                {/* Product */}
-                                <div className="flex flex-row gap-x-2 items-center justify-between text-sm font-semibold">
-                                    <Button
-                                        variant="ghost"
-                                        type="button"
-                                        disabled={disabled}
-                                        onClick={() => removeSelectedProduct(idx)}
-                                    >
-                                        <Trash2 className="h-4 w-4" />
-                                    </Button>
-                                    <FormField
-                                        control={form.control}
-                                        name={`selectedProducts.${idx}.quantity`}
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Cantidad {item.unitType === 'PESO' ? "(KG)" : "(UNIDADES)"}</FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        {...field}
-                                                        type="number"
-                                                        max="25000"
-                                                        disabled={disabled}
-                                                        placeholder="Cantidad"
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <TooltipWrapper
-                                        className="font-normal flex flex-row items-center"
-                                        content={item.name || "Sin descripción"}
-                                        icon={<ExternalLink className="h-4 w-4 mr-2" />}
-                                    >
-                                        <Link
-                                            className="cursor-pointer"
-                                            href={`/inventario/${item.productId}`}
-                                            target="_blank"
+                        <div className="space-y-4 border rounded-md px-6 py-6">
+                            <p className="font-bold pb-4">Productos seleccionados</p>
+                            {selectedProductsFields.map((item, idx) =>
+                                <li key={item.uid} className="flex justify-between items-center">
+                                    {/* Product */}
+                                    <div className="flex flex-row gap-x-2 items-center justify-between text-sm font-semibold">
+                                        <Button
+                                            variant="outline"
+                                            type="button"
+                                            disabled={disabled}
+                                            onClick={() => removeSelectedProduct(idx)}
                                         >
-                                            {item.name}
-                                        </Link>
-                                    </TooltipWrapper>
+                                            <Trash2 className="h-4 w-4" />
+                                        </Button>
+                                        <FormField
+                                            control={form.control}
+                                            name={`selectedProducts.${idx}.quantity`}
+                                            render={({ field }) => (
+                                                <TooltipWrapper
+                                                    className="font-normal flex flex-row items-center"
+                                                    content={item.unitType === 'PESO' ? "KG" : "Unidades"}
+                                                    icon={<ExternalLink className="h-4 w-4 mr-2" />}
+                                                    side="right"
+                                                >
+                                                    <FormItem>
+                                                        <FormControl>
+                                                            <Input
+                                                                {...field}
+                                                                type="number"
+                                                                max="25000"
+                                                                disabled={disabled}
+                                                                placeholder={item.unitType === 'PESO' ? "KG" : "Unidades"}
+                                                                className="w-20"
+                                                            />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                </TooltipWrapper>
+                                            )}
+                                        />
+                                        <TooltipWrapper
+                                            className="font-normal flex flex-row items-center"
+                                            content={`${item.name} ${item.brand}`}
+                                            icon={<ExternalLink className="h-4 w-4 mr-2" />}
+                                        >
+                                            <Link
+                                                className="ml-2 cursor-pointer font-normal"
+                                                href={`/inventario/${item.productId}`}
+                                                target="_blank"
+                                            >
+                                                {item.name} {item.brand}
+                                            </Link>
+                                        </TooltipWrapper>
+                                    </div>
+                                    {/* Price */}
+                                    <div className="flex mt-1 text-sm">
+                                        <p className="font-semibold">
+                                            {formatterUYU.format(item.calculatedPrice * watch(`selectedProducts.${idx}.quantity`))}
+                                        </p>
+                                    </div>
+                                </li>
+                            )}
+                            <div className="py-2 space-y-4">
+                                <div className="flex items-center justify-between border-t py-4 border-gray-200 pt-4">
+                                    <div className="text-xl font-bold">
+                                        Total
+                                    </div>
+                                    <div className="text-xl font-extrabold">
+                                        {formatterUYU.format(totalPrice)}
+                                    </div>
                                 </div>
-
-                                {/* Price */}
-                                <div className="flex mt-1 text-sm">
-                                    <p className="font-semibold">
-                                        {formatterUYU.format(item.calculatedPrice * watch(`selectedProducts.${idx}.quantity`))}
-                                    </p>
-                                </div>
-                            </li>
-                        )}
+                            </div>
+                        </div>
                     </div>
                 </form>
             </Form>
