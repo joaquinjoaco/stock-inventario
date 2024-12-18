@@ -40,23 +40,10 @@ model Purchase {
   updatedAt DateTime @updatedAt
 }
 
-// model Client {
-//   id         Int      @id @default(autoincrement())
-//   name       String
-//   phone      String
-//   address    String? // optional
-//   isArchived Boolean
-//   createdAt  DateTime @default(now())
-//   updatedAt  DateTime @updatedAt
-//   Sale       Sale[] // client sales history
-// }
-
 model Sale {
   id          Int         @id @default(autoincrement())
   totalPrice  Decimal
   paymentType PaymentType
-  // clientId   Int
-  // client     Client     @relation(fields: [clientId], references: [id])
   saleItems   SaleItem[]
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt

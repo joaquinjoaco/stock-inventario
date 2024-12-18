@@ -24,7 +24,7 @@ const SalesPage = async () => {
     const formattedProducts: SalesColumn[] = sales.map((sale) => ({
         "ID": sale.id.toString(),
         "Total": formatterUYU.format(sale.totalPrice.toNumber()),
-
+        "Método de pago": sale.paymentType.toString(),
         "Fecha de creación": format(sale.createdAt, "dd MMMM, yyyy", { locale: es }),
         "Fecha de actualización": format(sale.updatedAt, "dd MMMM, yyyy", { locale: es })
     }));

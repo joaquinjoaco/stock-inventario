@@ -8,6 +8,7 @@ import { ArrowUpDown } from "lucide-react";
 export type SalesColumn = {
     "ID": string;
     "Total": string; // we format it into a string.
+    "Método de pago": string;
     "Fecha de creación": string;
     "Fecha de actualización": string;
 }
@@ -36,6 +37,20 @@ export const columns: ColumnDef<SalesColumn>[] = [
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
                     Total
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+    },
+    {
+        accessorKey: "Método de pago",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Método de pago
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )

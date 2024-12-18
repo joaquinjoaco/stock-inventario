@@ -6,7 +6,7 @@ import prismadb from "@/lib/prismadb"
 export async function POST(
     req: Request,
 ) {
-    // A new purchase record will be create and the amount will be added to the product stock.
+    // A new purchase record will be created and the amount will be added to the product stock.
     try {
         const body = await req.json()
 

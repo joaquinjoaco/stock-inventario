@@ -66,6 +66,7 @@ export const serializeSale = (sale: Sale & { saleItems: (SaleItem & { product: P
         name: item.product.name,
         brand: item.product.brand || "sin marca",
         unitType: item.product.unitType,
+        product: serializeProduct(item.product),
       }
     })
   };
