@@ -86,6 +86,7 @@ export const SaleForm: React.FC<SaleFormProps> = ({
         totalPrice: initialData.totalPrice,
     } : {
         totalPrice: 0,
+        paymentType: 'DEBITO' as PaymentType,
         selectedProducts: [],
     }
 
@@ -414,8 +415,11 @@ export const SaleForm: React.FC<SaleFormProps> = ({
                             />
                         </div>
 
-                        <div className="space-y-4 border rounded-md px-6 py-6">
-                            <p className="font-bold pb-4">Productos seleccionados</p>
+                        <div className="space-y-4 border rounded-md bg-[#fcf8e6] dark:bg-accent/20 px-6 py-6">
+                            <div>
+                                <p className="font-bold text-lg">Resumen</p>
+                                <p className="font-normal text-xs pb-4">PAGA EN: {watch('paymentType')}</p>
+                            </div>
                             {selectedProductsFields.map((item, idx) =>
                                 <FormField
                                     key={item.uid}

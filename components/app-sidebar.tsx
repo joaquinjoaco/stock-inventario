@@ -7,6 +7,7 @@ import {
     Package,
     Save,
     Settings2,
+    Store,
     User,
 } from "lucide-react"
 import Image from "next/image"
@@ -59,20 +60,6 @@ const data = {
         },
     ],
     navMain2: [
-        // {
-        //     title: "Clientes",
-        //     icon: User,
-        //     items: [
-        //         {
-        //             title: "Mis clientes",
-        //             url: "#",
-        //         },
-        //         {
-        //             title: "Registrar cliente",
-        //             url: "#",
-        //         },
-        //     ],
-        // },
         {
             title: "Ventas",
             icon: BookOpen,
@@ -84,6 +71,22 @@ const data = {
                 {
                     title: "Registrar venta",
                     url: "/ventas/nueva",
+                },
+            ],
+        },
+    ],
+    navMain3: [
+        {
+            title: "Negocio",
+            icon: Store,
+            items: [
+                {
+                    title: "Información",
+                    url: "/negocio/informacion",
+                },
+                {
+                    title: "Informes",
+                    url: "/negocio/informes",
                 },
             ],
         },
@@ -131,6 +134,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarContent>
                 <NavMain title="Stock" items={data.navMain1} />
                 <NavMain title="Ventas" items={data.navMain2} />
+                <NavMain title="Negocio" items={data.navMain3} />
                 <NavSecondary items={data.navSecondary} className="mt-auto" />
                 <SidebarThemeToggle />
             </SidebarContent>

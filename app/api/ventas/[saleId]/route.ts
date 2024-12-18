@@ -19,12 +19,6 @@ export async function DELETE(
             return new NextResponse("saleId is required", { status: 400 });
         }
 
-        const saleIdNumber = Number(saleId);
-        console.log(saleIdNumber)
-        if (isNaN(saleIdNumber)) {
-            return new NextResponse("Invalid saleId format", { status: 400 });
-        }
-
         // 1. Delete all related SaleItems.
         await prismadb.saleItem.deleteMany({
             where: {
