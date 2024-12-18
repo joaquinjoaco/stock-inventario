@@ -2,7 +2,7 @@
 "use client"
 
 import * as z from "zod"
-import { ArrowLeft, Check, ChevronsUpDown, Trash } from "lucide-react"
+import { ArrowLeft, Check, ChevronsUpDown, Package, Trash } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect, useState } from "react"
@@ -22,9 +22,9 @@ import {
 import { Input } from "@/components/ui/input"
 import { AlertModal } from "@/components/modals/alert-modal"
 import { useToast } from "@/hooks/use-toast"
-import { cn } from "@/lib/utils"
+import { cn, formatterUYU } from "@/lib/utils"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Command, CommandGroup, CommandItem, CommandList } from "@/components/ui/command"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { SerializedProduct, SerializedPurchase } from "@/types"
 
 const formSchema = z.object({
@@ -242,50 +242,49 @@ export const PurchaseForm: React.FC<PurchaseFormProps> = ({
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Producto</FormLabel>
-                                    <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
-                                        <PopoverTrigger asChild disabled={disabled}>
-                                            <FormControl>
-                                                <Button
-                                                    variant="outline"
-                                                    role="combobox"
-                                                    className={cn(
-                                                        "flex justify-between h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-                                                        !field.value && "text-muted-foreground"
-                                                    )}
-                                                >
-                                                    {field.value
-                                                        ? serializedProducts.find(
-                                                            (product) => product?.id.toString() === field.value
-                                                        )?.name
-                                                        : "Producto"}
-                                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                                </Button>
-                                            </FormControl>
+                                    <Popover open={popoverOpen} onOpenChange={setPopoverOpen} >
+                                        <PopoverTrigger asChild>
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                role="combobox"
+                                                aria-expanded={open}
+                                                aria-label="Selecciona un producto"
+                                                type="button"
+                                                className={cn("w-full justify-between p-[19px] font-normal")}
+                                                disabled={disabled}
+                                            >
+                                                <div className="flex items-center gap-x-2">
+                                                    <Package className="flex-none mr-2 h-4 w-4" />
+                                                    <p className="truncate">
+                                                        Selecciona un producto
+                                                    </p>
+                                                </div>
+                                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                            </Button>
                                         </PopoverTrigger>
-                                        <PopoverContent align="start" className="w-[200px] p-0">
+                                        <PopoverContent className="w-[500px] p-0">
                                             <Command>
                                                 <CommandList>
-                                                    <CommandGroup>
-                                                        {serializedProducts.map((product) => (
-                                                            product &&
+                                                    <CommandInput placeholder="Busca un producto..." />
+                                                    <CommandEmpty>
+                                                        No se encontró el producto.
+                                                    </CommandEmpty>
+                                                    <CommandGroup heading="Productos">
+                                                        {serializedProducts.map((product, idx) => (
                                                             <CommandItem
-                                                                value={product.id.toString()}
-                                                                key={product.id}
-                                                                onSelect={() => {
-                                                                    form.setValue("productId", product.id.toString())
-                                                                    setPopoverOpen(false)
-                                                                }}
+                                                                key={idx}
+                                                                onSelect={
+                                                                    () => { form.setValue('productId', product.id.toString()) }
+                                                                }
                                                                 className="cursor-pointer"
                                                             >
-                                                                <Check
-                                                                    className={cn(
-                                                                        "mr-2 h-4 w-4",
-                                                                        product.id.toString() === field.value
-                                                                            ? "opacity-100"
-                                                                            : "opacity-0"
-                                                                    )}
-                                                                />
-                                                                {product.name}, {product.brand}
+                                                                <Package className="flex-none h-4 w-4 mr-2" />
+                                                                <p className="truncate">
+                                                                    {product?.name} {product?.brand}
+                                                                    <span className="truncate text-muted-foreground"> ({product?.stock.toString()})</span>
+                                                                </p>
+                                                                <p className="ml-auto">{product.unitType}</p>
                                                             </CommandItem>
                                                         ))}
                                                     </CommandGroup>
