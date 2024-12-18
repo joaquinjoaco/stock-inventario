@@ -1,4 +1,4 @@
-import { UnitType } from "@prisma/client";
+import { PaymentType } from "@prisma/client";
 
 export type SerializedProduct = {
     name: string;
@@ -6,7 +6,7 @@ export type SerializedProduct = {
     description: string | null;
     brand: string;
     sellingPrice: number;
-    unitType: UnitType;
+    unitType: string;
     stock: number;
     isArchived: boolean;
     createdAt: Date;
@@ -26,11 +26,12 @@ export type SerializedPurchase = {
 
 export type SerializedSale = {
     totalPrice: number;
+    paymentType: PaymentType;
     saleItems: {
         calculatedPrice: number;
         quantity: number;
         id: number;
-        unitType: UnitType;
+        unitType: string;
         saleId: number;
         productId: number;
         name: string;

@@ -30,6 +30,7 @@ export const PurchaseClient: React.FC<PurchaseClientProps> = ({
                 "Nombre del producto": item["Nombre del producto"],
                 "Cantidad": item["Cantidad"],
                 "Costo total": item["Costo total"],
+                "Tipo": item["Tipo"],
                 "Proveedor": item["Proveedor"],
                 "Fecha de creación": item["Fecha de creación"],
                 "Fecha de actualización": item["Fecha de actualización"],

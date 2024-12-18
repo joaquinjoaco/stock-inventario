@@ -23,7 +23,6 @@ import {
 import { Input } from "@/components/ui/input"
 import { AlertModal } from "@/components/modals/alert-modal"
 import { Checkbox } from "@/components/ui/checkbox"
-import { UnitType } from "@prisma/client"
 import { useToast } from "@/hooks/use-toast"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
@@ -37,20 +36,9 @@ const formSchema = z.object({
     description: z.string().max(1024, { message: 'La descripción excede el límite de 1024 caracteres' }).optional(),
     brand: z.string().optional(),
     sellingPrice: z.coerce.number().positive({ message: 'El precio debe ser positivo' }), // coerce because we are using a decimal
-    unitType: z.enum(['UNIDAD', 'PESO'], {
-        required_error: 'El tipo de unidad es obligatorio',
-        invalid_type_error: 'El tipo de unidad debe ser UNIDAD o PESO'
-    }),
+    unitType: z.string().min(1, { message: 'El tipo de unidad del producto es obligatorio' }),
     stock: z.coerce.number().positive({ message: 'La cantidad de stock debe ser positiva' }), // coerce because we are using a decimal
     isArchived: z.boolean().default(false).optional(),
-}).superRefine((data, ctx) => {
-    if (data.unitType === 'UNIDAD' && !Number.isInteger(data.stock)) {
-        ctx.addIssue({
-            code: 'custom',
-            path: ['stock'], // Field causing the error (message will be displayed here)
-            message: 'El stock debe ser un número entero cuando el tipo de unidad es UNIDAD.'
-        });
-    }
 })
 
 type ProductFormValues = z.infer<typeof formSchema>
@@ -72,11 +60,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 
     const { toast } = useToast()
 
-    const unidades = [
-        { label: "Unidad", value: UnitType.UNIDAD },
-        { label: "Peso (KG)", value: UnitType.PESO },
-    ];
-
     const title = initialData ? "Editar producto" : "Registrar producto"
     const description = initialData ? "Editar el producto del inventario" : "Registrar un nuevo producto del inventario"
     const toastMessage = initialData ? "Producto actualizado." : "Producto registrado"
@@ -93,7 +76,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
         description: '',
         brand: '',
         sellingPrice: 0,
-        unitType: UnitType.UNIDAD,
+        unitType: '',
         stock: 0,
         isArchived: false,
     }
@@ -275,56 +258,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Tipo de unidad</FormLabel>
-                                    <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
-                                        <PopoverTrigger asChild>
-                                            <FormControl>
-                                                <Button
-                                                    variant="outline"
-                                                    role="combobox"
-                                                    className={cn(
-                                                        "flex justify-between h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-                                                        !field.value && "text-muted-foreground"
-                                                    )}
-                                                >
-                                                    {field.value
-                                                        ? unidades.find(
-                                                            (ubicacion) => ubicacion.value === field.value
-                                                        )?.label
-                                                        : "Ubicación"}
-                                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                                </Button>
-                                            </FormControl>
-                                        </PopoverTrigger>
-                                        <PopoverContent align="start" className="w-[200px] p-0">
-                                            <Command>
-                                                <CommandList>
-                                                    <CommandGroup>
-                                                        {unidades.map((unidad) => (
-                                                            <CommandItem
-                                                                value={unidad.label}
-                                                                key={unidad.value}
-                                                                onSelect={() => {
-                                                                    form.setValue("unitType", unidad.value)
-                                                                    setPopoverOpen(false)
-                                                                }}
-                                                                className="cursor-pointer"
-                                                            >
-                                                                <Check
-                                                                    className={cn(
-                                                                        "mr-2 h-4 w-4",
-                                                                        unidad.value === field.value
-                                                                            ? "opacity-100"
-                                                                            : "opacity-0"
-                                                                    )}
-                                                                />
-                                                                {unidad.label}
-                                                            </CommandItem>
-                                                        ))}
-                                                    </CommandGroup>
-                                                </CommandList>
-                                            </Command>
-                                        </PopoverContent>
-                                    </Popover>
+                                    <FormControl>
+                                        <Input disabled={loading} placeholder="Tipo de unidad del producto" {...field} />
+                                    </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -334,7 +270,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                             name="brand"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Marca</FormLabel>
+                                    <FormLabel>Marca (opcional)</FormLabel>
                                     <FormControl>
                                         <Input disabled={loading} placeholder="Marca del producto" {...field} />
                                     </FormControl>
@@ -363,7 +299,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                                 <FormItem>
                                     <FormLabel>Stock {watch('unitType') === 'PESO' ? '(KG)' : '(Unidades)'}</FormLabel>
                                     <FormControl>
-                                        <Input type="number" disabled={loading} placeholder="Unidades o KG" {...field} />
+                                        <Input type="number" disabled={loading} placeholder="Entero o decimal" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

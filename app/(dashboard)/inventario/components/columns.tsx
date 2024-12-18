@@ -10,7 +10,7 @@ export type ProductColumn = {
     "Nombre": string;
     "Precio de venta": string; // we format it into a string.
     "Stock": string;
-    "Unidad": string; // PESO | UNIDAD
+    "Tipo": string;
     "Marca": string;
     isArchived: boolean;
     isArchivedText: string;
@@ -48,6 +48,20 @@ export const columns: ColumnDef<ProductColumn>[] = [
         },
     },
     {
+        accessorKey: "Marca",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Marca
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+    },
+    {
         accessorKey: "Precio de venta",
         header: ({ column }) => {
             return (
@@ -76,33 +90,20 @@ export const columns: ColumnDef<ProductColumn>[] = [
         },
     },
     {
-        accessorKey: "Unidad",
+        accessorKey: "Tipo",
         header: ({ column }) => {
             return (
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Unidad
+                    Tipo
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
         },
     },
-    {
-        accessorKey: "Marca",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Marca
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-    },
+
     {
         accessorKey: "isArchivedText",
         header: ({ column }) => {

@@ -7,9 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UnitType {
-  UNIDAD
-  PESO
+enum PaymentType {
+  EFECTIVO
+  TRANSFERENCIA
+  DEBITO
+  CREDITO
 }
 
 model Product {
@@ -18,7 +20,7 @@ model Product {
   description  String?    @db.VarChar(255)
   brand        String?
   sellingPrice Decimal
-  unitType     UnitType // UNIDAD | PESO (merely used for a more clear UX, could be discarded)
+  unitType     String
   stock        Decimal
   isArchived   Boolean
   createdAt    DateTime   @default(now())
@@ -50,13 +52,14 @@ model Purchase {
 // }
 
 model Sale {
-  id         Int        @id @default(autoincrement())
-  totalPrice Decimal
+  id          Int         @id @default(autoincrement())
+  totalPrice  Decimal
+  paymentType PaymentType
   // clientId   Int
   // client     Client     @relation(fields: [clientId], references: [id])
-  saleItems  SaleItem[]
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  saleItems   SaleItem[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 }
 
 model SaleItem {
