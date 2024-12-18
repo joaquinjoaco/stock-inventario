@@ -153,7 +153,7 @@ export const SaleForm: React.FC<SaleFormProps> = ({
     const onDelete = async () => {
         try {
             setLoading(true)
-            await axios.delete(`/api/ventas/${params.purchaseId}`)
+            await axios.delete(`/api/ventas/${params.saleId}`)
             // COULD USE FETCHING AGAIN AND JUST REVALIDATE THE ROUTE INSTEAD OF GOING BACK.
             router.push('/ventas')
             router.refresh() // Refresh the component so it refetches the patched data.

@@ -37,7 +37,7 @@ export const CellAction: React.FC<CellActionProps> = ({
     const onDelete = async () => {
         try {
             setLoading(true);
-            await axios.delete(`/api/inventario/${data["ID"]}`);
+            await axios.delete(`/api/ventas/${data["ID"]}`);
             router.refresh(); // Refresh the component so it refetches the data.
             toast({
                 title: <div className="flex items-center text-green-500">
