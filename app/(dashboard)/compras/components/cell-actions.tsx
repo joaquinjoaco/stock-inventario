@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Check, Edit, MoreHorizontal, Trash } from "lucide-react";

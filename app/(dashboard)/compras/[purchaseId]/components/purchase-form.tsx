@@ -22,7 +22,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { AlertModal } from "@/components/modals/alert-modal"
 import { useToast } from "@/hooks/use-toast"
-import { cn, formatterUYU } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { SerializedProduct, SerializedPurchase } from "@/types"
@@ -38,7 +38,7 @@ const formSchema = z.object({
 type PurchaseFormValues = z.infer<typeof formSchema>
 
 interface PurchaseFormProps {
-    initialData: SerializedPurchase | null;
+    initialData: SerializedPurchase;
     serializedProducts: SerializedProduct[];
 }
 
@@ -239,7 +239,7 @@ export const PurchaseForm: React.FC<PurchaseFormProps> = ({
                         <FormField
                             control={form.control}
                             name="productId"
-                            render={({ field }) => (
+                            render={({ }) => (
                                 <FormItem>
                                     <FormLabel>Producto</FormLabel>
                                     <Popover open={popoverOpen} onOpenChange={setPopoverOpen} >
@@ -257,7 +257,10 @@ export const PurchaseForm: React.FC<PurchaseFormProps> = ({
                                                 <div className="flex items-center gap-x-2">
                                                     <Package className="flex-none mr-2 h-4 w-4" />
                                                     <p className="truncate">
-                                                        Selecciona un producto
+                                                        {(() => {
+                                                            const product = serializedProducts.find(p => p.id.toString() === form.getValues('productId'));
+                                                            return product ? `${product.name} (${product.brand})` : "Selecciona un producto";
+                                                        })()}
                                                     </p>
                                                 </div>
                                                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -275,13 +278,16 @@ export const PurchaseForm: React.FC<PurchaseFormProps> = ({
                                                             <CommandItem
                                                                 key={idx}
                                                                 onSelect={
-                                                                    () => { form.setValue('productId', product.id.toString()) }
+                                                                    () => {
+                                                                        form.setValue('productId', product.id.toString())
+                                                                        setPopoverOpen(false)
+                                                                    }
                                                                 }
                                                                 className="cursor-pointer"
                                                             >
                                                                 <Package className="flex-none h-4 w-4 mr-2" />
                                                                 <p className="truncate">
-                                                                    {product?.name} {product?.brand}
+                                                                    {product?.name} ({product?.brand})
                                                                     <span className="truncate text-muted-foreground"> ({product?.stock.toString()})</span>
                                                                 </p>
                                                                 <p className="ml-auto">{product.unitType}</p>

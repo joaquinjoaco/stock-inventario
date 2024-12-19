@@ -21,7 +21,7 @@ export type SerializedPurchase = {
     supplier: string | null;
     createdAt: Date;
     updatedAt: Date;
-    product: SerializedProduct;
+    product: SerializedProduct | null;
 } | null
 
 export type SerializedSale = {

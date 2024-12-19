@@ -38,7 +38,10 @@ const SalesPage = async (
     // Get all non archived products.
     const products = await prismadb.product.findMany({
         where: {
-            isArchived: false
+            isArchived: false,
+            stock: {
+                gt: 0,
+            }
         }
     })
     // Use a helper function to convert 'Decimal' fields to 'Number'.

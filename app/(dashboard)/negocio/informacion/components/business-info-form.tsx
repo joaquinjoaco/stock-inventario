@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect, useState } from "react"
 import axios from "axios"
-import { useParams, useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { Heading } from "@/components/ui/heading"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
@@ -41,9 +41,7 @@ export const BusinessInfoForm: React.FC<BusinessInfoFormProps> = ({
     initialData,
 }) => {
 
-    const params = useParams()
     const router = useRouter()
-    const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
 
     const { toast } = useToast()
@@ -69,8 +67,6 @@ export const BusinessInfoForm: React.FC<BusinessInfoFormProps> = ({
         resolver: zodResolver(formSchema),
         defaultValues
     })
-
-    const { watch } = form
 
     const onSubmit = async (data: BusinessInfoFormValues) => {
         try {
@@ -99,6 +95,7 @@ export const BusinessInfoForm: React.FC<BusinessInfoFormProps> = ({
                 description: "Por favor comunícate con el soporte para solucionar el inconveniente",
                 variant: "destructive",
             })
+            console.log(error)
         } finally {
             setLoading(false)
         }

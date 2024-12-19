@@ -2,7 +2,7 @@
 "use client"
 
 import * as z from "zod"
-import { ArrowLeft, Check, ChevronsUpDown, CreditCard, Divide, ExternalLink, Landmark, Package, PlusCircle, Trash, Trash2, Wallet } from "lucide-react"
+import { ArrowLeft, Check, ChevronsUpDown, CreditCard, ExternalLink, Landmark, Package, PlusCircle, Trash, Trash2, Wallet } from "lucide-react"
 import { useFieldArray, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect, useState } from "react"
@@ -285,7 +285,7 @@ export const SaleForm: React.FC<SaleFormProps> = ({
                             <FormField
                                 control={form.control}
                                 name="selectedProducts"
-                                render={({ field }) => (
+                                render={({ }) => (
                                     <FormItem>
                                         <FormLabel>Productos</FormLabel>
                                         <Popover open={popoverOpen} onOpenChange={setPopoverOpen} >

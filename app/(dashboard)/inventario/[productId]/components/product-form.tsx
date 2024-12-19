@@ -2,7 +2,7 @@
 "use client"
 
 import * as z from "zod"
-import { ArrowLeft, Check, ChevronsUpDown, Trash } from "lucide-react"
+import { ArrowLeft, Check, Trash } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect, useState } from "react"
@@ -25,9 +25,6 @@ import { AlertModal } from "@/components/modals/alert-modal"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useToast } from "@/hooks/use-toast"
 import { Textarea } from "@/components/ui/textarea"
-import { cn } from "@/lib/utils"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Command, CommandGroup, CommandItem, CommandList } from "@/components/ui/command"
 import { SerializedProduct } from "@/types"
 
 const formSchema = z.object({
@@ -55,7 +52,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     const params = useParams()
     const router = useRouter()
     const [open, setOpen] = useState(false)
-    const [popoverOpen, setPopoverOpen] = useState(false)
     const [loading, setLoading] = useState(false)
 
     const { toast } = useToast()
