@@ -5,7 +5,7 @@ import prismadb from '@/lib/prismadb';
 import { NextResponse } from 'next/server';
 
 
-// SALES EXPORT
+// SALE ITEMS EXPORT
 export async function GET(_req: Request, _res: Response) {
     try {
         const todayStart = new Date()
@@ -13,8 +13,8 @@ export async function GET(_req: Request, _res: Response) {
         // Subtract one day
         todayStart.setDate(todayStart.getDate() - 1);
 
-        // Fetch sales created or updated today
-        const data = await prismadb.sale.findMany({
+        // Fetch saleItems created or updated today
+        const data = await prismadb.saleItem.findMany({
             where: {
                 OR: [
                     { createdAt: { gte: todayStart } },

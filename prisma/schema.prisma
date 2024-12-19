@@ -68,6 +68,9 @@ model SaleItem {
   productId       Int
   product         Product @relation(fields: [productId], references: [id])
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([saleId])
   @@index([productId])
 }

@@ -47,7 +47,7 @@ export const SalesClient: React.FC<SalesClientProps> = ({
 
     return (
         <>
-            <div className="flex items-center justify-between sticky top-0 z-10 bg-background py-4">
+            <div className="flex items-center justify-between sticky top-0 bg-background py-4">
                 <Heading
                     title={`Ventas (${data.length})`}
                     description="Administra las ventas del negocio"

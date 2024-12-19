@@ -96,18 +96,18 @@ const data = {
     navSecondary: [
         {
             title: "Exportar datos",
-            url: "/exportar",
             icon: Save,
             onClick: async () => {
                 await exportInventory();
                 await exportPurchases();
                 await exportSales();
+                await exportSaleItems();
                 await exportBusinessInfo();
             },
         },
         {
             title: "Importar datos",
-            url: "/importar",
+            url: "/datos/importar",
             onClick: null,
             icon: Import,
         },
@@ -122,7 +122,7 @@ const exportInventory = async () => {
         // Create a link element
         const link = document.createElement('a')
         link.href = data.filePath  // The URL to the file
-        link.download = `inventario-${format(new Date(), "dd-MM-yy hh-mm", { locale: es })}.json`  // Filename for the download
+        link.download = `1_inventario-${format(new Date(), "dd-MM-yy HH-mm", { locale: es })}.json`  // Filename for the download
 
         // Programmatically click the link to trigger the download
         document.body.appendChild(link) // Append the link to the body
@@ -141,7 +141,7 @@ const exportPurchases = async () => {
         // Create a link element
         const link = document.createElement('a')
         link.href = data.filePath  // The URL to the file
-        link.download = `compras-${format(new Date(), "dd-MM-yy hh-mm", { locale: es })}.json`  // Filename for the download
+        link.download = `2_compras-${format(new Date(), "dd-MM-yy HH-mm", { locale: es })}.json`  // Filename for the download
 
         // Programmatically click the link to trigger the download
         document.body.appendChild(link) // Append the link to the body
@@ -160,7 +160,7 @@ const exportSales = async () => {
         // Create a link element
         const link = document.createElement('a')
         link.href = data.filePath  // The URL to the file
-        link.download = `ventas-${format(new Date(), "dd-MM-yy hh-mm", { locale: es })}.json`  // Filename for the download
+        link.download = `3_ventas-${format(new Date(), "dd-MM-yy HH-mm", { locale: es })}.json`  // Filename for the download
 
         // Programmatically click the link to trigger the download
         document.body.appendChild(link) // Append the link to the body
@@ -171,6 +171,24 @@ const exportSales = async () => {
     }
 }
 
+const exportSaleItems = async () => {
+    const response = await fetch('/api/export/ventas/saleItems')
+    const data = await response.json()
+
+    if (data.filePath) {
+        // Create a link element
+        const link = document.createElement('a')
+        link.href = data.filePath  // The URL to the file
+        link.download = `4_ventas_items-${format(new Date(), "dd-MM-yy HH-mm", { locale: es })}.json`  // Filename for the download
+
+        // Programmatically click the link to trigger the download
+        document.body.appendChild(link) // Append the link to the body
+        link.click()  // Trigger the download
+        document.body.removeChild(link) // Clean up by removing the link element
+    } else {
+        console.log(data.message)
+    }
+}
 const exportBusinessInfo = async () => {
     const response = await fetch('/api/export/negocio')
     const data = await response.json()
@@ -179,7 +197,7 @@ const exportBusinessInfo = async () => {
         // Create a link element
         const link = document.createElement('a')
         link.href = data.filePath  // The URL to the file
-        link.download = `negocio-${format(new Date(), "dd-MM-yy hh-mm", { locale: es })}.json`  // Filename for the download
+        link.download = `5_negocio-${format(new Date(), "dd-MM-yy HH-mm", { locale: es })}.json`  // Filename for the download
 
         // Programmatically click the link to trigger the download
         document.body.appendChild(link) // Append the link to the body

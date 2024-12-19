@@ -47,7 +47,7 @@ export const BusinessInfoForm: React.FC<BusinessInfoFormProps> = ({
     const { toast } = useToast()
 
     const title = "Información del negocio"
-    const description = "Editar la información del negocio"
+    const description = "Estos datos aparecerán en las impresiones"
     const toastMessage = "Información actualizada"
     const action = "Guardar cambios"
 

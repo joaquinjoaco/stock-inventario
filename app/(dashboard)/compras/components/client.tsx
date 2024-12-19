@@ -51,7 +51,7 @@ export const PurchaseClient: React.FC<PurchaseClientProps> = ({
 
     return (
         <>
-            <div className="flex items-center justify-between sticky top-0 z-10 bg-background py-4">
+            <div className="flex items-center justify-between sticky top-0 bg-background py-4">
                 <Heading
                     title={`Compras (${data.length})`}
                     description="Administra las compras del negocio"

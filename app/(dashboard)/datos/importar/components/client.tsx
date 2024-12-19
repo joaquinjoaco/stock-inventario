@@ -1,0 +1,204 @@
+"use client"
+
+import * as React from "react"
+import { Upload, X } from 'lucide-react'
+import { useDropzone } from "react-dropzone"
+import axios from "axios"
+
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Progress } from "@/components/ui/progress"
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card"
+
+export function ImportClient() {
+    const [files, setFiles] = React.useState<File[]>([])
+    const [progress, setProgress] = React.useState(0)
+    const [uploading, setUploading] = React.useState(false)
+    const [error, setError] = React.useState<string | null>(null)
+
+    const maxFiles = 5  // Limit to 4 files
+    const maxSize = 5242880 // 5MB
+
+    const onDrop = React.useCallback((acceptedFiles: File[]) => {
+        setError(null)
+        if (acceptedFiles.length > maxFiles) {
+            setError(`Solo se pueden subir un máximo de ${maxFiles} archivos.`)
+        } else {
+            setFiles(acceptedFiles)
+        }
+    }, [maxFiles])
+
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        onDrop,
+        accept: {
+            'application/json': ['.json']  // Accept only JSON files
+        },
+        maxFiles,
+        maxSize,
+    })
+
+    const handleUpload = async () => {
+        try {
+            setUploading(true)
+            setProgress(0)
+
+            // Simulate upload progress
+            const interval = setInterval(() => {
+                setProgress((prev) => {
+                    if (prev >= 95) {
+                        clearInterval(interval)
+                        return prev
+                    }
+                    return prev + 5
+                })
+            }, 100)
+
+
+            // Process each file and send its data as JSON
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                let apiUrl = '';
+
+                // Assign the API URL based on the file name
+                if (file.name.startsWith('1_inventario')) apiUrl = '/api/import/inventario'; // Inventory API
+                if (file.name.startsWith('2_compras')) apiUrl = '/api/import/compras'; // Purchases API
+                if (file.name.startsWith('3_ventas')) apiUrl = '/api/import/ventas'; // Sales API
+                if (file.name.startsWith('4_ventas_items')) apiUrl = '/api/import/ventas/saleItems'; // Sales API
+                if (file.name.startsWith('5_negocio')) apiUrl = '/api/import/negocio'; // Business API
+
+                if (!apiUrl) {
+                    console.error(`Archivo ${file.name} no tiene un nombre válido para asignar una URL`);
+                    continue;
+                }
+
+                try {
+                    // Read and parse the file content
+                    const fileContent = await new Promise<string>((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = () => {
+                            if (typeof reader.result === 'string') {
+                                resolve(reader.result);
+                            } else {
+                                reject(new Error('El contenido del archivo no es un string.'));
+                            }
+                        };
+                        reader.onerror = () => reject(new Error('Error leyendo el archivo'));
+                        reader.readAsText(file);
+                    });
+
+                    // Parse the file content into a JavaScript object
+                    const jsonData = JSON.parse(fileContent);
+
+                    if (!Array.isArray(jsonData) && !file.name.startsWith('5_negocio')) {
+                        console.error(`Archivo ${file.name} tiene un formato inválido, se esperaba un array.`);
+                        continue;
+                    }
+
+                    // Send the parsed data to the appropriate API
+                    await axios.post(apiUrl, { data: jsonData }, {
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
+
+                    // console.log(`Archivo ${file.name} enviado exitosamente a ${apiUrl}`);
+                } catch (err) {
+                    console.error(`Error al procesar o enviar archivo ${file.name}:`, err);
+                }
+            }
+
+            clearInterval(interval)
+            setProgress(100)
+
+            // Reset after successful upload
+            setTimeout(() => {
+                setFiles([])
+                setProgress(0)
+                setUploading(false)
+            }, 1000)
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Error enviando los archivos')
+            setUploading(false)
+            setProgress(0)
+        }
+    }
+
+    const removeFile = (index: number) => {
+        setFiles((prev) => prev.filter((_, i) => i !== index))
+        setError(null)
+    }
+
+    return (
+        <Card className="w-full max-w-2xl mx-auto">
+            <CardHeader>
+                <CardTitle>Importar archivos</CardTitle>
+                <CardDescription>
+                    Arrastra y suelta tus archivos aquí o haz clic para seleccionarlos
+                </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+                <div
+                    {...getRootProps()}
+                    className={cn(
+                        "border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors",
+                        isDragActive ? "border-primary bg-primary/5" : "border-muted",
+                        error && "border-destructive"
+                    )}
+                >
+                    <input {...getInputProps()} />
+                    <Upload className="w-8 h-8 mx-auto mb-4 text-muted-foreground" />
+                    <p className="text-sm text-muted-foreground">
+                        {isDragActive
+                            ? "Suelta los archivos aquí"
+                            : "Arrastra archivos aquí o haz clic para seleccionar"}
+                    </p>
+                </div>
+
+                {error && (
+                    <p className="text-sm text-destructive">{error}</p>
+                )}
+
+                {files.length > 0 && (
+                    <div className="space-y-2">
+                        {files.map((file, index) => (
+                            <div
+                                key={file.name}
+                                className="flex items-center justify-between p-2 border rounded"
+                            >
+                                <span className="text-sm truncate">{file.name}</span>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => removeFile(index)}
+                                    disabled={uploading}
+                                >
+                                    <X className="w-4 h-4" />
+                                </Button>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {progress > 0 && (
+                    <Progress value={progress} className="h-2" />
+                )}
+
+                {files.length > 0 &&
+                    <Button
+                        onClick={handleUpload}
+                        disabled={files.length === 0 || uploading}
+                        className="w-full"
+                    >
+                        {uploading ? 'Subiendo...' : 'Subir archivos'}
+                    </Button>
+                }
+            </CardContent>
+        </Card>
+    )
+}
