@@ -136,17 +136,19 @@ export function ImportClient() {
 
     return (
         <Card className="w-full max-w-2xl mx-auto">
-            <CardHeader>
-                <CardTitle>Importar archivos</CardTitle>
+            <CardHeader className="text-center">
+                <CardTitle>Cargar archivos</CardTitle>
                 <CardDescription>
                     Arrastra y suelta tus archivos aquí o haz clic para seleccionarlos
+                    <br />
+                    (Máximo 5 archivos)
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
                 <div
                     {...getRootProps()}
                     className={cn(
-                        "border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors",
+                        "border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors hover:bg-primary/5",
                         isDragActive ? "border-primary bg-primary/5" : "border-muted",
                         error && "border-destructive"
                     )}
@@ -156,7 +158,7 @@ export function ImportClient() {
                     <p className="text-sm text-muted-foreground">
                         {isDragActive
                             ? "Suelta los archivos aquí"
-                            : "Arrastra archivos aquí o haz clic para seleccionar"}
+                            : "Arrastra los archivos aquí o haz clic para seleccionarlos"}
                     </p>
                 </div>
 
