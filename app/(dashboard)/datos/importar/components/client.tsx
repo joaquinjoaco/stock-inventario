@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Upload, X } from 'lucide-react'
+import { Check, Upload, X } from 'lucide-react'
 import { useDropzone } from "react-dropzone"
 import axios from "axios"
 
@@ -15,6 +15,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import { useToast } from "@/hooks/use-toast"
 
 export function ImportClient() {
     const [files, setFiles] = React.useState<File[]>([])
@@ -24,6 +25,8 @@ export function ImportClient() {
 
     const maxFiles = 5  // Limit to 4 files
     const maxSize = 5242880 // 5MB
+
+    const { toast } = useToast();
 
     const onDrop = React.useCallback((acceptedFiles: File[]) => {
         setError(null)
@@ -107,7 +110,6 @@ export function ImportClient() {
                         },
                     });
 
-                    // console.log(`Archivo ${file.name} enviado exitosamente a ${apiUrl}`);
                 } catch (err) {
                     console.error(`Error al procesar o enviar archivo ${file.name}:`, err);
                 }
@@ -121,6 +123,12 @@ export function ImportClient() {
                 setFiles([])
                 setProgress(0)
                 setUploading(false)
+                toast({
+                    title: <div className="flex items-center text-green-500">
+                        <Check className="h-4 w-4 mr-2" />
+                        Datos actualizados
+                    </div>
+                })
             }, 1000)
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Error enviando los archivos')
