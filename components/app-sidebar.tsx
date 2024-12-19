@@ -24,6 +24,8 @@ import {
 } from "@/components/ui/sidebar"
 import { SidebarThemeToggle } from "./sidebar-theme-toggle"
 import Link from "next/link"
+import { es } from "date-fns/locale"
+import { format } from "date-fns"
 
 const data = {
     navMain1: [
@@ -96,13 +98,96 @@ const data = {
             title: "Exportar datos",
             url: "/exportar",
             icon: Save,
+            onClick: async () => {
+                await exportInventory();
+                await exportPurchases();
+                await exportSales();
+                await exportBusinessInfo();
+            },
         },
         {
             title: "Importar datos",
             url: "/importar",
+            onClick: null,
             icon: Import,
         },
     ],
+}
+
+const exportInventory = async () => {
+    const response = await fetch('/api/export/inventario')
+    const data = await response.json()
+
+    if (data.filePath) {
+        // Create a link element
+        const link = document.createElement('a')
+        link.href = data.filePath  // The URL to the file
+        link.download = `inventario-${format(new Date(), "dd-MM-yy hh-mm", { locale: es })}.json`  // Filename for the download
+
+        // Programmatically click the link to trigger the download
+        document.body.appendChild(link) // Append the link to the body
+        link.click()  // Trigger the download
+        document.body.removeChild(link) // Clean up by removing the link element
+    } else {
+        console.log(data.message)
+    }
+}
+
+const exportPurchases = async () => {
+    const response = await fetch('/api/export/compras')
+    const data = await response.json()
+
+    if (data.filePath) {
+        // Create a link element
+        const link = document.createElement('a')
+        link.href = data.filePath  // The URL to the file
+        link.download = `compras-${format(new Date(), "dd-MM-yy hh-mm", { locale: es })}.json`  // Filename for the download
+
+        // Programmatically click the link to trigger the download
+        document.body.appendChild(link) // Append the link to the body
+        link.click()  // Trigger the download
+        document.body.removeChild(link) // Clean up by removing the link element
+    } else {
+        console.log(data.message)
+    }
+}
+
+const exportSales = async () => {
+    const response = await fetch('/api/export/ventas')
+    const data = await response.json()
+
+    if (data.filePath) {
+        // Create a link element
+        const link = document.createElement('a')
+        link.href = data.filePath  // The URL to the file
+        link.download = `ventas-${format(new Date(), "dd-MM-yy hh-mm", { locale: es })}.json`  // Filename for the download
+
+        // Programmatically click the link to trigger the download
+        document.body.appendChild(link) // Append the link to the body
+        link.click()  // Trigger the download
+        document.body.removeChild(link) // Clean up by removing the link element
+    } else {
+        console.log(data.message)
+    }
+}
+
+const exportBusinessInfo = async () => {
+    const response = await fetch('/api/export/negocio')
+    const data = await response.json()
+
+    if (data.filePath) {
+        // Create a link element
+        const link = document.createElement('a')
+        link.href = data.filePath  // The URL to the file
+        link.download = `negocio-${format(new Date(), "dd-MM-yy hh-mm", { locale: es })}.json`  // Filename for the download
+
+        // Programmatically click the link to trigger the download
+        document.body.appendChild(link) // Append the link to the body
+        link.click()  // Trigger the download
+        document.body.removeChild(link) // Clean up by removing the link element
+    } else {
+        console.log(data.message)
+    }
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
+    "@json2csv/plainjs": "^7.0.6",
     "@prisma/client": "^6.0.1",
     "@radix-ui/react-avatar": "^1.1.1",
     "@radix-ui/react-checkbox": "^1.1.3",

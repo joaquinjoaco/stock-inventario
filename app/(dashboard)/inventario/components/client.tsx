@@ -51,26 +51,6 @@ export const ProductClient: React.FC<ProductClientProps> = ({
         XLSX.writeFile(workbook, 'productos.xlsx');
     }
 
-
-    const generateSheet2 = () => {
-        // Function to convert an array of objects to a worksheet.
-        const sheetFromArrayOfObjects = (arrayOfObjects: ProductColumn[]) => {
-
-            const worksheet = XLSX.utils.json_to_sheet(arrayOfObjects);
-            return worksheet;
-        };
-
-        // Create a workbook.
-        const workbook = XLSX.utils.book_new();
-
-        // Add a worksheet with product data.
-        XLSX.utils.book_append_sheet(workbook, sheetFromArrayOfObjects(data), 'Productos');
-
-        // Save the workbook to a file (starts a download).
-        XLSX.writeFile(workbook, 'productos.xlsx');
-    }
-
-
     return (
         <>
             <div className="flex items-center justify-between sticky top-0 z-10 bg-background py-4">
@@ -86,10 +66,6 @@ export const ProductClient: React.FC<ProductClientProps> = ({
                     <Button disabled={data.length === 0} onClick={() => generateSheet()} className="bg-[#107C41] hover:bg-[#1d6e42] dark:text-foreground" >
                         <FileSpreadsheet className="mr-2 h-4 w-4" />
                         Generar archivo
-                    </Button>
-                    <Button disabled={data.length === 0} onClick={() => generateSheet()} className="bg-[#107C41] hover:bg-[#1d6e42] dark:text-foreground" >
-                        <FileSpreadsheet className="mr-2 h-4 w-4" />
-                        Generar archivo 2
                     </Button>
                 </div>
             </div>

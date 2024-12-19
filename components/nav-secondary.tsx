@@ -15,7 +15,7 @@ export function NavSecondary({
 }: {
     items: {
         title: string
-        url: string
+        onClick: any
         icon: LucideIcon
     }[]
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
@@ -25,11 +25,9 @@ export function NavSecondary({
                 <SidebarMenu>
                     {items.map((item) => (
                         <SidebarMenuItem key={item.title}>
-                            <SidebarMenuButton asChild size="sm">
-                                <a href={item.url}>
-                                    <item.icon />
-                                    <span>{item.title}</span>
-                                </a>
+                            <SidebarMenuButton onClick={item.onClick} size="sm">
+                                <item.icon />
+                                <span>{item.title}</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     ))}
