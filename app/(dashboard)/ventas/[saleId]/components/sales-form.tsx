@@ -2,14 +2,14 @@
 "use client"
 
 import * as z from "zod"
-import { ArrowLeft, Check, ChevronsUpDown, CreditCard, ExternalLink, Landmark, Package, PlusCircle, Trash, Trash2, Wallet } from "lucide-react"
+import { ArrowLeft, Check, ChevronsUpDown, CreditCard, ExternalLink, Landmark, Package, PlusCircle, Printer, Trash, Trash2, Wallet } from "lucide-react"
 import { useFieldArray, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect, useState } from "react"
 import axios from "axios"
 import { useParams, useRouter } from "next/navigation"
 import { Heading } from "@/components/ui/heading"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import {
     Form,
@@ -112,15 +112,19 @@ export const SaleForm: React.FC<SaleFormProps> = ({
         const finalData = { ...data, totalPrice: totalPrice }
         try {
             setLoading(true)
+            let res
             if (initialData) {
                 // Update the purchase.
-                await axios.patch(`/api/ventas/${params.purchaseId}`, finalData)
+                res = await axios.patch(`/api/ventas/${params.purchaseId}`, finalData)
             } else {
                 // Create the purchase.
-                await axios.post(`/api/ventas`, finalData)
+                res = await axios.post(`/api/ventas`, finalData)
             }
 
             // COULD USE FETCHING AGAIN AND JUST REVALIDATE THE ROUTE INSTEAD OF GOING BACK.
+
+            window.open(`/ventas/${res.data.id}/imprimir`, '_blank')
+
             router.push('/ventas')
             router.refresh() // Refresh the component so it refetches the patched data.
             toast({
@@ -241,15 +245,26 @@ export const SaleForm: React.FC<SaleFormProps> = ({
                     </Button>
 
                     {initialData && (
-                        <Button
-                            disabled={loading}
-                            variant="destructive"
-                            onClick={() => setOpen(true)}
-                            type="button"
-                        >
-                            <Trash className="h-4 w-4 mr-2" />
-                            Eliminar
-                        </Button>
+                        <>
+                            <Button
+                                disabled={loading}
+                                variant="destructive"
+                                onClick={() => setOpen(true)}
+                                type="button"
+                            >
+                                <Trash className="h-4 w-4 mr-2" />
+                                Eliminar
+                            </Button>
+                            <Link
+                                href={`/ventas/${initialData.id}/imprimir`}
+                                target="_blank"
+                                className={buttonVariants({ variant: "default" })}
+                            // type="button"
+                            >
+                                <Printer className="h-4 w-4 mr-2" />
+                                Imprimir
+                            </Link>
+                        </>
                     )}
 
                     {!initialData &&
