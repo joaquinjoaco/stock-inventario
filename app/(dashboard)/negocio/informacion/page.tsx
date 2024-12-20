@@ -13,7 +13,7 @@ const BusinessInfoPage = async () => {
         },
         {
             name: 'Negocio',
-            url: '/negocio'
+            url: ''
         },
         {
             name: 'Información',

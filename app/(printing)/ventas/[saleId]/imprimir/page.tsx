@@ -1,7 +1,7 @@
 import prismadb from "@/lib/prismadb";
 import { serializeSale } from "@/lib/utils";
 import ImprimirVentaClient from "./components/client";
-import { Link } from "lucide-react";
+import Link from "next/link";
 
 export const metadata = {
     title: "Imprimir",

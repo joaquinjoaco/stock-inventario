@@ -34,7 +34,7 @@ const formSchema = z.object({
     brand: z.string().optional(),
     sellingPrice: z.coerce.number().positive({ message: 'El precio debe ser positivo' }), // coerce because we are using a decimal
     unitType: z.string().min(1, { message: 'El tipo de unidad del producto es obligatorio' }),
-    stock: z.coerce.number().positive({ message: 'La cantidad de stock debe ser positiva' }), // coerce because we are using a decimal
+    stock: z.coerce.number().min(0, { message: 'La cantidad de stock debe ser positiva' }), // coerce because we are using a decimal
     isArchived: z.boolean().default(false).optional(),
 })
 

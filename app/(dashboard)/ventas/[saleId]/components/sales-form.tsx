@@ -41,6 +41,7 @@ const saleItemSchema = z.object({
     name: z.string().optional(),
     brand: z.string().optional(),
     unitType: z.string().optional(),
+    availableStock: z.number().optional(),
     productId: z.string().optional(),
 })
 
@@ -73,7 +74,7 @@ export const SaleForm: React.FC<SaleFormProps> = ({
 
     const { toast } = useToast()
 
-    const title = initialData ? `Venta ${initialData.id}` : "Registrar venta"
+    const title = initialData ? `Venta ${format(initialData.createdAt, "dd MMMM, yyyy HH:mm", { locale: es })}` : "Registrar venta"
     const description = initialData ? "Vista de la venta" : "Se restará la cantidad especificada al stock del producto"
     const toastMessage = initialData ? "Venta actualizada." : "Venta registrada"
     const action = initialData ? "Guardar cambios" : "Registrar venta"
@@ -201,13 +202,14 @@ export const SaleForm: React.FC<SaleFormProps> = ({
                 name: product.name,
                 brand: product.brand,
                 unitType: product.unitType,
+                availableStock: product.stock,
                 productId: product.id
             })
         }
     }
 
     useEffect(() => {
-        document.title = initialData ? `Venta Nº ${initialData.id}${format(initialData.createdAt, "dd MMMM, yyyy", { locale: es })}` : "Nueva compra"
+        document.title = initialData ? `Venta ${format(initialData.createdAt, "dd MMMM, yyyy HH:mm", { locale: es })}` : "Nueva compra"
     }, [])
 
     return (
@@ -297,66 +299,68 @@ export const SaleForm: React.FC<SaleFormProps> = ({
                                 <FormMessage />
                             </FormItem> */}
 
-                            <FormField
-                                control={form.control}
-                                name="selectedProducts"
-                                render={({ }) => (
-                                    <FormItem>
-                                        <FormLabel>Productos</FormLabel>
-                                        <Popover open={popoverOpen} onOpenChange={setPopoverOpen} >
-                                            <PopoverTrigger asChild>
-                                                <Button
-                                                    variant="outline"
-                                                    size="sm"
-                                                    role="combobox"
-                                                    aria-expanded={open}
-                                                    aria-label="Selecciona un producto"
-                                                    type="button"
-                                                    className={cn("w-full justify-between p-[19px] font-normal")}
-                                                    disabled={disabled}
-                                                >
-                                                    <div className="flex items-center gap-x-2">
-                                                        <Package className="flex-none mr-2 h-4 w-4" />
-                                                        <p className="truncate">
-                                                            Selecciona un producto
-                                                        </p>
-                                                    </div>
-                                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                                </Button>
-                                            </PopoverTrigger>
-                                            <PopoverContent className="w-[500px] p-0">
-                                                <Command>
-                                                    <CommandList>
-                                                        <CommandInput placeholder="Busca un producto..." />
-                                                        <CommandEmpty>
-                                                            No se encontró el producto.
-                                                        </CommandEmpty>
-                                                        <CommandGroup heading="Productos">
-                                                            {serializedProducts.map((product, idx) => (
-                                                                <CommandItem
-                                                                    key={idx}
-                                                                    onSelect={
-                                                                        () => selectProduct(product)
-                                                                    }
-                                                                    className="cursor-pointer"
-                                                                >
-                                                                    <PlusCircle className="flex-none h-4 w-4 mr-2" />
-                                                                    <p className="truncate">
-                                                                        {product?.name} {product?.brand}
-                                                                        <span className="truncate text-muted-foreground"> ({product?.stock.toString()} {product?.unitType === 'PESO' ? "KG" : "Unidades"})</span>
-                                                                    </p>
-                                                                    <p className="ml-auto">{formatterUYU.format(Number(product?.sellingPrice))}</p>
-                                                                </CommandItem>
-                                                            ))}
-                                                        </CommandGroup>
-                                                    </CommandList>
-                                                </Command>
-                                            </PopoverContent>
-                                        </Popover>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                            {!initialData &&
+                                <FormField
+                                    control={form.control}
+                                    name="selectedProducts"
+                                    render={({ }) => (
+                                        <FormItem>
+                                            <FormLabel>Productos</FormLabel>
+                                            <Popover open={popoverOpen} onOpenChange={setPopoverOpen} >
+                                                <PopoverTrigger asChild>
+                                                    <Button
+                                                        variant="outline"
+                                                        size="sm"
+                                                        role="combobox"
+                                                        aria-expanded={open}
+                                                        aria-label="Selecciona un producto"
+                                                        type="button"
+                                                        className={cn("w-full justify-between p-[19px] font-normal")}
+                                                        disabled={disabled}
+                                                    >
+                                                        <div className="flex items-center gap-x-2">
+                                                            <Package className="flex-none mr-2 h-4 w-4" />
+                                                            <p className="truncate">
+                                                                Selecciona un producto
+                                                            </p>
+                                                        </div>
+                                                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                                    </Button>
+                                                </PopoverTrigger>
+                                                <PopoverContent className="w-[500px] p-0">
+                                                    <Command>
+                                                        <CommandList>
+                                                            <CommandInput placeholder="Busca un producto..." />
+                                                            <CommandEmpty>
+                                                                No se encontró el producto.
+                                                            </CommandEmpty>
+                                                            <CommandGroup heading="Productos">
+                                                                {serializedProducts.map((product, idx) => (
+                                                                    <CommandItem
+                                                                        key={idx}
+                                                                        onSelect={
+                                                                            () => selectProduct(product)
+                                                                        }
+                                                                        className="cursor-pointer"
+                                                                    >
+                                                                        <PlusCircle className="flex-none h-4 w-4 mr-2" />
+                                                                        <p className="truncate">
+                                                                            {product?.name} {product?.brand}
+                                                                            <span className="truncate text-muted-foreground"> ({product?.stock.toString()} {product?.unitType === 'PESO' ? "KG" : "Unidades"})</span>
+                                                                        </p>
+                                                                        <p className="ml-auto">{formatterUYU.format(Number(product?.sellingPrice))}</p>
+                                                                    </CommandItem>
+                                                                ))}
+                                                            </CommandGroup>
+                                                        </CommandList>
+                                                    </Command>
+                                                </PopoverContent>
+                                            </Popover>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            }
 
                             {/* Payment method */}
                             <FormField
@@ -465,7 +469,7 @@ export const SaleForm: React.FC<SaleFormProps> = ({
                                                                 <Input
                                                                     {...field}
                                                                     type="number"
-                                                                    max="25000"
+                                                                    max={item.availableStock}
                                                                     disabled={disabled}
                                                                     placeholder="Cant."
                                                                     className="w-20"

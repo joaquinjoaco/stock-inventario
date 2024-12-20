@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { Check, Edit, Eye, MoreHorizontal, Trash } from "lucide-react";
+import { Check, Eye, MoreHorizontal, Printer, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -18,8 +18,6 @@ import { SalesColumn } from "./columns";
 import { AlertModal } from "@/components/modals/alert-modal";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
-import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import Link from "next/link";
 
 interface CellActionProps {
     data: SalesColumn;
@@ -104,8 +102,12 @@ export const CellAction: React.FC<CellActionProps> = ({
                             Acciones
                         </DropdownMenuLabel>
                         <DropdownMenuItem onClick={() => router.push(`/ventas/${data["ID"]}`)}>
-                            <Edit className="mr-2 h-4 w-4" />
-                            Editar
+                            <Eye className="mr-2 h-4 w-4" />
+                            Ver
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => window.open(`/ventas/${data["ID"]}/imprimir`)}>
+                            <Printer className="mr-2 h-4 w-4" />
+                            Imprimir
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => setOpen(true)}>
                             <Trash className="mr-2 h-4 w-4" />
@@ -113,22 +115,7 @@ export const CellAction: React.FC<CellActionProps> = ({
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
-                <TooltipWrapper
-                    content="Ver service"
-                    icon={<Eye className="h-4 w-4" />}
-                    className="hidden 2xl:flex flex-row items-center gap-x-2"
-                >
-                    <Link
-                        className="inline-flex justify-center items-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10"
-                        href={`/ventas/${data["ID"]}`}
-                    // target="_blank"
-                    >
-                        {/* accesibility feature, screenreaders only 'Ver service' */}
-                        <span className="sr-only">Ver detalles</span>
-                        <Eye className="h-9 w-9 p-2 hover:bg-accent rounded-md transition-all" />
-                    </Link>
 
-                </TooltipWrapper>
             </div>
         </>
     );

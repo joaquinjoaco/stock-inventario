@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { Check, Edit, MoreHorizontal, Trash } from "lucide-react";
+import { Check, Eye, MoreHorizontal, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -99,8 +99,8 @@ export const CellAction: React.FC<CellActionProps> = ({
                         Acciones
                     </DropdownMenuLabel>
                     <DropdownMenuItem onClick={() => router.push(`/compras/${data["ID"]}`)}>
-                        <Edit className="mr-2 h-4 w-4" />
-                        Editar
+                        <Eye className="mr-2 h-4 w-4" />
+                        Ver
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setOpen(true)}>
                         <Trash className="mr-2 h-4 w-4" />

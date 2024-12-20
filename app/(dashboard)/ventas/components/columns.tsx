@@ -70,8 +70,8 @@ export const columns: ColumnDef<SalesColumn>[] = [
     //         )
     //     },
     // },
-    // {
-    //     id: "actions",
-    //     cell: ({ row }) => <CellAction data={row.original} />
-    // }
+    {
+        id: "actions",
+        cell: ({ row }) => <CellAction data={row.original} />
+    }
 ]
