@@ -25,11 +25,6 @@ export async function POST(
             return new NextResponse("name is required", { status: 400 })
         }
 
-        // // Check for the sellingPrice.
-        // if (!sellingPrice) {
-        //     return new NextResponse("sellingPrice is required", { status: 400 });
-        // }
-
         // Check for the unitType.
         if (!unitType) {
             return new NextResponse("unitType is required", { status: 400 })
