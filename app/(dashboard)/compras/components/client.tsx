@@ -32,7 +32,7 @@ export const PurchaseClient: React.FC<PurchaseClientProps> = ({
                 "Tipo": item["Tipo"],
                 "Proveedor": item["Proveedor"],
                 "Fecha de creación": item["Fecha de creación"],
-                "Fecha de actualización": item["Fecha de actualización"],
+                // "Fecha de actualización": item["Fecha de actualización"],
             }));
             const worksheet = XLSX.utils.json_to_sheet(formattedArray);
             return worksheet;

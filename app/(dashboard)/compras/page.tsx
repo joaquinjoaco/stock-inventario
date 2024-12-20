@@ -31,8 +31,8 @@ const PurchasesPage = async () => {
         "Costo total": formatterUYU.format(purchase.totalCost.toNumber()),
         "Tipo": purchase.product.unitType,
         "Proveedor": purchase.supplier || "-",
-        "Fecha de creación": format(purchase.createdAt, "dd MMMM, yyyy", { locale: es }),
-        "Fecha de actualización": format(purchase.updatedAt, "dd MMMM, yyyy", { locale: es })
+        "Fecha de creación": format(purchase.createdAt, "dd MMMM, yyyy HH:mm", { locale: es }),
+        "Fecha de actualización": format(purchase.updatedAt, "dd MMMM, yyyy HH:mm", { locale: es })
     }));
 
     const breadcrumbs = [

@@ -101,20 +101,20 @@ export const columns: ColumnDef<PurchaseColumn>[] = [
             )
         },
     },
-    {
-        accessorKey: "Fecha de actualización",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Actualización
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-    },
+    // {
+    //     accessorKey: "Fecha de actualización",
+    //     header: ({ column }) => {
+    //         return (
+    //             <Button
+    //                 variant="ghost"
+    //                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+    //             >
+    //                 Actualización
+    //                 <ArrowUpDown className="ml-2 h-4 w-4" />
+    //             </Button>
+    //         )
+    //     },
+    // },
     {
         id: "actions",
         cell: ({ row }) => <CellAction data={row.original} />

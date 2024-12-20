@@ -25,8 +25,8 @@ const SalesPage = async () => {
         "ID": sale.id,
         "Total": formatterUYU.format(sale.totalPrice.toNumber()),
         "Método de pago": sale.paymentType.toString(),
-        "Fecha de creación": format(sale.createdAt, "dd MMMM, yyyy", { locale: es }),
-        "Fecha de actualización": format(sale.updatedAt, "dd MMMM, yyyy", { locale: es })
+        "Fecha de creación": format(sale.createdAt, "dd MMMM, yyyy HH:mm", { locale: es }),
+        "Fecha de actualización": format(sale.updatedAt, "dd MMMM, yyyy HH:mm", { locale: es })
     }))
 
     const breadcrumbs = [
