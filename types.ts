@@ -2,7 +2,7 @@ import { PaymentType } from "@prisma/client";
 
 export type SerializedProduct = {
     name: string;
-    id: number;
+    id: string;
     description: string | null;
     brand: string;
     sellingPrice: number;
@@ -14,8 +14,8 @@ export type SerializedProduct = {
 }
 
 export type SerializedPurchase = {
-    id: number;
-    productId: number;
+    id: string;
+    productId: string;
     totalCost: number;
     amount: number;
     supplier: string | null;
@@ -30,14 +30,14 @@ export type SerializedSale = {
     saleItems: {
         calculatedPrice: number;
         quantity: number;
-        id: number;
+        id: string;
         unitType: string;
-        saleId: number;
-        productId: number;
+        saleId: string;
+        productId: string;
         name: string;
         brand: string;
     }[];
-    id: number;
+    id: string;
     createdAt: Date;
     updatedAt: Date;
 } | null

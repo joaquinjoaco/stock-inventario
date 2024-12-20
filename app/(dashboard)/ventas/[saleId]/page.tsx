@@ -12,7 +12,7 @@ const SalesPage = async (
     const params = await props.params;
 
     const { saleId } = params // From Next 15 on, params API is now asynchronous (https://nextjs.org/docs/messages/sync-dynamic-apis).
-    const id = saleId === 'nueva' ? -1 : params.saleId
+    // const id = saleId === 'nueva' ? -1 : params.saleId
 
     const sale: Sale & { saleItems: (SaleItem & { product: Product })[] } | null =
         saleId === 'nuevo' ?
@@ -22,7 +22,7 @@ const SalesPage = async (
             // we search the sale if a valid id was provided.
             await prismadb.sale.findUnique({
                 where: {
-                    id: Number(id)
+                    id: saleId
                 },
                 include: {
                     saleItems: {
@@ -35,7 +35,7 @@ const SalesPage = async (
     // Use a helper function to convert 'Decimal' fields to 'Number'.
     const serializedSale = serializeSale(sale)
 
-    // Get all non archived products.
+    // Get all non archived products in stock.
     const products = await prismadb.product.findMany({
         where: {
             isArchived: false,

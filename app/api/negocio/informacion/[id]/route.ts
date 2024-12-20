@@ -35,7 +35,7 @@ export async function PATCH(
 
         const businessInfo = await prismadb.business.update({
             where: {
-                id: Number(id),
+                id: id,
             },
             data: {
                 name,

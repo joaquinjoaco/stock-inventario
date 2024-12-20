@@ -24,7 +24,7 @@ export async function POST(
                 name: string;
                 brand: string;
                 unitType: string;
-                productId: number;
+                productId: string;
             }[];
         } = body
 
@@ -66,7 +66,7 @@ export async function POST(
                 totalPrice: totalPrice,
                 paymentType: paymentType,
                 saleItems: {
-                    create: selectedProducts.map((product: { calculatedPrice: number, quantity: number, name: string, brand: string, unitType: string, productId: number, }) => ({
+                    create: selectedProducts.map((product: { calculatedPrice: number, quantity: number, name: string, brand: string, unitType: string, productId: string, }) => ({
                         calculatedPrice: product.calculatedPrice,
                         quantity: product.quantity,
                         product: {

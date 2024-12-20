@@ -10,11 +10,8 @@ export const dynamic = 'force-dynamic';
 
 const InformesPage = async () => {
 
-
     let currentReport = "";
     currentReport = await getCurrentDayReport();
-
-
 
     return (
         <>

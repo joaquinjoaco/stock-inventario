@@ -223,7 +223,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
             <Form {...form}>
                 <form id="product-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
                     <div className="grid grid-cols-2 gap-8">
-                        <FormItem>
+                        {/* <FormItem>
                             <FormLabel>ID del producto</FormLabel>
                             <FormControl>
                                 <Input
@@ -232,7 +232,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                                 />
                             </FormControl>
                             <FormMessage />
-                        </FormItem>
+                        </FormItem> */}
 
                         <FormField
                             control={form.control}

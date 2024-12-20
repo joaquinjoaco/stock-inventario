@@ -16,19 +16,38 @@ export async function POST(
             phone, // optional
         } = body
 
-
         if (!name) {
             return new NextResponse("name is required", { status: 400 })
         }
 
-        const businessInfo = await prismadb.business.create({
-            data: {
-                name,
-                RUT,
-                address,
-                phone,
-            }
-        })
+        // Find the first and only row.
+        const business = await prismadb.business.findFirst({})
+        let businessInfo
+
+        if (!business) {
+            // If no such row exists then it might be the first time the user is setting up the business information.
+            businessInfo = await prismadb.business.create({
+                data: {
+                    name,
+                    RUT,
+                    address,
+                    phone,
+                }
+            })
+        } else {
+            // If the row exists then we update the existing row.
+            businessInfo = await prismadb.business.update({
+                where: {
+                    id: business.id
+                },
+                data: {
+                    name,
+                    RUT,
+                    address,
+                    phone,
+                }
+            })
+        }
 
         return NextResponse.json(businessInfo);
 

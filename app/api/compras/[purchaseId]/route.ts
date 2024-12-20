@@ -21,7 +21,7 @@ export async function DELETE(
 
         const purchase = await prismadb.purchase.deleteMany({
             where: {
-                id: Number(purchaseId),
+                id: purchaseId,
             }
         });
 

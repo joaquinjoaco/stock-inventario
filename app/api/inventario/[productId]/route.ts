@@ -50,7 +50,7 @@ export async function PATCH(
         // Update the product.
         const product = await prismadb.product.update({
             where: {
-                id: Number(productId)
+                id: productId
             },
             data: {
                 name,
@@ -91,7 +91,7 @@ export async function DELETE(
 
         const product = await prismadb.product.deleteMany({
             where: {
-                id: Number(productId),
+                id: productId,
             }
         });
 

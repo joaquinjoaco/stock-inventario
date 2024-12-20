@@ -35,14 +35,14 @@ export async function POST(
                 totalCost,
                 amount,
                 supplier,
-                productId: Number(productId),
+                productId: productId,
             },
         })
 
         // 2. Add the product stock.
         await prismadb.product.update({
             where: {
-                id: Number(productId)
+                id: productId
             },
             data: {
                 stock: {

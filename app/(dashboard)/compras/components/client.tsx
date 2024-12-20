@@ -26,7 +26,6 @@ export const PurchaseClient: React.FC<PurchaseClientProps> = ({
         const sheetFromArrayOfObjects = (arrayOfObjects: PurchaseColumn[]) => {
             // Re-format the already formatted data prop to readable values for a human in a worksheet.
             const formattedArray = arrayOfObjects.map((item) => ({
-                "ID": item["ID"],
                 "Nombre del producto": item["Nombre del producto"],
                 "Cantidad": item["Cantidad"],
                 "Costo total": item["Costo total"],

@@ -12,7 +12,7 @@ const ProductPage = async (
     const params = await props.params;
 
     const { productId } = params // From Next 15 on, params API is now asynchronous (https://nextjs.org/docs/messages/sync-dynamic-apis).
-    const id = productId === 'nuevo' ? -1 : params.productId
+    // const id = productId === 'nuevo' ? -1 : params.productId
 
     const product: Product | null = productId === 'nuevo' ?
         // null if we want to create a new product.
@@ -21,7 +21,7 @@ const ProductPage = async (
         // we search the product if a valid id was provided.
         await prismadb.product.findUnique({
             where: {
-                id: Number(id)
+                id: productId
             }
         })
 

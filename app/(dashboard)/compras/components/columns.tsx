@@ -18,20 +18,6 @@ export type PurchaseColumn = {
 
 export const columns: ColumnDef<PurchaseColumn>[] = [
     {
-        accessorKey: "ID",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    ID
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-    },
-    {
         accessorKey: "Nombre del producto",
         header: ({ column }) => {
             return (

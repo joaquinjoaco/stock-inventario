@@ -31,7 +31,7 @@ export function ProductsDataTable<TData, TValue>({
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-    const [selectedColumn, setSelectedColumn] = useState<string>(columns[0]?.id || "ID"); // Default to the first column
+    const [selectedColumn, setSelectedColumn] = useState<string>(columns[0]?.id || "Fecha de creación"); // Default to the first column
 
     const table = useReactTable({
         data,
@@ -71,7 +71,7 @@ export function ProductsDataTable<TData, TValue>({
                 >
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <div className={buttonVariants({ variant: "default" })} >
+                            <div className={buttonVariants({ variant: "default", className: "cursor-pointer" })} >
                                 <Filter className="w-6 h-6 mr-2" /> {capitalizeFirstLetter(selectedColumn) || "Filtro"}
                             </div>
                         </DropdownMenuTrigger>
@@ -107,7 +107,7 @@ export function ProductsDataTable<TData, TValue>({
                     {/* mb, forgot i could use asChild inside TooltipTrigger XD */}
                     <div
                         onClick={() => { window.location.reload() }}
-                        className={buttonVariants({ variant: "outline", size: "icon" })}
+                        className={buttonVariants({ variant: "outline", size: "icon", className: "cursor-pointer" })}
                     >
                         <ListRestartIcon className="h-6 w-6" />
                     </div>

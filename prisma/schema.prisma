@@ -15,7 +15,7 @@ enum PaymentType {
 }
 
 model Business {
-  id        Int      @id @default(0)
+  id        String   @id @default(uuid())
   name      String
   RUT       String?
   address   String?
@@ -25,7 +25,7 @@ model Business {
 }
 
 model Product {
-  id           Int        @id @default(autoincrement())
+  id           String     @id @default(uuid())
   name         String
   description  String?    @db.VarChar(255)
   brand        String?
@@ -40,18 +40,18 @@ model Product {
 }
 
 model Purchase {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   totalCost Decimal
   amount    Decimal
   supplier  String?
-  productId Int
+  productId String
   product   Product  @relation(fields: [productId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Sale {
-  id          Int         @id @default(autoincrement())
+  id          String      @id @default(uuid())
   totalPrice  Decimal
   paymentType PaymentType
   saleItems   SaleItem[]
@@ -60,12 +60,12 @@ model Sale {
 }
 
 model SaleItem {
-  id              Int     @id @default(autoincrement())
+  id              String  @id @default(uuid())
   calculatedPrice Decimal
   quantity        Decimal // kilos or units
-  saleId          Int
+  saleId          String
   sale            Sale    @relation(fields: [saleId], references: [id])
-  productId       Int
+  productId       String
   product         Product @relation(fields: [productId], references: [id])
 
   createdAt DateTime @default(now())

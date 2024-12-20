@@ -41,7 +41,7 @@ const saleItemSchema = z.object({
     name: z.string().optional(),
     brand: z.string().optional(),
     unitType: z.string().optional(),
-    productId: z.number().optional(),
+    productId: z.string().optional(),
 })
 
 const formSchema = z.object({
@@ -286,7 +286,7 @@ export const SaleForm: React.FC<SaleFormProps> = ({
                 <form id="sale-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
                     <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
                         <div className="space-y-8">
-                            <FormItem>
+                            {/* <FormItem>
                                 <FormLabel>ID de la venta</FormLabel>
                                 <FormControl>
                                     <Input
@@ -295,7 +295,7 @@ export const SaleForm: React.FC<SaleFormProps> = ({
                                     />
                                 </FormControl>
                                 <FormMessage />
-                            </FormItem>
+                            </FormItem> */}
 
                             <FormField
                                 control={form.control}
@@ -433,7 +433,7 @@ export const SaleForm: React.FC<SaleFormProps> = ({
                         <div className="space-y-4 border rounded-md bg-[#fcf8e6] dark:bg-accent/20 px-6 py-6">
                             <div>
                                 <p className="font-bold text-lg">Resumen</p>
-                                <p className="font-normal text-xs pb-4">PAGA EN: {watch('paymentType')}</p>
+                                <p className="font-normal text-xs pb-4">PAGA CON: {watch('paymentType')}</p>
                             </div>
                             {selectedProductsFields.map((item, idx) =>
                                 <FormField

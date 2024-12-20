@@ -22,7 +22,7 @@ const ProductsPage = async () => {
     });
 
     const formattedProducts: ProductColumn[] = products.map((product) => ({
-        "ID": product.id.toString(),
+        "ID": product.id,
         "Nombre": product.name,
         "Precio de venta": formatterUYU.format(product.sellingPrice.toNumber()),
         "Stock": product.stock.toString(),

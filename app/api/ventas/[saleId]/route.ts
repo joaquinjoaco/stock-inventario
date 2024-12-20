@@ -22,14 +22,14 @@ export async function DELETE(
         // 1. Delete all related SaleItems.
         await prismadb.saleItem.deleteMany({
             where: {
-                saleId: Number(saleId),
+                saleId: saleId,
             }
         });
 
         // 2. Delete the sale.
         const sale = await prismadb.sale.delete({
             where: {
-                id: Number(saleId)
+                id: saleId
             }
         })
         return NextResponse.json(sale);

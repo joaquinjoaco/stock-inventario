@@ -15,13 +15,13 @@ const ImprimirVentaPage = async (
     const params = await props.params;
 
     const { saleId } = params // From Next 15 on, params API is now asynchronous (https://nextjs.org/docs/messages/sync-dynamic-apis).
-    const id = saleId === 'nueva' ? -1 : params.saleId
+    // const id = saleId === 'nueva' ? -1 : params.saleId
 
     const businessInfo = await prismadb.business.findFirst()
 
     const sale = await prismadb.sale.findUnique({
         where: {
-            id: Number(id)
+            id: saleId
         },
         include: {
             saleItems: {

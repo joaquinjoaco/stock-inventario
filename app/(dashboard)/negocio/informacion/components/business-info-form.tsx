@@ -71,13 +71,13 @@ export const BusinessInfoForm: React.FC<BusinessInfoFormProps> = ({
     const onSubmit = async (data: BusinessInfoFormValues) => {
         try {
             setLoading(true)
-            if (initialData) {
-                // Update the business information.
-                await axios.patch(`/api/negocio/informacion/0`, data)
-            } else {
-                // Insert the business information.
-                await axios.post(`/api/negocio/informacion`, data)
-            }
+            // if (initialData) {
+            // Update the business information.
+            // await axios.patch(`/api/negocio/informacion/0`, data)
+            // } else {
+            // Insert the business information.
+            await axios.post(`/api/negocio/informacion`, data)
+            // }
 
             // COULD USE FETCHING AGAIN AND JUST REVALIDATE THE ROUTE INSTEAD OF GOING BACK.
             toast({

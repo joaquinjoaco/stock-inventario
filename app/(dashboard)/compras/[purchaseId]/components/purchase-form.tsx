@@ -64,7 +64,7 @@ export const PurchaseForm: React.FC<PurchaseFormProps> = ({
 
     const defaultValues = initialData ? {
         ...initialData,
-        productId: initialData.productId.toString(),
+        productId: initialData.productId,
         supplier: initialData.supplier || '',
         totalCost: parseFloat(String(initialData?.totalCost)),
         amount: parseFloat(String(initialData?.amount)),
@@ -225,7 +225,7 @@ export const PurchaseForm: React.FC<PurchaseFormProps> = ({
             <Form {...form}>
                 <form id="purchase-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
                     <div className="grid grid-cols-2 gap-8">
-                        <FormItem>
+                        {/* <FormItem>
                             <FormLabel>ID de la compra</FormLabel>
                             <FormControl>
                                 <Input
@@ -234,7 +234,7 @@ export const PurchaseForm: React.FC<PurchaseFormProps> = ({
                                 />
                             </FormControl>
                             <FormMessage />
-                        </FormItem>
+                        </FormItem> */}
 
                         <FormField
                             control={form.control}

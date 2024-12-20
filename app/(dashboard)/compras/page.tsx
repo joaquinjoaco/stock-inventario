@@ -25,7 +25,7 @@ const PurchasesPage = async () => {
     });
 
     const formattedProducts: PurchaseColumn[] = purchases.map((purchase) => ({
-        "ID": purchase.id.toString(),
+        "ID": purchase.id,
         "Nombre del producto": purchase.product.name,
         "Cantidad": `${purchase.amount.toNumber()} ${purchase.product.unitType === 'PESO' ? 'KG' : 'UNIDADES'}`,
         "Costo total": formatterUYU.format(purchase.totalCost.toNumber()),
