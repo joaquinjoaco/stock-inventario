@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { BookOpen, Calendar, LinkIcon, Package, PackageX } from "lucide-react";
+import { AlertTriangle, BookOpen, Calendar, ExternalLink, Package, PackageX } from "lucide-react";
 import { Header } from "@/components/ui/header"
 import { formatterUYU } from "@/lib/utils";
 import { format } from "date-fns";
@@ -23,6 +23,7 @@ import { getCurrentWeekPurchasesTotal } from "@/actions/week/get-current-week-pu
 import { getCurrentMonthPurchasesCount } from "@/actions/month/get-current-month-purchasesCount";
 import { getCurrentMonthPurchasesTotal } from "@/actions/month/get-current-month-purchasesTotal";
 import { Badge } from "@/components/ui/badge";
+import { getProductsStockAlert } from "@/actions/get-productsStockAlert";
 
 
 export const revalidate = 0
@@ -59,6 +60,7 @@ export default async function Page() {
 
     const productsInStockCountCurrentDay = await getProductsInStockCount()
     const productsOutOfStockCountCurrentDay = await getProductsOutOfStockCount()
+    const productsStockAlertCount = await getProductsStockAlert()
 
     const bestSellingProductCurrentMonth = await getCurrentMonthBestSellingProduct()
 
@@ -101,20 +103,36 @@ export default async function Page() {
                                 </Card>
                             </div>
 
-                            <TooltipWrapper className="flex items-center" content={"Ver producto"} icon={<LinkIcon className="h-4 w-4 mr-2 text-green-500" />}>
-                                <Link href={`/inventario/${bestSellingProductCurrentMonth?.product ? bestSellingProductCurrentMonth.product.id : ''}`} className="grid gap-4 ">
-                                    <Card className="dark:border-zinc-800 dark:bg-zinc-900/50 hover:bg-zinc-200 dark:hover:bg-zinc-900 transition-colors">
-                                        <CardContent className="flex items-center p-6">
-                                            <div className="ml-4">
-                                                <p className="dark:text-zinc-100 text-md font-medium">Producto más vendido este mes</p>
-                                                <p className="text-3xl font-bold dark:text-zinc-100">{bestSellingProductCurrentMonth?.product?.name}, {bestSellingProductCurrentMonth?.product?.brand}</p>
-                                                <p className="text-xl font-bold text-green-500">{bestSellingProductCurrentMonth?.quantitySold} vendidos</p>
-                                            </div>
-                                        </CardContent>
-                                    </Card>
-
-                                </Link>
-                            </TooltipWrapper>
+                            {bestSellingProductCurrentMonth &&
+                                <TooltipWrapper className="flex items-center" content={"Ver producto"} icon={<ExternalLink className="h-4 w-4 mr-2 text-green-500" />}>
+                                    <Link href={`/inventario/${bestSellingProductCurrentMonth?.product ? bestSellingProductCurrentMonth.product.id : ''}`} className="grid gap-4 ">
+                                        <Card className="dark:border-zinc-800 dark:bg-zinc-900/50 hover:bg-zinc-200 dark:hover:bg-zinc-900 transition-colors">
+                                            <CardContent className="flex items-center p-6">
+                                                <div className="ml-4">
+                                                    <p className="dark:text-zinc-100 text-md font-medium">Producto más vendido este mes</p>
+                                                    <p className="text-3xl font-bold dark:text-zinc-100">{bestSellingProductCurrentMonth?.product?.name}, {bestSellingProductCurrentMonth?.product?.brand}</p>
+                                                    <p className="text-xl font-bold text-green-500">{bestSellingProductCurrentMonth?.quantitySold} vendidos</p>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    </Link>
+                                </TooltipWrapper>
+                            }
+                            {productsStockAlertCount > 0 &&
+                                <TooltipWrapper className="flex items-center" content={"Revisar inventario"} icon={<ExternalLink className="h-4 w-4 mr-2 text-yellow-500" />}>
+                                    <Link href={`/inventario`} className="grid gap-4 ">
+                                        <Card className="border-yellow-500 dark:bg-zinc-900/50 hover:bg-zinc-200 dark:hover:bg-zinc-900 transition-colors">
+                                            <CardContent className="flex items-center p-6">
+                                                <AlertTriangle className="h-8 w-8 text-yellow-500" />
+                                                <div className="ml-4">
+                                                    <p className="dark:text-zinc-100 text-md font-medium">Productos con stock bajo</p>
+                                                    <p className="text-xl font-bold text-yellow-500">{productsStockAlertCount}</p>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    </Link>
+                                </TooltipWrapper>
+                            }
 
                             <Separator className="dark:bg-zinc-800" />
 

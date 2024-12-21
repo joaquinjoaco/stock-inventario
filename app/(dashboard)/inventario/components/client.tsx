@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { FileSpreadsheet, Plus } from "lucide-react";
+import { AlertTriangle, FileSpreadsheet, Plus } from "lucide-react";
 import * as XLSX from 'xlsx';
 
 import { Button } from "@/components/ui/button";
@@ -9,22 +9,28 @@ import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 
 import { ProductColumn, columns } from "./columns";
-import { ProductsDataTable } from "@/components/ui/products-data-table";
+import { DataTable } from "@/components/ui/data-table";
+import { useState } from "react";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 
 interface ProductClientProps {
     data: ProductColumn[];
+    productsStockAlertCount: number;
 }
 
 export const ProductClient: React.FC<ProductClientProps> = ({
-    data
+    data,
+    productsStockAlertCount
 }) => {
-
-    const router = useRouter();
+    const router = useRouter()
+    const today = format(new Date(), "dd/MM/yy HH:mm", { locale: es })
+    // Add state to store filtered data
+    const [filteredData, setFilteredData] = useState<ProductColumn[]>(data)
 
     const generateSheet = () => {
-        // Function to convert an array of objects to a worksheet.
+        // Use the current filtered data state
         const sheetFromArrayOfObjects = (arrayOfObjects: ProductColumn[]) => {
-            // Re-format the already formatted data prop to readable values for a human in a worksheet.
             const formattedArray = arrayOfObjects.map((item) => ({
                 "Nombre": item["Nombre"],
                 "Precio de venta": item["Precio de venta"],
@@ -32,44 +38,52 @@ export const ProductClient: React.FC<ProductClientProps> = ({
                 "Tipo": item["Tipo"],
                 "Marca": item["Marca"],
                 "Archivado": item.isArchivedText,
-
                 "Fecha de creación": item["Fecha de creación"],
                 "Fecha de actualización": item["Fecha de actualización"],
             }));
-            const worksheet = XLSX.utils.json_to_sheet(formattedArray);
-            return worksheet;
+            const worksheet = XLSX.utils.json_to_sheet(formattedArray)
+            return worksheet
         };
 
-        // Create a workbook.
         const workbook = XLSX.utils.book_new();
-
-        // Add a worksheet with product data.
-        XLSX.utils.book_append_sheet(workbook, sheetFromArrayOfObjects(data), 'Productos');
-
-        // Save the workbook to a file (starts a download).
-        XLSX.writeFile(workbook, 'productos.xlsx');
+        XLSX.utils.book_append_sheet(workbook, sheetFromArrayOfObjects(filteredData), 'Productos')
+        XLSX.writeFile(workbook, `productos-${today}.xlsx`)
     }
 
     return (
         <>
             <div className="flex items-center justify-between sticky top-0 bg-background py-4">
                 <Heading
-                    title={`Productos (${data.length})`}
-                    description="Administra los productos del negocio"
+                    title={`Productos (${filteredData.length})`}
+                    description={productsStockAlertCount > 0 ?
+                        <div className="flex items-center font-medium">
+                            <AlertTriangle className="h-4 w-4 mr-2 text-yellow-500" />
+                            Hay productos con stock 1
+                        </div> :
+                        'Administra los productos del negocio'
+                    }
                 />
                 <div className="flex gap-x-2">
-                    <Button onClick={() => { router.push(`/inventario/nuevo`) }}>
+                    <Button onClick={() => { router.push('/inventario/nuevo') }}>
                         <Plus className="mr-2 h-4 w-4" />
                         Nuevo producto
                     </Button>
-                    <Button disabled={data.length === 0} onClick={() => generateSheet()} className="bg-[#107C41] hover:bg-[#1d6e42] dark:text-foreground" >
+                    <Button
+                        disabled={filteredData.length === 0}
+                        onClick={generateSheet}
+                        className="bg-[#107C41] hover:bg-[#1d6e42] dark:text-foreground"
+                    >
                         <FileSpreadsheet className="mr-2 h-4 w-4" />
                         Generar archivo
                     </Button>
                 </div>
             </div>
             <Separator />
-            <ProductsDataTable columns={columns} data={data} />
+            <DataTable
+                columns={columns}
+                data={data}
+                onDataFiltered={setFilteredData}
+            />
         </>
     )
 }

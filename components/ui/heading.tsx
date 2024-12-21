@@ -1,6 +1,6 @@
 interface HeadingProps {
     title: string;
-    description: string;
+    description: string | React.ReactNode;
     description2?: string;
     className?: string;
 };
@@ -14,9 +14,9 @@ export const Heading: React.FC<HeadingProps> = ({
     return (
         <div className={className}>
             <h2 className="text-3xl font-bold tracking-tight">{title}</h2>
-            <p className="text-sm text-muted-foreground">
+            <div className="text-sm text-muted-foreground">
                 {description}
-            </p>
+            </div>
             <p className="text-sm text-muted-foreground">
                 {description2}
             </p>

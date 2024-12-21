@@ -38,6 +38,9 @@ const SalesPage = async (
                     lt: endOfMonth,
                 },
             },
+            orderBy: {
+                createdAt: "desc"
+            }
         });
     } else if (filter === "WEEKLY") {
         // Calculate the start and end of the current week
@@ -56,6 +59,9 @@ const SalesPage = async (
                     lt: endOfWeek,
                 },
             },
+            orderBy: {
+                createdAt: "desc"
+            }
         });
     } else if (filter === "DAILY") {
         sales = await prismadb.sale.findMany({
@@ -66,10 +72,17 @@ const SalesPage = async (
                     lt: new Date(today.setHours(23, 59, 59, 999)), // Local end of day
                 },
             },
+            orderBy: {
+                createdAt: "desc"
+            }
         })
     } else {
         // All sales
-        sales = await prismadb.sale.findMany();
+        sales = await prismadb.sale.findMany({
+            orderBy: {
+                createdAt: "desc"
+            }
+        });
     }
 
     const formattedProducts: SalesColumn[] = sales.map((sale) => ({

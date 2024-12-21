@@ -22,18 +22,16 @@ const ImprimirVentaClient: React.FC<ImprimirVentaClientProps> = ({
 
     return (
         <div className="p-6 bg-white text-black min-h-[100vh]">
-            <div className="flex justify-between">
-                <div className="flex flex-col text-xs">
-                    <p className="p-0 mb-1 font-bold">{business?.name}</p>
-                    <p className="p-0 mb-1">RUT {business?.RUT}</p>
-                    <p className="p-0 mb-1">{business?.address}</p>
-                    <p className="p-0 mb-1">{business?.phone}</p>
+            <div className="flex mb-8">
+                <div>
+                    <p className="text-xs ">{data?.createdAt ? format(data?.createdAt, "dd/MM/yy HH:mm", { locale: es }) : ""}</p>
                 </div>
-                <div className="flex pb-4 mb-8">
-                    <div>
-                        <p className="text-xs ">{data?.createdAt ? format(data?.createdAt, "dd MMMM, yyyy HH:mm", { locale: es }) : ""}</p>
-                    </div>
-                </div>
+            </div>
+            <p className="p-0 mb-1 font-bold">{business?.name}</p>
+            <div className="flex flex-col text-xs">
+                <p className="p-0 mb-1">RUT {business?.RUT}</p>
+                <p className="p-0 mb-1">{business?.address}</p>
+                <p className="p-0 mb-1">{business?.phone}</p>
             </div>
 
             <div className="h-px bg-gray-300 my-4" />
@@ -42,7 +40,7 @@ const ImprimirVentaClient: React.FC<ImprimirVentaClientProps> = ({
                     // item
                     <li className="flex justify-between" key={idx}>
                         <div className="flex flex-row gap-x-2 items-center justify-between font-semibold">
-                            {Number(item.quantity)} x {item.name} ({item.unitType})
+                            {Number(item.quantity)} x {item.name}
                         </div>
                         {/* price */}
                         <div className="flex items-center mt-1 gap-x-2">

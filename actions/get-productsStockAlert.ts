@@ -1,12 +1,12 @@
 import prismadb from "@/lib/prismadb";
 
-export async function getProductsOutOfStockCount(): Promise<number> {
+export async function getProductsStockAlert(): Promise<number> {
     try {
-        // Amount of products out of stock
+        // Amount of products whose stock is 1
         const productsOutOfStockQuery = await prismadb.product.count({
             where: {
                 stock: {
-                    lte: 0,
+                    equals: 1,
                 },
             },
         })

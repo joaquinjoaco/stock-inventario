@@ -40,6 +40,9 @@ const PurchasesPage = async (
             },
             include: {
                 product: true,
+            },
+            orderBy: {
+                createdAt: "desc"
             }
         });
     } else if (filter === "WEEKLY") {
@@ -61,6 +64,9 @@ const PurchasesPage = async (
             },
             include: {
                 product: true,
+            },
+            orderBy: {
+                createdAt: "desc"
             }
         });
     } else if (filter === "DAILY") {
@@ -74,6 +80,9 @@ const PurchasesPage = async (
             },
             include: {
                 product: true,
+            },
+            orderBy: {
+                createdAt: "desc"
             }
         })
     } else {
@@ -81,6 +90,9 @@ const PurchasesPage = async (
         purchases = await prismadb.purchase.findMany({
             include: {
                 product: true,
+            },
+            orderBy: {
+                createdAt: "desc"
             }
         });
     }

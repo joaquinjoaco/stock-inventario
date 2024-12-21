@@ -6,10 +6,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const formatterUYU = new Intl.NumberFormat("en-US", {
+export const formatterUYU = new Intl.NumberFormat("es-UY", {
   style: 'currency',
   currency: 'UYU',
-  currencyDisplay: 'code'
+  currencyDisplay: 'symbol'
 })
 
 export function capitalizeFirstLetter(string: string) {

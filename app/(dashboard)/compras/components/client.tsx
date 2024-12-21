@@ -9,8 +9,11 @@ import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 
 import { PurchaseColumn, columns } from "./columns";
-import { ProductsDataTable } from "@/components/ui/products-data-table";
+import { DataTable } from "@/components/ui/data-table";
 import FilterCombobox from "./filter-combobox";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
+import { useState } from "react";
 
 interface PurchaseClientProps {
     data: PurchaseColumn[];
@@ -23,6 +26,10 @@ export const PurchaseClient: React.FC<PurchaseClientProps> = ({
     const router = useRouter();
     const searchParams = useSearchParams()
     const filter = searchParams.get('filter')
+
+    const today = format(new Date(), "dd/MM/yy HH:mm", { locale: es })
+    // Add state to store filtered data
+    const [filteredData, setFilteredData] = useState<PurchaseColumn[]>(data)
 
     const generateSheet = () => {
         // Function to convert an array of objects to a worksheet.
@@ -45,17 +52,17 @@ export const PurchaseClient: React.FC<PurchaseClientProps> = ({
         const workbook = XLSX.utils.book_new();
 
         // Add a worksheet with product data.
-        XLSX.utils.book_append_sheet(workbook, sheetFromArrayOfObjects(data), 'Compras');
+        XLSX.utils.book_append_sheet(workbook, sheetFromArrayOfObjects(filteredData), 'Compras');
 
         // Save the workbook to a file (starts a download).
-        XLSX.writeFile(workbook, 'compras.xlsx');
+        XLSX.writeFile(workbook, `compras-${today}.xlsx`);
     }
 
     return (
         <>
             <div className="flex items-center justify-between sticky top-0 bg-background py-4">
                 <Heading
-                    title={`Compras (${data.length})`}
+                    title={`Compras (${filteredData.length})`}
                     description="Administra las compras del negocio"
                 />
                 <div className="flex gap-x-2">
@@ -63,7 +70,7 @@ export const PurchaseClient: React.FC<PurchaseClientProps> = ({
                         <Plus className="mr-2 h-4 w-4" />
                         Nueva compra
                     </Button>
-                    <Button disabled={data.length === 0} onClick={() => generateSheet()} className="bg-[#107C41] hover:bg-[#1d6e42] dark:text-foreground" >
+                    <Button disabled={filteredData.length === 0} onClick={() => generateSheet()} className="bg-[#107C41] hover:bg-[#1d6e42] dark:text-foreground" >
                         <FileSpreadsheet className="mr-2 h-4 w-4" />
                         Generar archivo
                     </Button>
@@ -71,7 +78,11 @@ export const PurchaseClient: React.FC<PurchaseClientProps> = ({
                 </div>
             </div>
             <Separator />
-            <ProductsDataTable columns={columns} data={data} />
+            <DataTable
+                columns={columns}
+                data={data}
+                onDataFiltered={setFilteredData}
+            />
         </>
     )
 }

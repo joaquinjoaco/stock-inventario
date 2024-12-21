@@ -9,8 +9,11 @@ import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 
 import { SalesColumn, columns } from "./columns";
-import { ProductsDataTable } from "@/components/ui/products-data-table";
+import { DataTable } from "@/components/ui/data-table";
 import FilterCombobox from "./filter-combobox";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
+import { useState } from "react";
 
 interface SalesClientProps {
     data: SalesColumn[];
@@ -23,16 +26,18 @@ export const SalesClient: React.FC<SalesClientProps> = ({
     const router = useRouter()
     const searchParams = useSearchParams()
     const filter = searchParams.get('filter')
+    const today = format(new Date(), "dd/MM/yy HH:mm", { locale: es })
+    // Add state to store filtered data
+    const [filteredData, setFilteredData] = useState<SalesColumn[]>(data)
 
     const generateSheet = () => {
         // Function to convert an array of objects to a worksheet.
         const sheetFromArrayOfObjects = (arrayOfObjects: SalesColumn[]) => {
             // Re-format the already formatted data prop to readable values for a human in a worksheet.
             const formattedArray = arrayOfObjects.map((item) => ({
-                "ID": item["ID"],
                 "Total": item["Total"],
+                "Método de pago": item["Método de pago"],
                 "Fecha de creación": item["Fecha de creación"],
-                // "Fecha de actualización": item["Fecha de actualización"],
             }));
             const worksheet = XLSX.utils.json_to_sheet(formattedArray);
             return worksheet;
@@ -42,17 +47,17 @@ export const SalesClient: React.FC<SalesClientProps> = ({
         const workbook = XLSX.utils.book_new();
 
         // Add a worksheet with product data.
-        XLSX.utils.book_append_sheet(workbook, sheetFromArrayOfObjects(data), 'Ventas');
+        XLSX.utils.book_append_sheet(workbook, sheetFromArrayOfObjects(filteredData), 'Ventas');
 
         // Save the workbook to a file (starts a download).
-        XLSX.writeFile(workbook, 'ventas.xlsx');
+        XLSX.writeFile(workbook, `ventas-${today}.xlsx`);
     }
 
     return (
         <>
             <div className="flex items-center justify-between sticky top-0 bg-background py-4">
                 <Heading
-                    title={`Ventas (${data.length})`}
+                    title={`Ventas (${filteredData.length})`}
                     description="Administra las ventas del negocio"
                 />
                 <div className="flex gap-x-2">
@@ -60,7 +65,7 @@ export const SalesClient: React.FC<SalesClientProps> = ({
                         <Plus className="mr-2 h-4 w-4" />
                         Nueva venta
                     </Button>
-                    <Button disabled={data.length === 0} onClick={() => generateSheet()} className="bg-[#107C41] hover:bg-[#1d6e42] dark:text-foreground" >
+                    <Button disabled={filteredData.length === 0} onClick={() => generateSheet()} className="bg-[#107C41] hover:bg-[#1d6e42] dark:text-foreground" >
                         <FileSpreadsheet className="mr-2 h-4 w-4" />
                         Generar archivo
                     </Button>
@@ -68,7 +73,11 @@ export const SalesClient: React.FC<SalesClientProps> = ({
                 </div>
             </div>
             <Separator />
-            <ProductsDataTable columns={columns} data={data} />
+            <DataTable
+                columns={columns}
+                data={data}
+                onDataFiltered={setFilteredData}
+            />
         </>
     )
 }

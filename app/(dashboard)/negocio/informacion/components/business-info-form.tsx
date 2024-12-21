@@ -162,7 +162,7 @@ export const BusinessInfoForm: React.FC<BusinessInfoFormProps> = ({
                                 <FormItem>
                                     <FormLabel>Nombre</FormLabel>
                                     <FormControl>
-                                        <Input disabled={loading} placeholder="Nombre del producto" {...field} />
+                                        <Input disabled={loading} placeholder="Nombre del negocio" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -189,7 +189,7 @@ export const BusinessInfoForm: React.FC<BusinessInfoFormProps> = ({
                                 <FormItem>
                                     <FormLabel>Teléfono (opcional)</FormLabel>
                                     <FormControl>
-                                        <Input disabled={loading} placeholder="Marca del producto" {...field} />
+                                        <Input disabled={loading} placeholder="Teléfono" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

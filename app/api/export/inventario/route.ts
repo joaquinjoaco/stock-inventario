@@ -7,8 +7,8 @@ export async function GET() {
     try {
         const todayStart = new Date()
         todayStart.setHours(0, 0, 0, 0)
-        // Subtract one day
-        todayStart.setDate(todayStart.getDate() - 1);
+        // Subtract two days
+        todayStart.setDate(todayStart.getDate() - 2);
 
         // Fetch products created or updated today
         const data = await prismadb.product.findMany({

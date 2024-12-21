@@ -7,6 +7,7 @@ import { ProductClient } from "./components/client";
 import { ProductColumn } from "./components/columns";
 import { es } from "date-fns/locale";
 import { Header } from "@/components/ui/header";
+import { getProductsStockAlert } from "@/actions/get-productsStockAlert";
 
 
 export const metadata = {
@@ -20,6 +21,8 @@ const ProductsPage = async () => {
             createdAt: 'desc'
         }
     });
+
+    const productsStockAlertCount = await getProductsStockAlert()
 
     const formattedProducts: ProductColumn[] = products.map((product) => ({
         "ID": product.id,
@@ -52,7 +55,7 @@ const ProductsPage = async () => {
             <Header breadcrumbs={breadcrumbs} withSideBarTrigger />
             <div className="flex-col">
                 <div className="flex-1 space-y-4 p-8 pt-6t">
-                    <ProductClient data={formattedProducts} />
+                    <ProductClient data={formattedProducts} productsStockAlertCount={productsStockAlertCount} />
                 </div>
             </div>
         </>

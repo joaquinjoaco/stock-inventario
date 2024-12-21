@@ -19,19 +19,21 @@ import {
 import { TooltipWrapper } from "./tooltip-wrapper";
 import { capitalizeFirstLetter } from "@/lib/utils";
 
-interface ProductsDataTableProps<TData, TValue> {
+interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
+    onDataFiltered: (filteredData: TData[]) => void;
 }
 
-export function ProductsDataTable<TData, TValue>({
+export function DataTable<TData, TValue>({
     columns,
     data,
-}: ProductsDataTableProps<TData, TValue>) {
+    onDataFiltered,
+}: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-    const [selectedColumn, setSelectedColumn] = useState<string>(columns[0]?.id || "Fecha de creación"); // Default to the first column
+    const [selectedColumn, setSelectedColumn] = useState<string>(columns[0]?.id || "Fecha de creación");
 
     const table = useReactTable({
         data,
@@ -55,7 +57,14 @@ export function ProductsDataTable<TData, TValue>({
         }
     });
 
-    // Reset the filter value whenever the selected column changes.
+    // Update filtered data whenever filters or sorting change
+    useEffect(() => {
+        const filteredRows = table.getFilteredRowModel().rows;
+        const filteredData = filteredRows.map(row => row.original);
+        onDataFiltered(filteredData);
+    }, [table.getState().columnFilters, table.getState().sorting, onDataFiltered]);
+
+    // Reset the filter value whenever the selected column changes
     useEffect(() => {
         table.getColumn(selectedColumn)?.setFilterValue("");
     }, [selectedColumn]);
