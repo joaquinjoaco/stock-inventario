@@ -35,9 +35,9 @@ const FilterCombobox: React.FC<StatusFilterComboboxProps> = ({
 
     const onStatusSelect = (newStatus: 'MONTHLY' | 'WEEKLY' | 'DAILY') => {
         if (currentFilter === newStatus) {
-            router.push(`/ventas`)
+            router.push(`/compras`)
         } else {
-            router.push(`/ventas?filter=${newStatus}`)
+            router.push(`/compras?filter=${newStatus}`)
         }
         setOpen(false)
     }
