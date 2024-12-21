@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FileSpreadsheet, Plus } from "lucide-react";
 import * as XLSX from 'xlsx';
 
@@ -10,6 +10,7 @@ import { Separator } from "@/components/ui/separator";
 
 import { PurchaseColumn, columns } from "./columns";
 import { ProductsDataTable } from "@/components/ui/products-data-table";
+import FilterCombobox from "./filter-combobox";
 
 interface PurchaseClientProps {
     data: PurchaseColumn[];
@@ -20,6 +21,8 @@ export const PurchaseClient: React.FC<PurchaseClientProps> = ({
 }) => {
 
     const router = useRouter();
+    const searchParams = useSearchParams()
+    const filter = searchParams.get('filter')
 
     const generateSheet = () => {
         // Function to convert an array of objects to a worksheet.
@@ -64,6 +67,7 @@ export const PurchaseClient: React.FC<PurchaseClientProps> = ({
                         <FileSpreadsheet className="mr-2 h-4 w-4" />
                         Generar archivo
                     </Button>
+                    <FilterCombobox currentFilter={filter as 'MONTHLY' | 'WEEKLY' | 'DAILY'} />
                 </div>
             </div>
             <Separator />
