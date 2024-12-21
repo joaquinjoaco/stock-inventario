@@ -3,6 +3,8 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
+export const dynamic = 'force-dynamic'
+
 export default function Layout({
     children,
 }: Readonly<{
