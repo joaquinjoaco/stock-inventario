@@ -1,10 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { BookOpen, Calendar, LinkIcon, Package, PackageX } from "lucide-react";
+import { BookOpen, Calendar, CreditCard, LinkIcon, Package, PackageX } from "lucide-react";
 import { Header } from "@/components/ui/header"
-import { capitalizeFirstLetter, formatterUYU } from "@/lib/utils";
+import { formatterUYU } from "@/lib/utils";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-
+import Link from "next/link";
 import { getCurrentDaySalesCount } from "@/actions/day/get-current-day-salesCount";
 import { getCurrentDayPurchasesCount } from "@/actions/day/get-current-day-purchasesCount";
 import { getCurrentDayPurchasesTotal } from "@/actions/day/get-current-day-purchasesTotal";
@@ -14,7 +14,6 @@ import { getProductsInStockCount } from "@/actions/get-productsInStockCount";
 import { getProductsOutOfStockCount } from "@/actions/get-productsOutOfStockCount";
 import { getCurrentWeekSalesCount } from "@/actions/week/get-current-week-salesCount";
 import { getCurrentWeekSalesTotal } from "@/actions/week/get-current-week-salesTotal";
-import Link from "next/link";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 import { Separator } from "@/components/ui/separator";
 import { getCurrentMonthSalesCount } from "@/actions/month/get-current-month-salesCount";
@@ -23,6 +22,7 @@ import { getCurrentWeekPurchasesCount } from "@/actions/week/get-current-week-pu
 import { getCurrentWeekPurchasesTotal } from "@/actions/week/get-current-week-purchasesTotal";
 import { getCurrentMonthPurchasesCount } from "@/actions/month/get-current-month-purchasesCount";
 import { getCurrentMonthPurchasesTotal } from "@/actions/month/get-current-month-purchasesTotal";
+import { Badge } from "@/components/ui/badge";
 
 export default async function Page() {
 
@@ -41,7 +41,11 @@ export default async function Page() {
     const salesTotalCurrentDay = await getCurrentDaySalesTotal()
     const salesCountCurrentWeek = await getCurrentWeekSalesCount()
     const salesTotalCurrentWeek = await getCurrentWeekSalesTotal()
-    const salesCountCurrentMonth = await getCurrentMonthSalesCount()
+    const salesCountCurrentMonth = await getCurrentMonthSalesCount("ALL")
+    const salesCountCurrentMonthDEBITO = await getCurrentMonthSalesCount("DEBITO")
+    const salesCountCurrentMonthCREDITO = await getCurrentMonthSalesCount("CREDITO")
+    const salesCountCurrentMonthTRANSFERENCIA = await getCurrentMonthSalesCount("TRANSFERENCIA")
+    const salesCountCurrentMonthEFECTIVO = await getCurrentMonthSalesCount("EFECTIVO")
     const salesTotalCurrentMonth = await getCurrentMonthSalesTotal()
 
     const purchasesCountCurrentDay = await getCurrentDayPurchasesCount()
@@ -77,7 +81,7 @@ export default async function Page() {
                             <div className="grid gap-4 md:grid-cols-2">
                                 <Card className="dark:border-zinc-800 dark:bg-zinc-900/50">
                                     <CardContent className="flex items-center p-6">
-                                        <Package className="h-8 w-8 text-green-500" />
+                                        <Package className="h-7 w-7 text-green-500" />
                                         <div className="ml-4">
                                             <p className="text-lg font-medium">En Stock</p>
                                             <p className="text-3xl font-bold text-green-500">1</p>
@@ -86,7 +90,7 @@ export default async function Page() {
                                 </Card>
                                 <Card className="dark:border-zinc-800 dark:bg-zinc-900/50">
                                     <CardContent className="flex items-center p-6">
-                                        <PackageX className="h-8 w-8 text-red-500" />
+                                        <PackageX className="h-7 w-7 text-red-500" />
                                         <div className="ml-4">
                                             <p className="text-lg font-medium">Fuera de Stock</p>
                                             <p className="text-3xl font-bold text-red-500">1</p>
@@ -221,6 +225,23 @@ export default async function Page() {
                                     <div className="flex justify-between">
                                         <span>Total de ventas del día</span>
                                         <span className="font-medium dark:text-zinc-100">{salesCountCurrentDay}</span>
+                                    </div>
+                                    <Separator className="my-2" />
+                                    <div className="flex justify-between">
+                                        <span>Ventas del mes con <Badge className="ml-2">EFECTIVO</Badge></span>
+                                        <span className="font-medium dark:text-zinc-100">{salesCountCurrentMonthEFECTIVO}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span>Ventas del mes con <Badge className="ml-2">DÉBITO</Badge></span>
+                                        <span className="font-medium dark:text-zinc-100">{salesCountCurrentMonthDEBITO}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span>Ventas del mes con <Badge className="ml-2">TRANSFERENCIA</Badge></span>
+                                        <span className="font-medium dark:text-zinc-100">{salesCountCurrentMonthTRANSFERENCIA}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span>Ventas del mes con <Badge className="ml-2">CRÉDITO</Badge></span>
+                                        <span className="font-medium dark:text-zinc-100">{salesCountCurrentMonthCREDITO}</span>
                                     </div>
                                     <div className="flex justify-between">
                                         <span>Última Actualización</span>

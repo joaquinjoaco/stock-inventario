@@ -1,6 +1,7 @@
 import prismadb from "@/lib/prismadb";
+import { PaymentType } from "@prisma/client";
 
-export async function getCurrentMonthSalesCount(): Promise<number> {
+export async function getCurrentMonthSalesCount(paymentType: PaymentType | 'ALL'): Promise<number> {
     try {
         const today = new Date();
 
@@ -9,16 +10,29 @@ export async function getCurrentMonthSalesCount(): Promise<number> {
         const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1); // First day of next month
         endOfMonth.setMilliseconds(-1); // End of the current month
 
-        // Count sales for the current month
-        const salesCountQuery = await prismadb.sale.count({
-            where: {
-                createdAt: {
-                    gte: startOfMonth,
-                    lt: endOfMonth,
+        let salesCountQuery
+        if (paymentType === 'ALL') {
+            // Count all sales for the current month
+            salesCountQuery = await prismadb.sale.count({
+                where: {
+                    createdAt: {
+                        gte: startOfMonth,
+                        lt: endOfMonth,
+                    },
                 },
-            },
-        });
-
+            });
+        } else {
+            // Count sales for the current month with a specific payment type
+            salesCountQuery = await prismadb.sale.count({
+                where: {
+                    createdAt: {
+                        gte: startOfMonth,
+                        lt: endOfMonth,
+                    },
+                    paymentType: paymentType
+                },
+            });
+        }
         return Number(salesCountQuery);
 
     } catch (error: any) {
