@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import prismadb from '@/lib/prismadb';
 import { SaleItem } from '@prisma/client';
 import { NextResponse } from 'next/server';
 
-export async function POST(req: Request, _res: Response) {
+export async function POST(req: Request) {
     try {
         const body = await req.json()
         const { data }: { data: SaleItem[] } = body

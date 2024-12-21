@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { BookOpen, Calendar, CreditCard, LinkIcon, Package, PackageX } from "lucide-react";
+import { BookOpen, Calendar, LinkIcon, Package, PackageX } from "lucide-react";
 import { Header } from "@/components/ui/header"
 import { formatterUYU } from "@/lib/utils";
 import { format } from "date-fns";
@@ -24,6 +24,8 @@ import { getCurrentMonthPurchasesCount } from "@/actions/month/get-current-month
 import { getCurrentMonthPurchasesTotal } from "@/actions/month/get-current-month-purchasesTotal";
 import { Badge } from "@/components/ui/badge";
 
+
+export const revalidate = 0
 export default async function Page() {
 
     const breadcrumbs = [
@@ -84,7 +86,7 @@ export default async function Page() {
                                         <Package className="h-7 w-7 text-green-500" />
                                         <div className="ml-4">
                                             <p className="text-lg font-medium">En Stock</p>
-                                            <p className="text-3xl font-bold text-green-500">1</p>
+                                            <p className="text-3xl font-bold text-green-500">{productsInStockCountCurrentDay}</p>
                                         </div>
                                     </CardContent>
                                 </Card>
@@ -93,7 +95,7 @@ export default async function Page() {
                                         <PackageX className="h-7 w-7 text-red-500" />
                                         <div className="ml-4">
                                             <p className="text-lg font-medium">Fuera de Stock</p>
-                                            <p className="text-3xl font-bold text-red-500">1</p>
+                                            <p className="text-3xl font-bold text-red-500">{productsOutOfStockCountCurrentDay}</p>
                                         </div>
                                     </CardContent>
                                 </Card>

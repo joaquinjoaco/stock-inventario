@@ -5,7 +5,6 @@ import {
     BookOpen,
     Check,
     Import,
-    Loader2,
     Package,
     Save,
     Settings2,

@@ -4,7 +4,7 @@ import * as path from 'path';
 import prismadb from '@/lib/prismadb';
 import { NextResponse } from 'next/server';
 
-export async function GET(_req: Request, _res: Response) {
+export async function GET() {
     try {
         const todayStart = new Date()
         todayStart.setHours(0, 0, 0, 0)
