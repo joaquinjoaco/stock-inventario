@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { FileSpreadsheet, Plus } from "lucide-react";
+import { Divide, FileSpreadsheet, Plus } from "lucide-react";
 import * as XLSX from 'xlsx';
 
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,9 @@ import { DataTable } from "@/components/ui/data-table";
 import FilterCombobox from "./filter-combobox";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { formatterUYU } from "@/lib/utils";
 
 interface SalesClientProps {
     data: SalesColumn[];
@@ -27,8 +29,25 @@ export const SalesClient: React.FC<SalesClientProps> = ({
     const searchParams = useSearchParams()
     const filter = searchParams.get('filter')
     const today = format(new Date(), "dd/MM/yy HH:mm", { locale: es })
+
     // Add state to store filtered data
     const [filteredData, setFilteredData] = useState<SalesColumn[]>(data)
+
+    // Calculate the total sum of the sales from filtered Data using useMemo
+    const salesTotal = useMemo(() => {
+        return filteredData.reduce((acc, sale) => {
+            // Parse the currency string to number
+            const cleanAmount = sale.Total
+                .replace('$', '') // Remove currency symbol
+                .replace(/\s/g, '') // Remove spaces
+                .replace(/\./g, '') // Remove dots (thousand separators)
+                .replace(',', '.') // Replace comma with dot for decimal
+                .trim(); // Remove any remaining whitespace
+
+            const amount = parseFloat(cleanAmount);
+            return acc + amount;
+        }, 0);
+    }, [filteredData]);
 
     const generateSheet = () => {
         // Function to convert an array of objects to a worksheet.
@@ -58,7 +77,11 @@ export const SalesClient: React.FC<SalesClientProps> = ({
             <div className="flex items-center justify-between sticky top-0 bg-background py-4">
                 <Heading
                     title={`Ventas (${filteredData.length})`}
-                    description="Administra las ventas del negocio"
+                    description={
+                        <Badge variant="default" className="mt-2 text-md">
+                            Totales: {formatterUYU.format(salesTotal)}
+                        </Badge>
+                    }
                 />
                 <div className="flex gap-x-2">
                     <Button onClick={() => { router.push(`/ventas/nueva`) }}>
