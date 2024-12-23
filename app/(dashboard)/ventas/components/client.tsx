@@ -58,7 +58,23 @@ export const SalesClient: React.FC<SalesClientProps> = ({
                 "Método de pago": item["Método de pago"],
                 "Fecha de creación": item["Fecha de creación"],
             }));
+
+            // Add total row
+            formattedArray.push(
+                {
+                    "Total": "",
+                    "Método de pago": "",
+                    "Fecha de creación": "",
+                },
+                {
+                    "Total": "TOTALES",
+                    "Método de pago": formatterUYU.format(salesTotal),
+                    "Fecha de creación": "",
+                }
+            )
+
             const worksheet = XLSX.utils.json_to_sheet(formattedArray);
+
             return worksheet;
         };
 

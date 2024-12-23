@@ -62,7 +62,29 @@ export const PurchaseClient: React.FC<PurchaseClientProps> = ({
                 "Fecha de creación": item["Fecha de creación"],
                 // "Fecha de actualización": item["Fecha de actualización"],
             }));
+
+            // Add total row
+            formattedArray.push(
+                {
+                    "Nombre del producto": "",
+                    "Cantidad": "",
+                    "Costo total": "",
+                    "Tipo": "",
+                    "Proveedor": "",
+                    "Fecha de creación": "",
+                },
+                {
+                    "Nombre del producto": "TOTALES",
+                    "Cantidad": formatterUYU.format(purchasesTotal),
+                    "Costo total": "",
+                    "Tipo": "",
+                    "Proveedor": "",
+                    "Fecha de creación": "",
+                }
+            )
+
             const worksheet = XLSX.utils.json_to_sheet(formattedArray);
+
             return worksheet;
         };
 
