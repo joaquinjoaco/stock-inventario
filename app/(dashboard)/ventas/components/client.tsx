@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { Divide, FileSpreadsheet, Plus } from "lucide-react";
+import { FileSpreadsheet, Plus } from "lucide-react";
 import * as XLSX from 'xlsx';
 
 import { Button } from "@/components/ui/button";
@@ -100,6 +100,7 @@ export const SalesClient: React.FC<SalesClientProps> = ({
                     }
                 />
                 <div className="flex gap-x-2">
+                    <FilterCombobox currentFilter={filter as 'MONTHLY' | 'WEEKLY' | 'DAILY'} />
                     <Button onClick={() => { router.push(`/ventas/nueva`) }}>
                         <Plus className="mr-2 h-4 w-4" />
                         Nueva venta
@@ -108,7 +109,6 @@ export const SalesClient: React.FC<SalesClientProps> = ({
                         <FileSpreadsheet className="mr-2 h-4 w-4" />
                         Generar archivo
                     </Button>
-                    <FilterCombobox currentFilter={filter as 'MONTHLY' | 'WEEKLY' | 'DAILY'} />
                 </div>
             </div>
             <Separator />

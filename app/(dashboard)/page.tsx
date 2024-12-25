@@ -24,6 +24,8 @@ import { getCurrentMonthPurchasesCount } from "@/actions/month/get-current-month
 import { getCurrentMonthPurchasesTotal } from "@/actions/month/get-current-month-purchasesTotal";
 import { Badge } from "@/components/ui/badge";
 import { getProductsStockAlert } from "@/actions/get-productsStockAlert";
+import { getHistoricTop10BestSellingProducts } from "@/actions/get-historic-top10-bestSellingProducts";
+import { getGivenMonthTop10BestSellingProducts } from "@/actions/month/get-given-month-top10-bestSellingProducts";
 
 
 export const revalidate = 0
@@ -38,7 +40,8 @@ export default async function Page() {
     const today = new Date()
     const todayFormatted = format(today, "dd MMMM, yyyy", { locale: es })
     const todayTime = format(today, "HH:mm", { locale: es })
-    // const currentMonth = capitalizeFirstLetter(format(today, "MMMM", { locale: es }))
+    const currentMonth = today.getMonth() // 0 based index
+    const currentYear = today.getFullYear()
 
     const salesCountCurrentDay = await getCurrentDaySalesCount()
     const salesTotalCurrentDay = await getCurrentDaySalesTotal()
@@ -63,6 +66,7 @@ export default async function Page() {
     const productsStockAlertCount = await getProductsStockAlert()
 
     const bestSellingProductCurrentMonth = await getCurrentMonthBestSellingProduct()
+    const top10BestSellingProductsCurrentMonth = await getGivenMonthTop10BestSellingProducts(currentMonth, currentYear);
 
     return (
         <>
@@ -133,6 +137,18 @@ export default async function Page() {
                                     </Link>
                                 </TooltipWrapper>
                             }
+
+                            <div className="rounded-lg border dark:border-zinc-800 dark:bg-zinc-900/50 p-4">
+                                <h3 className="mb-2 text-lg font-medium">Top 10 productos más vendidos del mes</h3>
+                                <div className="grid gap-2 text-sm dark:text-zinc-400">
+                                    {top10BestSellingProductsCurrentMonth.map((item) => (
+                                        <div className="flex justify-between">
+                                            <span>{item.product?.name}, {item.product?.brand}</span>
+                                            <span className="font-medium dark:text-zinc-100">{item.quantitySold}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
 
                             <Separator className="dark:bg-zinc-800" />
 

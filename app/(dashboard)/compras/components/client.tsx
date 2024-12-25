@@ -110,6 +110,7 @@ export const PurchaseClient: React.FC<PurchaseClientProps> = ({
                     }
                 />
                 <div className="flex gap-x-2">
+                    <FilterCombobox currentFilter={filter as 'MONTHLY' | 'WEEKLY' | 'DAILY'} />
                     <Button onClick={() => { router.push(`/compras/nueva`) }}>
                         <Plus className="mr-2 h-4 w-4" />
                         Nueva compra
@@ -118,7 +119,6 @@ export const PurchaseClient: React.FC<PurchaseClientProps> = ({
                         <FileSpreadsheet className="mr-2 h-4 w-4" />
                         Generar archivo
                     </Button>
-                    <FilterCombobox currentFilter={filter as 'MONTHLY' | 'WEEKLY' | 'DAILY'} />
                 </div>
             </div>
             <Separator />
