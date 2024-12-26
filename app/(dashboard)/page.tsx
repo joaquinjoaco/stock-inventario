@@ -24,7 +24,6 @@ import { getCurrentMonthPurchasesCount } from "@/actions/month/get-current-month
 import { getCurrentMonthPurchasesTotal } from "@/actions/month/get-current-month-purchasesTotal";
 import { Badge } from "@/components/ui/badge";
 import { getProductsStockAlert } from "@/actions/get-productsStockAlert";
-import { getHistoricTop10BestSellingProducts } from "@/actions/get-historic-top10-bestSellingProducts";
 import { getGivenMonthTop10BestSellingProducts } from "@/actions/month/get-given-month-top10-bestSellingProducts";
 
 
