@@ -15,20 +15,23 @@ export const metadata = {
 
 const PurchasesPage = async (
     props: {
-        searchParams: Promise<{ filter: 'MONTHLY' | 'WEEKLY' | 'DAILY' }>
+        searchParams: Promise<{
+            filter: 'MONTHLY' | 'WEEKLY' | 'DAILY'
+            month: string | null
+        }>
     }
 ) => {
 
     const searchParams = await props.searchParams // From Next 15 on, params API is now asynchronous (https://nextjs.org/docs/messages/sync-dynamic-apis).
-    const { filter } = searchParams
+    const { filter, month: monthFilter } = searchParams
     const today = new Date()
 
     let purchases
 
     if (filter === "MONTHLY") {
         // Calculate the start and end of the current month
-        const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1); // First day of the month
-        const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1); // First day of next month
+        const startOfMonth = new Date(today.getFullYear(), Number(monthFilter), 1); // First day of the month
+        const endOfMonth = new Date(today.getFullYear(), Number(monthFilter) + 1, 1); // First day of next month
         endOfMonth.setMilliseconds(-1); // End of the current month
 
         purchases = await prismadb.purchase.findMany({

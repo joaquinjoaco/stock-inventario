@@ -141,8 +141,8 @@ export default async function Page() {
                             <div className="rounded-lg border dark:border-zinc-800 dark:bg-zinc-900/50 p-4">
                                 <h3 className="mb-2 text-lg font-medium">Top 10 productos más vendidos del mes</h3>
                                 <div className="grid gap-2 text-sm dark:text-zinc-400">
-                                    {top10BestSellingProductsCurrentMonth.map((item) => (
-                                        <div className="flex justify-between">
+                                    {top10BestSellingProductsCurrentMonth.map((item, idx) => (
+                                        <div key={idx} className="flex justify-between">
                                             <span>{item.product?.name}, {item.product?.brand}</span>
                                             <span className="font-medium dark:text-zinc-100">{item.quantitySold}</span>
                                         </div>

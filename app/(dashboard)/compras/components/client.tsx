@@ -28,8 +28,10 @@ export const PurchaseClient: React.FC<PurchaseClientProps> = ({
     const router = useRouter();
     const searchParams = useSearchParams()
     const filter = searchParams.get('filter')
+    const monthFilter = searchParams.get('month')
 
     const today = format(new Date(), "dd/MM/yy HH:mm", { locale: es })
+
     // Add state to store filtered data
     const [filteredData, setFilteredData] = useState<PurchaseColumn[]>(data)
 
@@ -110,7 +112,10 @@ export const PurchaseClient: React.FC<PurchaseClientProps> = ({
                     }
                 />
                 <div className="flex gap-x-2">
-                    <FilterCombobox currentFilter={filter as 'MONTHLY' | 'WEEKLY' | 'DAILY'} />
+                    <FilterCombobox
+                        currentFilter={filter as 'MONTHLY' | 'WEEKLY' | 'DAILY'}
+                        currentMonthFilter={monthFilter}
+                    />
                     <Button onClick={() => { router.push(`/compras/nueva`) }}>
                         <Plus className="mr-2 h-4 w-4" />
                         Nueva compra

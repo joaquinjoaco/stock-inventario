@@ -28,6 +28,8 @@ export const SalesClient: React.FC<SalesClientProps> = ({
     const router = useRouter()
     const searchParams = useSearchParams()
     const filter = searchParams.get('filter')
+    const monthFilter = searchParams.get('month')
+
     const today = format(new Date(), "dd/MM/yy HH:mm", { locale: es })
 
     // Add state to store filtered data
@@ -100,7 +102,10 @@ export const SalesClient: React.FC<SalesClientProps> = ({
                     }
                 />
                 <div className="flex gap-x-2">
-                    <FilterCombobox currentFilter={filter as 'MONTHLY' | 'WEEKLY' | 'DAILY'} />
+                    <FilterCombobox
+                        currentFilter={filter as 'MONTHLY' | 'WEEKLY' | 'DAILY'}
+                        currentMonthFilter={monthFilter}
+                    />
                     <Button onClick={() => { router.push(`/ventas/nueva`) }}>
                         <Plus className="mr-2 h-4 w-4" />
                         Nueva venta

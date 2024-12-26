@@ -4,12 +4,10 @@ import { Product } from "@prisma/client";
 export async function getGivenMonthBestSellingProduct(month: number, year: number): Promise<{ product: Product | null, quantitySold: number } | null> {
     try {
 
-        if (month < 1 || month > 12) {
-            console.error('Mes inválido, debe ser un número entre 1 y 12')
+        if (month < 0 || month > 11) {
+            console.error('Mes inválido, debe ser un número entre 0 y 11')
             return null
         }
-
-        month-- // Adjust month to 0-based index
 
         // Get the first and last days of the month
         const startOfMonth = new Date(year, month, 1) // First day of the month
