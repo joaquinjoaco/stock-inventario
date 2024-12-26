@@ -98,9 +98,9 @@ const FilterCombobox: React.FC<StatusFilterComboboxProps> = ({
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="p-0">
+                <DropdownMenuContent>
                     <DropdownMenuLabel>Filtros rápidos</DropdownMenuLabel>
-                    <DropdownMenuSeparator className="" />
+                    <DropdownMenuSeparator />
                     {filterList.map((filter) => (
                         filter.value === 'MONTHLY' ?
                             <DropdownMenuSub key={filter.value}>
@@ -157,9 +157,6 @@ const FilterCombobox: React.FC<StatusFilterComboboxProps> = ({
                                 />
                             </DropdownMenuItem>
                     ))}
-                    {/* </CommandGroup>
-                        </CommandList>
-                    </Command> */}
                 </DropdownMenuContent>
             </DropdownMenu>
         </>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { AlertTriangle, FileSpreadsheet, Plus } from "lucide-react";
 import * as XLSX from 'xlsx';
 
@@ -13,6 +13,7 @@ import { DataTable } from "@/components/ui/data-table";
 import { useState } from "react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import FilterCombobox from "./filter-combobox";
 
 interface ProductClientProps {
     data: ProductColumn[];
@@ -24,7 +25,11 @@ export const ProductClient: React.FC<ProductClientProps> = ({
     productsStockAlertCount
 }) => {
     const router = useRouter()
+    const searchParams = useSearchParams()
+    const filter = searchParams.get('filter')
+
     const today = format(new Date(), "dd/MM/yy HH:mm", { locale: es })
+
     // Add state to store filtered data
     const [filteredData, setFilteredData] = useState<ProductColumn[]>(data)
 
@@ -64,6 +69,7 @@ export const ProductClient: React.FC<ProductClientProps> = ({
                     }
                 />
                 <div className="flex gap-x-2">
+                    <FilterCombobox currentFilter={filter} />
                     <Button onClick={() => { router.push('/inventario/nuevo') }}>
                         <Plus className="mr-2 h-4 w-4" />
                         Nuevo producto

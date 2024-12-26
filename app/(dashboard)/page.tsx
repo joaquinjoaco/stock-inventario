@@ -59,7 +59,6 @@ export default async function Page() {
     const purchasesTotalCurrentWeek = await getCurrentWeekPurchasesTotal()
     const purchasesCountCurrentMonth = await getCurrentMonthPurchasesCount()
     const purchasesTotalCurrentMonth = await getCurrentMonthPurchasesTotal()
-
     const productsInStockCountCurrentDay = await getProductsInStockCount()
     const productsOutOfStockCountCurrentDay = await getProductsOutOfStockCount()
     const productsStockAlertCount = await getProductsStockAlert()
@@ -86,24 +85,32 @@ export default async function Page() {
                         </CardHeader>
                         <CardContent className="space-y-6">
                             <div className="grid gap-4 md:grid-cols-2">
-                                <Card className="dark:border-zinc-800 dark:bg-zinc-900/50">
-                                    <CardContent className="flex items-center p-6">
-                                        <Package className="h-7 w-7 text-green-500" />
-                                        <div className="ml-4">
-                                            <p className="text-lg font-medium">En Stock</p>
-                                            <p className="text-3xl font-bold text-green-500">{productsInStockCountCurrentDay}</p>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                                <Card className="dark:border-zinc-800 dark:bg-zinc-900/50">
-                                    <CardContent className="flex items-center p-6">
-                                        <PackageX className="h-7 w-7 text-red-500" />
-                                        <div className="ml-4">
-                                            <p className="text-lg font-medium">Fuera de Stock</p>
-                                            <p className="text-3xl font-bold text-red-500">{productsOutOfStockCountCurrentDay}</p>
-                                        </div>
-                                    </CardContent>
-                                </Card>
+                                <TooltipWrapper className="flex items-center" content={"Ver productos"} icon={<ExternalLink className="h-4 w-4 mr-2 text-green-500" />}>
+                                    <Link href={'/inventario'}>
+                                        <Card className="dark:border-zinc-800 dark:bg-zinc-900/50">
+                                            <CardContent className="flex items-center p-6">
+                                                <Package className="h-7 w-7 text-green-500" />
+                                                <div className="ml-4">
+                                                    <p className="text-lg font-medium">En Stock</p>
+                                                    <p className="text-3xl font-bold text-green-500">{productsInStockCountCurrentDay}</p>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    </Link>
+                                </TooltipWrapper>
+                                <TooltipWrapper className="flex items-center" content={"Ver productos"} icon={<ExternalLink className="h-4 w-4 mr-2 text-red-500" />}>
+                                    <Link href={'/inventario?filter=OOS'}>
+                                        <Card className="dark:border-zinc-800 dark:bg-zinc-900/50">
+                                            <CardContent className="flex items-center p-6">
+                                                <PackageX className="h-7 w-7 text-red-500" />
+                                                <div className="ml-4">
+                                                    <p className="text-lg font-medium">Fuera de Stock</p>
+                                                    <p className="text-3xl font-bold text-red-500">{productsOutOfStockCountCurrentDay}</p>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    </Link>
+                                </TooltipWrapper>
                             </div>
 
                             {bestSellingProductCurrentMonth &&

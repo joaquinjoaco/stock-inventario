@@ -14,13 +14,33 @@ export const metadata = {
     title: "Inventario",
 }
 
-const ProductsPage = async () => {
+const ProductsPage = async (props: {
+    searchParams: Promise<{
+        filter: 'OOS'
+    }>
+}) => {
 
-    const products = await prismadb.product.findMany({
-        orderBy: {
-            createdAt: 'desc'
-        }
-    });
+    const searchParams = await props.searchParams // From Next 15 on, params API is now asynchronous (https://nextjs.org/docs/messages/sync-dynamic-apis).
+    const { filter } = searchParams
+    let products
+    if (filter === 'OOS') {
+        products = await prismadb.product.findMany({
+            orderBy: {
+                createdAt: 'desc'
+            },
+            where: {
+                stock: {
+                    equals: 0
+                }
+            }
+        })
+    } else {
+        products = await prismadb.product.findMany({
+            orderBy: {
+                createdAt: 'desc'
+            }
+        })
+    }
 
     const productsStockAlertCount = await getProductsStockAlert()
 
