@@ -6,6 +6,7 @@ import { es } from "date-fns/locale";
 import { formatterUYU } from "@/lib/utils";
 import { SerializedSale } from "@/types";
 import { Business } from "@prisma/client";
+import { disconnect } from "process";
 
 interface ImprimirVentaClientProps {
     data: SerializedSale | null;
@@ -19,6 +20,7 @@ const ImprimirVentaClient: React.FC<ImprimirVentaClientProps> = ({
     if (typeof window !== 'undefined') {
         window.print();
     }
+    const discount = data?.discount ? data?.discount : 0
 
     return (
         <div className="p-6 bg-white text-black min-h-[100vh]">
@@ -50,17 +52,21 @@ const ImprimirVentaClient: React.FC<ImprimirVentaClientProps> = ({
                         </div>
                     </li>
                 ))}
-                <li className="flex justify-between">
-                    <div className="flex flex-row gap-x-2 items-center justify-between font-bold">
-                        Descuento
-                    </div>
-                    {/* price */}
-                    <div className="flex items-center mt-1 gap-x-2">
-                        <p className="font-bold">
-                            {formatterUYU.format(Number(data?.discount))}
-                        </p>
-                    </div>
-                </li>
+
+                {discount > 0 &&
+                    <li className="flex justify-between">
+                        <div className="flex flex-row gap-x-2 items-center justify-between font-bold">
+                            Descuento
+                        </div>
+                        {/* price */}
+                        <div className="flex items-center mt-1 gap-x-2">
+                            <p className="font-bold">
+                                {formatterUYU.format(Number(data?.discount))}
+                            </p>
+                        </div>
+                    </li>
+                }
+
                 <div className="mt-6 space-y-4">
                     <div className="flex items-center justify-between border-t py-4 border-gray-200 pt-4">
                         <div className="text-lg font-bold">

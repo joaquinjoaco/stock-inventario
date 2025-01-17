@@ -51,6 +51,21 @@ export const SalesClient: React.FC<SalesClientProps> = ({
         }, 0);
     }, [filteredData]);
 
+    const discountsTotal = useMemo(() => {
+        return filteredData.reduce((acc, sale) => {
+            // Parse the currency string to number
+            const cleanAmount = sale["Descuentos otorgados"]
+                .replace('$', '') // Remove currency symbol
+                .replace(/\s/g, '') // Remove spaces
+                .replace(/\./g, '') // Remove dots (thousand separators)
+                .replace(',', '.') // Replace comma with dot for decimal
+                .trim(); // Remove any remaining whitespace
+
+            const amount = parseFloat(cleanAmount);
+            return acc + amount;
+        }, 0);
+    }, [filteredData]);
+
     const generateSheet = () => {
         // Function to convert an array of objects to a worksheet.
         const sheetFromArrayOfObjects = (arrayOfObjects: SalesColumn[]) => {
@@ -58,6 +73,7 @@ export const SalesClient: React.FC<SalesClientProps> = ({
             const formattedArray = arrayOfObjects.map((item) => ({
                 "Total": item["Total"],
                 "Método de pago": item["Método de pago"],
+                "Descuentos otorgados": item["Descuentos otorgados"],
                 "Fecha de creación": item["Fecha de creación"],
             }));
 
@@ -66,12 +82,14 @@ export const SalesClient: React.FC<SalesClientProps> = ({
                 {
                     "Total": "",
                     "Método de pago": "",
+                    "Descuentos otorgados": "",
                     "Fecha de creación": "",
                 },
                 {
                     "Total": "TOTALES",
                     "Método de pago": formatterUYU.format(salesTotal),
-                    "Fecha de creación": "",
+                    "Descuentos otorgados": "DESCUENTOS OTORGADOS",
+                    "Fecha de creación": formatterUYU.format(discountsTotal),
                 }
             )
 

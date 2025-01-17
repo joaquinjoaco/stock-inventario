@@ -9,6 +9,7 @@ export type SalesColumn = {
     "ID": string;
     "Total": string; // we format it into a string.
     "Método de pago": string;
+    "Descuentos otorgados": string;
     "Fecha de creación": string;
     "Fecha de actualización": string;
 }
@@ -37,6 +38,20 @@ export const columns: ColumnDef<SalesColumn>[] = [
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
                     Método de pago
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+    },
+    {
+        accessorKey: "Descuentos otorgados",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Descuentos otorgados
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )

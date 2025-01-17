@@ -53,6 +53,14 @@ const formSchema = z.object({
         errorMap: () => ({ message: 'Debes seleccionar un método de pago válido' })
     }),
     selectedProducts: z.array(saleItemSchema).min(1, { message: "Debe seleccionar al menos un producto" })
+}).refine((data) => {
+    const subtotal = data.selectedProducts.reduce((total, product) => {
+        return total + (Number(product.calculatedPrice) * Number(product.quantity))
+    }, 0);
+    return subtotal - data.discount >= 0;
+}, {
+    message: "El descuento no puede ser mayor al total de la venta",
+    path: ["discount"] // This will show the error on the discount field
 })
 
 type SaleFormValues = z.infer<typeof formSchema>
@@ -140,6 +148,7 @@ export const SaleForm: React.FC<SaleFormProps> = ({
 
 
         } catch (error: any) {
+            console.log(error.message)
             if (error.response.status === 409) {
                 toast({
                     title: "Ocurrió un error al generar el ID de la venta",
@@ -516,14 +525,16 @@ export const SaleForm: React.FC<SaleFormProps> = ({
                                     )}
                                 />
                             )}
-                            <div className="flex items-center justify-between pt-4 text-muted-foreground">
-                                <div className="text-sm">
-                                    Descuento
+                            {watch('discount') > 0 &&
+                                <div className="flex items-center justify-between pt-4 text-muted-foreground">
+                                    <div className="text-sm">
+                                        Descuento
+                                    </div>
+                                    <div className="text-sm font-semibold">
+                                        {formatterUYU.format(watch('discount'))}
+                                    </div>
                                 </div>
-                                <div className="text-sm font-semibold">
-                                    {formatterUYU.format(watch('discount'))}
-                                </div>
-                            </div>
+                            }
                             <div className="pyspace-y-4 border-t py-4 border-gray-200">
                                 <div className="flex items-center justify-between  pt-4">
                                     <div className="text-xl font-bold">
