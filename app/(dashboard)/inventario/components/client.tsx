@@ -57,7 +57,7 @@ export const ProductClient: React.FC<ProductClientProps> = ({
 
     return (
         <>
-            <div className="flex items-center justify-between sticky top-0 bg-background py-4">
+            <div className="flex items-center justify-between sticky top-0 bg-background py-4 z-10">
                 <Heading
                     title={`Productos (${filteredData.length})`}
                     description={productsStockAlertCount > 0 ?

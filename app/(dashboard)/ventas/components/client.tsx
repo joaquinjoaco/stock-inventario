@@ -110,7 +110,7 @@ export const SalesClient: React.FC<SalesClientProps> = ({
 
     return (
         <>
-            <div className="flex items-center justify-between sticky top-0 bg-background py-4">
+            <div className="flex items-center justify-between sticky top-0 bg-background py-4 z-10">
                 <Heading
                     title={`Ventas (${filteredData.length})`}
                     description={
