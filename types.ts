@@ -26,6 +26,7 @@ export type SerializedPurchase = {
 
 export type SerializedSale = {
     totalPrice: number;
+    discount: number;
     paymentType: PaymentType;
     saleItems: {
         calculatedPrice: number;

@@ -13,10 +13,12 @@ export async function POST(
 
         const {
             totalPrice,
+            discount,
             paymentType,
             selectedProducts,
         }: {
             totalPrice: number;
+            discount: number;
             paymentType: PaymentType;
             selectedProducts: {
                 calculatedPrice: number;
@@ -64,6 +66,7 @@ export async function POST(
         const sale = await prismadb.sale.create({
             data: {
                 totalPrice: totalPrice,
+                discount: discount,
                 paymentType: paymentType,
                 saleItems: {
                     create: selectedProducts.map((product: { calculatedPrice: number, quantity: number, name: string, brand: string, unitType: string, productId: string, }) => ({

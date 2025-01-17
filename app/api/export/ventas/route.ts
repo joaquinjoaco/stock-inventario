@@ -3,14 +3,12 @@ import * as path from 'path';
 import prismadb from '@/lib/prismadb';
 import { NextResponse } from 'next/server';
 
-
-// SALES EXPORT
 export async function GET() {
     try {
         const todayStart = new Date()
         todayStart.setHours(0, 0, 0, 0)
-        // Subtract two days
-        todayStart.setDate(todayStart.getDate() - 2);
+        // Subtract ten days
+        todayStart.setDate(todayStart.getDate() - 8);
 
         // Fetch sales created or updated today
         const data = await prismadb.sale.findMany({

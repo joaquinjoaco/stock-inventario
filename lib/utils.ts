@@ -58,6 +58,7 @@ export const serializeSale = (sale: Sale & { saleItems: (SaleItem & { product: P
   return {
     ...sale,
     totalPrice: sale.totalPrice.toNumber(), // Convert Decimal to number
+    discount: sale.discount.toNumber(), // Convert Decimal to number
     saleItems: sale.saleItems.map((item) => {
       return {
         ...item,

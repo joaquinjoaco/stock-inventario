@@ -25,6 +25,9 @@ import { getCurrentMonthPurchasesTotal } from "@/actions/month/get-current-month
 import { Badge } from "@/components/ui/badge";
 import { getProductsStockAlert } from "@/actions/get-productsStockAlert";
 import { getGivenMonthTop10BestSellingProducts } from "@/actions/month/get-given-month-top10-bestSellingProducts";
+import { getCurrentDayDiscounts } from "@/actions/day/get-current-day-discounts";
+import { getCurrentWeekDiscounts } from "@/actions/week/get-current-week-discounts";
+import { getCurrentMonthDiscounts } from "@/actions/month/get-current-month-discounts";
 
 
 export const revalidate = 0
@@ -52,6 +55,9 @@ export default async function Page() {
     const salesCountCurrentMonthTRANSFERENCIA = await getCurrentMonthSalesCount("TRANSFERENCIA")
     const salesCountCurrentMonthEFECTIVO = await getCurrentMonthSalesCount("EFECTIVO")
     const salesTotalCurrentMonth = await getCurrentMonthSalesTotal()
+    const salesDiscountsTotalDay = await getCurrentDayDiscounts()
+    const salesDiscountsTotalWeek = await getCurrentWeekDiscounts()
+    const salesDiscountsTotalMonth = await getCurrentMonthDiscounts()
 
     const purchasesCountCurrentDay = await getCurrentDayPurchasesCount()
     const purchasesTotalCurrentDay = await getCurrentDayPurchasesTotal()
@@ -143,18 +149,19 @@ export default async function Page() {
                                     </Link>
                                 </TooltipWrapper>
                             }
-
-                            <div className="rounded-lg border dark:border-zinc-800 dark:bg-zinc-900/50 p-4">
-                                <h3 className="mb-2 text-lg font-medium">Top 10 productos más vendidos del mes</h3>
-                                <div className="grid gap-2 text-sm dark:text-zinc-400">
-                                    {top10BestSellingProductsCurrentMonth.map((item, idx) => (
-                                        <div key={idx} className="flex justify-between">
-                                            <span>{item.product?.name}, {item.product?.brand}</span>
-                                            <span className="font-medium dark:text-zinc-100">{item.quantitySold}</span>
-                                        </div>
-                                    ))}
+                            {top10BestSellingProductsCurrentMonth.length > 0 &&
+                                <div className="rounded-lg border dark:border-zinc-800 dark:bg-zinc-900/50 p-4">
+                                    <h3 className="mb-2 text-lg font-medium">Top 10 productos más vendidos del mes</h3>
+                                    <div className="grid gap-2 text-sm dark:text-zinc-400">
+                                        {top10BestSellingProductsCurrentMonth.map((item, idx) => (
+                                            <div key={idx} className="flex justify-between">
+                                                <span>{item.product?.name}, {item.product?.brand}</span>
+                                                <span className="font-medium dark:text-zinc-100">{item.quantitySold}</span>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
+                            }
 
                             <Separator className="dark:bg-zinc-800" />
 
@@ -173,7 +180,7 @@ export default async function Page() {
                                         <span>Fuera de stock</span>
                                         <span className="font-medium dark:text-zinc-100">{productsOutOfStockCountCurrentDay}</span>
                                     </div>
-                                    <div className="flex justify-between">
+                                    <div className="flex justify-between pt-4">
                                         <span>Última Actualización</span>
                                         <span className="font-medium dark:text-zinc-100">{todayTime}</span>
                                     </div>
@@ -285,7 +292,20 @@ export default async function Page() {
                                         <span>Ventas del mes con <Badge className="ml-2">CRÉDITO</Badge></span>
                                         <span className="font-medium dark:text-zinc-100">{salesCountCurrentMonthCREDITO}</span>
                                     </div>
+                                    <Separator className="my-2" />
                                     <div className="flex justify-between">
+                                        <span>Descuentos otorgados del día</span>
+                                        <span className="font-medium dark:text-zinc-100">{formatterUYU.format(salesDiscountsTotalDay)}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span>Descuentos otorgados de la semana</span>
+                                        <span className="font-medium dark:text-zinc-100">{formatterUYU.format(salesDiscountsTotalWeek)}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span>Descuentos otorgados del mes</span>
+                                        <span className="font-medium dark:text-zinc-100">{formatterUYU.format(salesDiscountsTotalMonth)}</span>
+                                    </div>
+                                    <div className="flex justify-between pt-4">
                                         <span>Última Actualización</span>
                                         <span className="font-medium dark:text-zinc-100">{todayTime}</span>
                                     </div>
@@ -381,7 +401,7 @@ export default async function Page() {
                                         <span>Total de compras del día</span>
                                         <span className="font-medium dark:text-zinc-100">{purchasesCountCurrentDay}</span>
                                     </div>
-                                    <div className="flex justify-between">
+                                    <div className="flex justify-between pt-4">
                                         <span>Última Actualización</span>
                                         <span className="font-medium dark:text-zinc-100">{todayTime}</span>
                                     </div>

@@ -23,7 +23,7 @@ export function ImportClient() {
     const [uploading, setUploading] = React.useState(false)
     const [error, setError] = React.useState<string | null>(null)
 
-    const maxFiles = 5  // Limit to 4 files
+    const maxFiles = 5  // Limit to 5 files
     const maxSize = 5242880 // 5MB
 
     const { toast } = useToast();

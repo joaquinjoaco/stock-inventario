@@ -50,6 +50,17 @@ const ImprimirVentaClient: React.FC<ImprimirVentaClientProps> = ({
                         </div>
                     </li>
                 ))}
+                <li className="flex justify-between">
+                    <div className="flex flex-row gap-x-2 items-center justify-between font-bold">
+                        Descuento
+                    </div>
+                    {/* price */}
+                    <div className="flex items-center mt-1 gap-x-2">
+                        <p className="font-bold">
+                            {formatterUYU.format(Number(data?.discount))}
+                        </p>
+                    </div>
+                </li>
                 <div className="mt-6 space-y-4">
                     <div className="flex items-center justify-between border-t py-4 border-gray-200 pt-4">
                         <div className="text-lg font-bold">

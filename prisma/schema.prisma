@@ -53,6 +53,7 @@ model Purchase {
 model Sale {
   id          String      @id @default(uuid())
   totalPrice  Decimal
+  discount    Decimal     @default(0)
   paymentType PaymentType
   saleItems   SaleItem[]
   createdAt   DateTime    @default(now())
