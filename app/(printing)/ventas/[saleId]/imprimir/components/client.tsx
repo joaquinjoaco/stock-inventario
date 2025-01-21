@@ -6,7 +6,6 @@ import { es } from "date-fns/locale";
 import { formatterUYU } from "@/lib/utils";
 import { SerializedSale } from "@/types";
 import { Business } from "@prisma/client";
-import { disconnect } from "process";
 
 interface ImprimirVentaClientProps {
     data: SerializedSale | null;
