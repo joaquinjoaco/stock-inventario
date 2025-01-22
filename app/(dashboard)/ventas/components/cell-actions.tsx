@@ -78,7 +78,7 @@ export const CellAction: React.FC<CellActionProps> = ({
                     <>
                         Se eliminará la venta, esta acción es destructiva y no se puede deshacer.
                         <br />
-                        Deberás ajustar el stock de los productos manualmente en el apartado de inventario.
+                        Se devolverá la cantidad de stock de cada producto al inventario.
                     </>
                 }
 
