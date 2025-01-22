@@ -19,14 +19,36 @@ export async function DELETE(
             return new NextResponse("saleId is required", { status: 400 });
         }
 
-        // 1. Delete all related SaleItems.
+        const saleItems = await prismadb.saleItem.findMany({
+            where: {
+                saleId: saleId,
+            }
+        })
+
+        // 1. Re-add the stock.
+        await Promise.all(
+            saleItems.map((item) => {
+                return prismadb.product.update({
+                    where: {
+                        id: item.productId
+                    },
+                    data: {
+                        stock: {
+                            increment: item.quantity
+                        }
+                    }
+                })
+            })
+        )
+
+        // 2. Delete all related SaleItems.
         await prismadb.saleItem.deleteMany({
             where: {
                 saleId: saleId,
             }
         });
 
-        // 2. Delete the sale.
+        // 3. Delete the sale.
         const sale = await prismadb.sale.delete({
             where: {
                 id: saleId
