@@ -25,7 +25,7 @@ export async function getCurrentDaySalesTotal(): Promise<number> {
         return Number(salesTotalQuery._sum.totalPrice || 0);
 
     } catch (error: any) {
-        console.log(error);
+        console.log(error.stack);
         return 0;
     }
 }

@@ -17,6 +17,7 @@ export async function getCurrentDayDiscounts(): Promise<number> {
                 // for sales its ok to use createdAt and not updatedAt.
                 createdAt: {
                     gte: new Date(today.setHours(0, 0, 0, 0)),  // Local start of day
+                    // below line is not needed, since we are creating a new date from today's date.
                     lt: new Date(today.setHours(23, 59, 59, 999)), // Local end of day
                 },
             },
@@ -25,7 +26,7 @@ export async function getCurrentDayDiscounts(): Promise<number> {
         return Number(discountsTotalQuery._sum.discount || 0);
 
     } catch (error: any) {
-        console.log(error);
+        console.log(error.stack);
         return 0;
     }
 }

@@ -22,7 +22,7 @@ export async function getCurrentDayPurchasesCount(): Promise<number> {
         return Number(purchasesCountQuery)
 
     } catch (error: any) {
-        console.log(error)
+        console.log(error.stack)
         return 0
     }
 }

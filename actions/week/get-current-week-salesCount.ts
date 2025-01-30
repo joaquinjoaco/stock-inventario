@@ -26,7 +26,7 @@ export async function getCurrentWeekSalesCount(): Promise<number> {
         return Number(salesCountQuery);
 
     } catch (error: any) {
-        console.log(error);
+        console.log(error.stack);
         return 0;
     }
 }

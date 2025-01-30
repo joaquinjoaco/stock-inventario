@@ -44,7 +44,7 @@ export async function getCurrentMonthBestSellingProduct(): Promise<{ product: Pr
             return null; // No sales for the current month
         }
     } catch (error: any) {
-        console.log(error);
+        console.log(error.stack);
         return null;
     }
 }

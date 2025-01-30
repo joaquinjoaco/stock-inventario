@@ -55,8 +55,8 @@ export async function getGivenMonthTop10BestSellingProducts(month: number, year:
 
         // Return empty array if no sales
         return []
-    } catch (error) {
-        console.error('Error fetching historic best selling products:', error)
+    } catch (error: any) {
+        console.error('Error fetching historic best selling products:', error.stack)
         return []
     }
 }

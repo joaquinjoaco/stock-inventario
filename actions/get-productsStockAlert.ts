@@ -14,7 +14,7 @@ export async function getProductsStockAlert(): Promise<number> {
         return Number(productsOutOfStockQuery)
 
     } catch (error: any) {
-        console.log(error)
+        console.log(error.stack)
         return 0
     }
 }

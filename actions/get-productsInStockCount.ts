@@ -14,7 +14,7 @@ export async function getProductsInStockCount(): Promise<number> {
         return Number(productsInStockQuery)
 
     } catch (error: any) {
-        console.log(error)
+        console.log(error.stack)
         return 0
     }
 }

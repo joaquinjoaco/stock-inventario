@@ -36,7 +36,7 @@ export async function getCurrentMonthSalesCount(paymentType: PaymentType | 'ALL'
         return Number(salesCountQuery);
 
     } catch (error: any) {
-        console.log(error);
+        console.log(error.stack);
         return 0;
     }
 }

@@ -25,7 +25,7 @@ export async function getCurrentMonthPurchasesTotal(): Promise<number> {
         return Number(purchasesTotalQuery._sum.totalCost || 0);
 
     } catch (error: any) {
-        console.log(error);
+        console.log(error.stack);
         return 0;
     }
 }

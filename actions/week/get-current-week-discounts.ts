@@ -29,7 +29,7 @@ export async function getCurrentWeekDiscounts(): Promise<number> {
         return Number(discountsTotalQuery._sum.discount || 0);
 
     } catch (error: any) {
-        console.log(error);
+        console.log(error.stack);
         return 0;
     }
 }
