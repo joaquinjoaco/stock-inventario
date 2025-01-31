@@ -15,13 +15,21 @@ export type SerializedProduct = {
 
 export type SerializedPurchase = {
     id: string;
-    productId: string;
+    purchaseItems: {
+        cost: number;
+        quantity: number;
+        id: string;
+        unitType: string;
+        purchaseId: string;
+        name: string;
+        brand: string;
+    }[];
     totalCost: number;
-    amount: number;
+    // amount: number;
     supplier: string | null;
     createdAt: Date;
     updatedAt: Date;
-    product: SerializedProduct | null;
+    // product: SerializedProduct | null;
 } | null
 
 export type SerializedSale = {

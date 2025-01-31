@@ -25,29 +25,43 @@ model Business {
 }
 
 model Product {
-  id           String     @id @default(uuid())
+  id           String         @id @default(uuid())
   name         String
-  description  String?    @db.VarChar(255)
+  description  String?        @db.VarChar(255)
   brand        String?
   sellingPrice Decimal
   unitType     String
   stock        Decimal
   isArchived   Boolean
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
   SaleItem     SaleItem[]
-  Purchase     Purchase[] // History of purchases for this product
+  PurchaseItem PurchaseItem[]
 }
 
 model Purchase {
-  id        String   @id @default(uuid())
-  totalCost Decimal
-  amount    Decimal
-  supplier  String?
-  productId String
-  product   Product  @relation(fields: [productId], references: [id])
+  id            String         @id @default(uuid())
+  totalCost     Decimal
+  supplier      String?
+  purchaseItems PurchaseItem[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model PurchaseItem {
+  id         String   @id @default(uuid())
+  cost       Decimal
+  quantity   Decimal
+  purchaseId String
+  purchase   Purchase @relation(fields: [purchaseId], references: [id])
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([purchaseId])
+  @@index([productId])
 }
 
 model Sale {
@@ -63,7 +77,7 @@ model Sale {
 model SaleItem {
   id              String  @id @default(uuid())
   calculatedPrice Decimal
-  quantity        Decimal // kilos or units
+  quantity        Decimal
   saleId          String
   sale            Sale    @relation(fields: [saleId], references: [id])
   productId       String

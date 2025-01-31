@@ -29,7 +29,6 @@ export async function POST(
                 productId: string;
             }[];
         } = body
-        console.log(body)
 
         // Check for the totalPrice. no ! because 0 is a falsy value.
         if (totalPrice === undefined || totalPrice === null) {

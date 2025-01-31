@@ -42,7 +42,7 @@ const PurchasesPage = async (
                 },
             },
             include: {
-                product: true,
+                purchaseItems: true,
             },
             orderBy: {
                 createdAt: "desc"
@@ -66,7 +66,7 @@ const PurchasesPage = async (
                 },
             },
             include: {
-                product: true,
+                purchaseItems: true,
             },
             orderBy: {
                 createdAt: "desc"
@@ -82,7 +82,7 @@ const PurchasesPage = async (
                 },
             },
             include: {
-                product: true,
+                purchaseItems: true,
             },
             orderBy: {
                 createdAt: "desc"
@@ -92,7 +92,7 @@ const PurchasesPage = async (
         // All purchases
         purchases = await prismadb.purchase.findMany({
             include: {
-                product: true,
+                purchaseItems: true,
             },
             orderBy: {
                 createdAt: "desc"
@@ -102,10 +102,8 @@ const PurchasesPage = async (
 
     const formattedProducts: PurchaseColumn[] = purchases.map((purchase) => ({
         "ID": purchase.id,
-        "Nombre del producto": purchase.product.name,
-        "Cantidad": `${purchase.amount.toNumber()} ${purchase.product.unitType === 'PESO' ? 'KG' : 'UNIDADES'}`,
+        "Productos": purchase.purchaseItems.length > 1 ? `${purchase.purchaseItems.length} PRODUCTOS` : `${purchase.purchaseItems.length} PRODUCTO`,
         "Costo total": formatterUYU.format(purchase.totalCost.toNumber()),
-        "Tipo": purchase.product.unitType,
         "Proveedor": purchase.supplier || "-",
         "Fecha de creación": format(purchase.createdAt, "dd MMMM, yyyy HH:mm", { locale: es }),
         "Fecha de actualización": format(purchase.updatedAt, "dd MMMM, yyyy HH:mm", { locale: es })

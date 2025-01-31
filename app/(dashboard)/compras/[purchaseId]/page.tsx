@@ -1,6 +1,6 @@
 import prismadb from "@/lib/prismadb";
 import { PurchaseForm } from "./components/purchase-form";
-import { Product, Purchase } from "@prisma/client";
+import { Product, Purchase, PurchaseItem } from "@prisma/client";
 import { Header } from "@/components/ui/header";
 import { serializeProducts, serializePurchase } from "@/lib/utils";
 
@@ -14,7 +14,7 @@ const PurchasePage = async (
     const { purchaseId } = params // From Next 15 on, params API is now asynchronous (https://nextjs.org/docs/messages/sync-dynamic-apis).
     // const id = purchaseId === 'nueva' ? -1 : params.purchaseId
 
-    const purchase: Purchase & { product: Product } | null = purchaseId === 'nuevo' ?
+    const purchase: Purchase & { purchaseItems: (PurchaseItem & { product: Product })[] } | null = purchaseId === 'nuevo' ?
         // null if we want to create a new purchase.
         null
         :
@@ -24,7 +24,11 @@ const PurchasePage = async (
                 id: purchaseId
             },
             include: {
-                product: true
+                purchaseItems: {
+                    include: {
+                        product: true,
+                    }
+                }
             }
         })
 
@@ -35,9 +39,9 @@ const PurchasePage = async (
         }
     })
 
+    // We are sending these below to the client as props.
     // Use a helper function to convert 'Decimal' fields to 'Number'.
     const serializedPurchase = serializePurchase(purchase)
-
     // Use a helper function to convert 'Decimal' fields to 'Number'.
     const serializedProducts = serializeProducts(products)
 

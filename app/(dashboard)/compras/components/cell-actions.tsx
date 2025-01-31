@@ -75,11 +75,12 @@ export const CellAction: React.FC<CellActionProps> = ({
                 onConfirm={onDelete}
                 loading={loading}
                 title="¿Eliminar compra?"
-                description={<>Se eliminará la compra, esta acción es destructiva y no se puede deshacer.
-                    Deberás ajustar el stock del producto manualmente en el apartado de inventario.
-                    <br />
-                    <br />
-                    Esta compra sumó {data["Cantidad"].toString()} al stock del producto.</>}
+                description={
+                    <>
+                        Se eliminará la compra, esta acción es destructiva y no se puede deshacer.
+                        Se restará la cantidad de stock de cada producto al inventario.
+                    </>
+                }
                 buttonMessage="Confirmar"
             />
             {/*

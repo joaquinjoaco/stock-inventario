@@ -145,10 +145,8 @@ export const SaleForm: React.FC<SaleFormProps> = ({
                 </div>,
                 description: `Venta registrada con éxito`
             })
-
-
         } catch (error: any) {
-            console.log(error.message)
+            // console.log(error.message)
             if (error.response.status === 409) {
                 toast({
                     title: "Ocurrió un error al generar el ID de la venta",

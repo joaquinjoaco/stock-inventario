@@ -11,21 +11,30 @@ export async function POST(
         const body = await req.json()
 
         const {
-            totalCost, // can be 0
-            amount,
-            supplier, // optional
-            productId,
+            totalCost,
+            supplier,
+            selectedProducts,
+        }: {
+            totalCost: number;
+            supplier: string | null;
+            selectedProducts: {
+                cost: number;
+                quantity: number;
+                name: string;
+                brand: string;
+                unitType: string;
+                productId: string;
+            }[];
         } = body
 
-
-        // Check for the amount.
-        if (!amount) {
-            return new NextResponse("name is required", { status: 400 })
+        // Check for the totalCost. no ! because 0 is a falsy value.
+        if (totalCost === undefined || totalCost === null) {
+            return new NextResponse("totalCost is required", { status: 400 })
         }
 
-        // Check for the productId.
-        if (!productId) {
-            return new NextResponse("productId is required", { status: 400 })
+        // Check for the selectedProducts.
+        if (!selectedProducts) {
+            return new NextResponse("selectedProducts is required", { status: 400 })
         }
 
 
@@ -33,23 +42,36 @@ export async function POST(
         const purchase = await prismadb.purchase.create({
             data: {
                 totalCost,
-                amount,
                 supplier,
-                productId: productId,
+                purchaseItems: {
+                    create: selectedProducts.map((product: { cost: number, quantity: number, name: string, brand: string, unitType: string, productId: string, }) => ({
+                        cost: product.cost,
+                        quantity: product.quantity,
+                        product: {
+                            connect: {
+                                id: product.productId
+                            }
+                        }
+                    }))
+                },
             },
         })
 
         // 2. Add the product stock.
-        await prismadb.product.update({
-            where: {
-                id: productId
-            },
-            data: {
-                stock: {
-                    increment: amount
-                }
-            }
-        })
+        // Add stock for all products in selectedProducts.
+        await Promise.all(
+            selectedProducts.map(async (product) => {
+                // Decrease the stock for the product
+                await prismadb.product.update({
+                    where: { id: product.productId },
+                    data: {
+                        stock: {
+                            increment: product.quantity, // Decrease stock by the quantity sold.
+                        },
+                    },
+                });
+            })
+        );
 
         return NextResponse.json(purchase)
 

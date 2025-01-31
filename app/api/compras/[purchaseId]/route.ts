@@ -19,7 +19,37 @@ export async function DELETE(
             return new NextResponse("purchaseId is required", { status: 400 });
         }
 
-        const purchase = await prismadb.purchase.deleteMany({
+        const purchaseItems = await prismadb.purchaseItem.findMany({
+            where: {
+                purchaseId: purchaseId,
+            }
+        })
+
+        // 1. Subtract the stock.
+        await Promise.all(
+            purchaseItems.map((item) => {
+                return prismadb.product.update({
+                    where: {
+                        id: item.productId
+                    },
+                    data: {
+                        stock: {
+                            decrement: item.quantity
+                        }
+                    }
+                })
+            })
+        )
+
+        // 2. Delete all related purchaseItems. 
+        await prismadb.purchaseItem.deleteMany({
+            where: {
+                purchaseId: purchaseId,
+            }
+        });
+
+        // 3. Delete the purchase.
+        const purchase = await prismadb.purchase.delete({
             where: {
                 id: purchaseId,
             }
@@ -27,7 +57,7 @@ export async function DELETE(
 
         return NextResponse.json(purchase);
     } catch (error: any) {
-        console.log('[COMPRAS_DELETE]', error);
+        console.log('[COMPRAS_DELETE]', error.message);
         if (error.code === 'P2003') {
             return new NextResponse("fk-constraint-failed", { status: 409 }); // FK constraint failed.
         }

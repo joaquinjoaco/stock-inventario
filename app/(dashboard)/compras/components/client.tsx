@@ -56,10 +56,8 @@ export const PurchaseClient: React.FC<PurchaseClientProps> = ({
         const sheetFromArrayOfObjects = (arrayOfObjects: PurchaseColumn[]) => {
             // Re-format the already formatted data prop to readable values for a human in a worksheet.
             const formattedArray = arrayOfObjects.map((item) => ({
-                "Nombre del producto": item["Nombre del producto"],
-                "Cantidad": item["Cantidad"],
+                "Productos": item["Productos"],
                 "Costo total": item["Costo total"],
-                "Tipo": item["Tipo"],
                 "Proveedor": item["Proveedor"],
                 "Fecha de creación": item["Fecha de creación"],
                 // "Fecha de actualización": item["Fecha de actualización"],
@@ -68,18 +66,14 @@ export const PurchaseClient: React.FC<PurchaseClientProps> = ({
             // Add total row
             formattedArray.push(
                 {
-                    "Nombre del producto": "",
-                    "Cantidad": "",
+                    "Productos": "",
                     "Costo total": "",
-                    "Tipo": "",
                     "Proveedor": "",
                     "Fecha de creación": "",
                 },
                 {
-                    "Nombre del producto": "TOTALES",
-                    "Cantidad": formatterUYU.format(purchasesTotal),
-                    "Costo total": "",
-                    "Tipo": "",
+                    "Productos": "TOTALES",
+                    "Costo total": formatterUYU.format(purchasesTotal),
                     "Proveedor": "",
                     "Fecha de creación": "",
                 }
