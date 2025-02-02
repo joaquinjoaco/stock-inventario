@@ -6,12 +6,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
     try {
-        const todayStart = new Date()
-        todayStart.setHours(0, 0, 0, 0)
-        // Subtract two days
-        todayStart.setDate(todayStart.getDate() - 8);
-
-        // Fetch business information created or updated today
+        // Fetch business information
         const data = await prismadb.business.findFirst()
 
         if (!data) {

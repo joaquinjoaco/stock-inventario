@@ -3,10 +3,9 @@
 import * as React from "react"
 import {
     BookOpen,
-    Check,
-    Import,
+    FileDown,
+    FileUp,
     Package,
-    Save,
     Settings2,
     Store,
 } from "lucide-react"
@@ -25,13 +24,8 @@ import {
 } from "@/components/ui/sidebar"
 import { SidebarThemeToggle } from "./sidebar-theme-toggle"
 import Link from "next/link"
-import { es } from "date-fns/locale"
-import { format } from "date-fns"
-import { useToast } from "@/hooks/use-toast"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-
-    const { toast } = useToast()
 
     const data = {
         navMain1: [
@@ -97,144 +91,34 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         ],
         navSecondary: [
             {
-                title: "Exportar datos",
-                icon: Save,
-                onClick: async () => {
-                    await exportInventory();
-                    await exportPurchases();
-                    await exportSales();
-                    await exportSaleItems();
-                    await exportBusinessInfo();
-                    toast({
-                        title: <div className="flex items-center text-green-500">
-                            <Check className="h-4 w-4 mr-2" />
-                            Datos exportados
-                        </div>
-                    })
-                },
-            },
-            {
                 title: "Importar datos",
                 url: "/datos/importar",
                 onClick: null,
-                icon: Import,
+                icon: FileUp,
+            },
+            {
+                title: "Exportar datos",
+                url: "/datos/exportar",
+                onClick: null,
+                icon: FileDown,
+                // onClick: async () => {
+                //     await exportInventory();
+                //     await exportPurchases();
+                //     await exportSales();
+                //     await exportSaleItems();
+                //     await exportBusinessInfo();
+                //     toast({
+                //         title: <div className="flex items-center text-green-500">
+                //             <Check className="h-4 w-4 mr-2" />
+                //             Datos exportados
+                //         </div>
+                //     })
+                // },
             },
         ],
     }
 
-    const exportInventory = async () => {
-        try {
-            const response = await fetch('/api/export/inventario')
-            const data = await response.json()
 
-            if (data.filePath) {
-                // Create a link element
-                const link = document.createElement('a')
-                link.href = data.filePath  // The URL to the file
-                link.download = `1_inventario-${format(new Date(), "dd-MM-yy HH-mm", { locale: es })}.json`  // Filename for the download
-
-                // Programmatically click the link to trigger the download
-                document.body.appendChild(link) // Append the link to the body
-                link.click()  // Trigger the download
-                document.body.removeChild(link) // Clean up by removing the link element
-            } else {
-                console.log(data.message)
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const exportPurchases = async () => {
-        try {
-            const response = await fetch('/api/export/compras')
-            const data = await response.json()
-
-            if (data.filePath) {
-                // Create a link element
-                const link = document.createElement('a')
-                link.href = data.filePath  // The URL to the file
-                link.download = `2_compras-${format(new Date(), "dd-MM-yy HH-mm", { locale: es })}.json`  // Filename for the download
-
-                // Programmatically click the link to trigger the download
-                document.body.appendChild(link) // Append the link to the body
-                link.click()  // Trigger the download
-                document.body.removeChild(link) // Clean up by removing the link element
-            } else {
-                console.log(data.message)
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const exportSales = async () => {
-        try {
-            const response = await fetch('/api/export/ventas')
-            const data = await response.json()
-
-            if (data.filePath) {
-                // Create a link element
-                const link = document.createElement('a')
-                link.href = data.filePath  // The URL to the file
-                link.download = `3_ventas-${format(new Date(), "dd-MM-yy HH-mm", { locale: es })}.json`  // Filename for the download
-
-                // Programmatically click the link to trigger the download
-                document.body.appendChild(link) // Append the link to the body
-                link.click()  // Trigger the download
-                document.body.removeChild(link) // Clean up by removing the link element
-            } else {
-                console.log(data.message)
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const exportSaleItems = async () => {
-        try {
-            const response = await fetch('/api/export/ventas/saleItems')
-            const data = await response.json()
-
-            if (data.filePath) {
-                // Create a link element
-                const link = document.createElement('a')
-                link.href = data.filePath  // The URL to the file
-                link.download = `4_ventas_items-${format(new Date(), "dd-MM-yy HH-mm", { locale: es })}.json`  // Filename for the download
-
-                // Programmatically click the link to trigger the download
-                document.body.appendChild(link) // Append the link to the body
-                link.click()  // Trigger the download
-                document.body.removeChild(link) // Clean up by removing the link element
-            } else {
-                console.log(data.message)
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-    const exportBusinessInfo = async () => {
-        try {
-            const response = await fetch('/api/export/negocio')
-            const data = await response.json()
-
-            if (data.filePath) {
-                // Create a link element
-                const link = document.createElement('a')
-                link.href = data.filePath  // The URL to the file
-                link.download = `5_negocio-${format(new Date(), "dd-MM-yy HH-mm", { locale: es })}.json`  // Filename for the download
-
-                // Programmatically click the link to trigger the download
-                document.body.appendChild(link) // Append the link to the body
-                link.click()  // Trigger the download
-                document.body.removeChild(link) // Clean up by removing the link element
-            } else {
-                console.log(data.message)
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
 
     return (
         <Sidebar variant="sidebar" className="z-20" {...props} >

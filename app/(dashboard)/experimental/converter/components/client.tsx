@@ -11,13 +11,12 @@ import { Progress } from "@/components/ui/progress"
 import {
     Card,
     CardContent,
-    CardDescription,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
 
-export function ImportClient() {
+export function ExperimentalClient() {
     const [files, setFiles] = React.useState<File[]>([])
     const [progress, setProgress] = React.useState(0)
     const [uploading, setUploading] = React.useState(false)
@@ -69,12 +68,12 @@ export function ImportClient() {
                 let apiUrl = '';
 
                 // Assign the API URL based on the file name
-                if (file.name.startsWith('1_inventario')) apiUrl = '/api/import/inventario'; // Inventory
-                if (file.name.startsWith('2_compras')) apiUrl = '/api/import/compras'; // Purchases
-                if (file.name.startsWith('3_compras_items')) apiUrl = '/api/import/compras/purchaseItems'; // Purchases
-                if (file.name.startsWith('4_ventas')) apiUrl = '/api/import/ventas'; // Sales
-                if (file.name.startsWith('5_ventas_items')) apiUrl = '/api/import/ventas/saleItems'; // Sales
-                if (file.name.startsWith('6_negocio')) apiUrl = '/api/import/negocio'; // Business
+                // if (file.name.startsWith('1_inventario')) apiUrl = '/api/import/inventario'; // Inventory
+                if (file.name.startsWith('2_compras')) apiUrl = '/api/import/experimental/compras'; // Purchases
+                // if (file.name.startsWith('3_compras_items')) apiUrl = '/api/import/compras/purchaseItems'; // Purchases
+                // if (file.name.startsWith('4_ventas')) apiUrl = '/api/import/ventas'; // Sales
+                // if (file.name.startsWith('5_ventas_items')) apiUrl = '/api/import/ventas/saleItems'; // Sales
+                // if (file.name.startsWith('6_negocio')) apiUrl = '/api/import/negocio'; // Business
 
                 if (!apiUrl) {
                     console.error(`Archivo ${file.name} no tiene un nombre válido para asignar una URL`);
@@ -104,7 +103,7 @@ export function ImportClient() {
                     // Parse the file content into a JavaScript object
                     const jsonData = JSON.parse(fileContent);
 
-                    if (!Array.isArray(jsonData) && !file.name.startsWith('6_negocio')) {
+                    if (!Array.isArray(jsonData) && !file.name.startsWith('5_negocio')) {
                         console.error(`Archivo ${file.name} tiene un formato inválido, se esperaba un array.`);
                         toast({
                             title: `Archivo ${file.name} tiene un formato inválido, se esperaba un array.`,
@@ -161,12 +160,12 @@ export function ImportClient() {
     return (
         <Card className="w-full max-w-2xl mx-auto">
             <CardHeader className="text-center">
-                <CardTitle>Cargar archivos</CardTitle>
-                <CardDescription>
+                <CardTitle>Importar compras con formato desactualizado</CardTitle>
+                {/* <CardDescription>
                     Arrastra y suelta tus archivos aquí o haz clic para seleccionarlos
                     <br />
                     (Máximo 6 archivos)
-                </CardDescription>
+                </CardDescription> */}
             </CardHeader>
             <CardContent className="space-y-4">
                 <div

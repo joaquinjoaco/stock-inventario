@@ -2,23 +2,23 @@ import * as fs from 'fs';
 import * as path from 'path';
 import prismadb from '@/lib/prismadb';
 import { NextRequest, NextResponse } from 'next/server';
-import { SaleItem } from '@prisma/client';
+import { PurchaseItem } from '@prisma/client';
 
 
-// SALE ITEMS EXPORT
+// PURCHASE ITEMS EXPORT
 export async function GET(request: NextRequest) {
     try {
         // Read the range from query parameters.
         const { searchParams } = new URL(request.url)
         const range = searchParams.get('range')
 
-        let data: SaleItem[] = []
+        let data: PurchaseItem[] = []
 
         if (range === 'all') {
             // HISTORIC
             const date = new Date()
             date.setHours(0, 0, 0, 0)
-            data = await prismadb.saleItem.findMany()
+            data = await prismadb.purchaseItem.findMany()
         } else if (range === 'last-seven') {
             // LAST SEVEN DAYS
             const date = new Date()
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
             // Subtract 7 days
             date.setDate(date.getDate() - 7)
             // Fetch sales created or updated later than 7 days from current date
-            data = await prismadb.saleItem.findMany({
+            data = await prismadb.purchaseItem.findMany({
                 where: {
                     OR: [
                         { createdAt: { gte: date } },
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
             endOfMonth.setMilliseconds(-1); // End of the current month (inclusive).
 
             // Fetch sales created or updated later than startOfMonth and before endOfMonth
-            data = await prismadb.saleItem.findMany({
+            data = await prismadb.purchaseItem.findMany({
                 where: {
                     OR: [
                         {
@@ -75,7 +75,7 @@ export async function GET(request: NextRequest) {
 
             console.log(startOfQuarter, " / ", endOfQuarter)
             // Fetch sales within the last quarter
-            data = await prismadb.saleItem.findMany({
+            data = await prismadb.purchaseItem.findMany({
                 where: {
                     OR: [
                         {
@@ -98,7 +98,7 @@ export async function GET(request: NextRequest) {
             const startOfYear = new Date(date.getFullYear(), 0, 1);
             const endOfYear = new Date(date.getFullYear(), 11, 31, 23, 59, 59, 999); // inclusive
 
-            data = await prismadb.saleItem.findMany({
+            data = await prismadb.purchaseItem.findMany({
                 where: {
                     OR: [
                         {
@@ -135,7 +135,7 @@ export async function GET(request: NextRequest) {
             }
 
             // Fetch sales within the custom date range
-            data = await prismadb.saleItem.findMany({
+            data = await prismadb.purchaseItem.findMany({
                 where: {
                     OR: [
                         {
@@ -156,20 +156,20 @@ export async function GET(request: NextRequest) {
         }
 
         if (data.length === 0) {
-            return new NextResponse("No se encontraron nuevas ventas para el día de hoy.", { status: 200 })
+            return new NextResponse("No se encontraron nuevas compras para el día de hoy.", { status: 200 })
         }
 
         // Convert data to JSON
         const jsonData = JSON.stringify(data)
 
         // Write the JSON to a file
-        const filePath = path.join(process.cwd(), 'public', 'ventas-items-hoy.json')
+        const filePath = path.join(process.cwd(), 'public', 'compras-items-hoy.json')
         fs.writeFileSync(filePath, jsonData)
 
-        return NextResponse.json({ message: 'Ventas exportadas', filePath: `/ventas-items-hoy.json` }, { status: 200 })
+        return NextResponse.json({ message: 'Compras exportadas', filePath: `/compras-items-hoy.json` }, { status: 200 })
 
     } catch (error) {
         console.error(error)
-        return NextResponse.json({ error: 'Ocurrió un error exportando los items de las ventas.' }, { status: 500 })
+        return NextResponse.json({ error: 'Ocurrió un error exportando los items de las compras.' }, { status: 500 })
     }
 }

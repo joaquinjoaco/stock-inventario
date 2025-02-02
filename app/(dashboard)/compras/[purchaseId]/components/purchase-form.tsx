@@ -2,7 +2,7 @@
 "use client"
 
 import * as z from "zod"
-import { ArrowLeft, Check, ChevronsUpDown, ExternalLink, Package, PlusCircle, Trash, Trash2 } from "lucide-react"
+import { ArrowLeft, Check, ChevronsUpDown, DollarSign, ExternalLink, Package, PlusCircle, Trash, Trash2 } from "lucide-react"
 import { useFieldArray, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect, useState } from "react"
@@ -410,9 +410,34 @@ export const PurchaseForm: React.FC<PurchaseFormProps> = ({
 
                                                 {/* Price */}
                                                 <div className="flex mt-1 text-sm">
-                                                    <p className="font-semibold">
-                                                        {formatterUYU.format(item.cost * watch(`selectedProducts.${idx}.quantity`))}
-                                                    </p>
+                                                    <FormField
+                                                        key={item.uid}
+                                                        control={form.control}
+                                                        name={`selectedProducts.${idx}.cost`}
+                                                        render={({ field }) => (
+                                                            <TooltipWrapper
+                                                                className="font-normal flex flex-row items-center"
+                                                                content={"Costo por unidad"}
+                                                                icon={<DollarSign className="h-4 w-4 mr-2" />}
+                                                                side="right"
+                                                            >
+                                                                <FormItem>
+                                                                    <FormControl>
+                                                                        <div className="relative">
+                                                                            <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4" />
+                                                                            <Input
+                                                                                {...field}
+                                                                                type="number"
+                                                                                disabled={disabled}
+                                                                                placeholder="Costo"
+                                                                                className="w-32 pl-8"
+                                                                            />
+                                                                        </div>
+                                                                    </FormControl>
+                                                                </FormItem>
+                                                            </TooltipWrapper>
+                                                        )}
+                                                    />
                                                 </div>
                                             </li>
                                             <FormMessage />
