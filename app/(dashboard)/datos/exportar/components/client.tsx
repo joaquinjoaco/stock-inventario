@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { CalendarIcon, Download, FileJson, FileSpreadsheet, Loader2 } from 'lucide-react'
+import { CalendarIcon, Download, FileJson, Loader2 } from 'lucide-react'
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -20,15 +20,16 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
+import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
+import { ListItemBig } from "@/components/ui/list-item-big";
 
 export function ExportClient() {
 
-    const [exportType, setExportType] = React.useState("json")
+    // const [exportType, setExportType] = React.useState("json") // json 
     const [range, setRange] = React.useState("all") // "all" | "last-seven" | "current-month" | "current-quarter" | "current-year" | "custom"
     const [dateFrom, setDateFrom] = React.useState<Date>()
     const [dateTo, setDateTo] = React.useState<Date>()
     const [isExporting, setIsExporting] = React.useState(false)
-
     const { toast } = useToast()
 
     const date = new Date(); // Current date
@@ -47,6 +48,7 @@ export function ExportClient() {
             }
             const data = await response.json()
 
+            // JSON file download
             if (data.filePath) {
                 // Create a link element
                 const link = document.createElement('a')
@@ -208,6 +210,8 @@ export function ExportClient() {
         }
     }
 
+
+    // Called when export button is clicked.
     const exportData = async () => {
         setIsExporting(true)
         try {
@@ -218,7 +222,7 @@ export function ExportClient() {
             await exportSaleItems()
             await exportBusinessInfo()
         } catch (error) {
-            console.log(error)
+            console.error(error)
             toast({
                 title: `Ocurrió un error inesperado`,
                 description: `Ocurrió un error inesperado al exportar los datos.`,
@@ -234,32 +238,25 @@ export function ExportClient() {
             <Card className="w-full max-w-2xl mx-auto">
                 <CardHeader>
                     <CardTitle>Exportar datos</CardTitle>
-                    <CardDescription>Configura y exporta tus datos en formato .JSON para cargarlos en otra instancia de la aplicación. O puedes exportarlos en una planilla (.xlsx)</CardDescription>
+                    <CardDescription>
+                        Configura y exporta tus datos en formato
+                        <TooltipWrapper
+                            content={
+                                <ListItemBig
+                                    href="https://www.w3schools.com/js/js_json_intro.asp"
+                                    icon={<FileJson />}
+                                    title="JSON"
+                                    blank
+                                >
+                                    Formato de archivo de texto estructurado que se utiliza para el intercambio de datos.
+                                </ListItemBig>
+                            }>
+                            <b> .JSON </b>
+                        </TooltipWrapper>
+                        para cargarlos en otra instancia de la aplicación.
+                    </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                    <div className="space-y-2">
-                        <Label htmlFor="export-type">Formato</Label>
-                        <Select value={exportType} onValueChange={setExportType}>
-                            <SelectTrigger id="export-type">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="json" className="cursor-pointer">
-                                    <div className="flex items-center">
-                                        <FileJson className="mr-2 h-4 w-4" />
-                                        JSON (.json)
-                                    </div>
-                                </SelectItem>
-                                <SelectItem value="excel" className="cursor-pointer">
-                                    <div className="flex items-center">
-                                        <FileSpreadsheet className="mr-2 h-4 w-4" />
-                                        Excel (.xlsx)
-                                    </div>
-                                </SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-
                     <div className="space-y-2">
                         <Label htmlFor="date-range">Rango de fechas</Label>
                         <Select value={range} onValueChange={setRange}>

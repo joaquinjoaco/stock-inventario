@@ -152,6 +152,7 @@ export async function GET(request: NextRequest) {
                 },
             })
         }
+
         if (data.length === 0) {
             return new NextResponse("No se encontraron nuevas compras para el día de hoy.", { status: 200 })
         }
