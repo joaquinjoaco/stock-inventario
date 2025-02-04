@@ -8,10 +8,14 @@ import { ArrowUpDown } from "lucide-react";
 export type SalesColumn = {
     "ID": string;
     "Total": string; // we format it into a string.
+    totalPrice: number; // we store the number for calculations.
     "Método de pago": string;
     "Descuentos otorgados": string;
+    discount: number;
     "Fecha de creación": string;
     "Fecha de actualización": string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export const columns: ColumnDef<SalesColumn>[] = [

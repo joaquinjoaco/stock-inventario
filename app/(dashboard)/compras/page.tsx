@@ -104,9 +104,12 @@ const PurchasesPage = async (
         "ID": purchase.id,
         "Productos": purchase.purchaseItems.length > 1 ? `${purchase.purchaseItems.length} PRODUCTOS` : `${purchase.purchaseItems.length} PRODUCTO`,
         "Costo total": formatterUYU.format(purchase.totalCost.toNumber()),
+        totalCost: purchase.totalCost.toNumber(),
         "Proveedor": purchase.supplier || "-",
         "Fecha de creación": format(purchase.createdAt, "dd MMMM, yyyy HH:mm", { locale: es }),
-        "Fecha de actualización": format(purchase.updatedAt, "dd MMMM, yyyy HH:mm", { locale: es })
+        "Fecha de actualización": format(purchase.updatedAt, "dd MMMM, yyyy HH:mm", { locale: es }),
+        createdAt: format(purchase.createdAt, "dd/MM/yy HH:mm", { locale: es }),
+        updatedAt: format(purchase.updatedAt, "dd/MM/yy HH:mm", { locale: es }),
     }));
 
     const breadcrumbs = [

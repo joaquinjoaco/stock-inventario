@@ -21,6 +21,12 @@ interface SalesClientProps {
     data: SalesColumn[];
 }
 
+interface SaleRow {
+    "Total": string | number;
+    "Método de pago": string | number;
+    "Descuentos otorgados": string | number;
+    "Fecha de creación": string | number;
+}
 export const SalesClient: React.FC<SalesClientProps> = ({
     data
 }) => {
@@ -38,61 +44,36 @@ export const SalesClient: React.FC<SalesClientProps> = ({
     // Calculate the total sum of the sales from filtered Data using useMemo
     const salesTotal = useMemo(() => {
         return filteredData.reduce((acc, sale) => {
-            // Parse the currency string to number
-            const cleanAmount = sale.Total
-                .replace('$', '') // Remove currency symbol
-                .replace(/\s/g, '') // Remove spaces
-                .replace(/\./g, '') // Remove dots (thousand separators)
-                .replace(',', '.') // Replace comma with dot for decimal
-                .trim(); // Remove any remaining whitespace
-
-            const amount = parseFloat(cleanAmount);
-            return acc + amount;
+            return acc + sale.totalPrice;
         }, 0);
     }, [filteredData]);
 
     const discountsTotal = useMemo(() => {
         return filteredData.reduce((acc, sale) => {
-            // Parse the currency string to number
-            const cleanAmount = sale["Descuentos otorgados"]
-                .replace('$', '') // Remove currency symbol
-                .replace(/\s/g, '') // Remove spaces
-                .replace(/\./g, '') // Remove dots (thousand separators)
-                .replace(',', '.') // Replace comma with dot for decimal
-                .trim(); // Remove any remaining whitespace
-
-            const amount = parseFloat(cleanAmount);
-            return acc + amount;
-        }, 0);
+            return acc + sale.discount
+        }, 0)
     }, [filteredData]);
 
     const generateSheet = () => {
         // Function to convert an array of objects to a worksheet.
         const sheetFromArrayOfObjects = (arrayOfObjects: SalesColumn[]) => {
             // Re-format the already formatted data prop to readable values for a human in a worksheet.
-            const formattedArray = arrayOfObjects.map((item) => ({
-                "Total": item["Total"],
+            const formattedArray: SaleRow[] = arrayOfObjects.map((item) => ({
+                "Total": item.totalPrice,
                 "Método de pago": item["Método de pago"],
-                "Descuentos otorgados": item["Descuentos otorgados"],
-                "Fecha de creación": item["Fecha de creación"],
+                "Descuentos otorgados": item.discount,
+                "Fecha de creación": item.createdAt,
             }));
 
-            // Add total row
+            // Add totals row
             formattedArray.push(
                 {
-                    "Total": "",
-                    "Método de pago": "",
-                    "Descuentos otorgados": "",
-                    "Fecha de creación": "",
-                },
-                {
                     "Total": "TOTALES",
-                    "Método de pago": formatterUYU.format(salesTotal),
+                    "Método de pago": salesTotal,
                     "Descuentos otorgados": "DESCUENTOS OTORGADOS",
-                    "Fecha de creación": formatterUYU.format(discountsTotal),
+                    "Fecha de creación": discountsTotal,
                 }
             )
-
             const worksheet = XLSX.utils.json_to_sheet(formattedArray);
 
             return worksheet;

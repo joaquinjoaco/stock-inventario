@@ -73,12 +73,12 @@ export function ExportClient() {
                         const formattedArray = arrayOfObjects.map((item) => ({
                             "Nombre": item.name,
                             "Precio de venta": Number(item.sellingPrice),
-                            "Stock": item.stock,
+                            "Stock": Number(item.stock),
                             "Tipo": item.unitType,
                             "Marca": item.brand ? item.brand : "-",
                             "Archivado": item.isArchived ? "Archivado" : "-",
-                            "Fecha de creación": format(item.createdAt, "dd-MM-yy HH:mm", { locale: es }),
-                            "Fecha de actualización": format(item.updatedAt, "dd-MM-yy HH:mm", { locale: es }),
+                            "Fecha de creación": format(item.createdAt, "dd/MM/yy HH:mm", { locale: es }),
+                            "Fecha de actualización": format(item.updatedAt, "dd/MM/yy HH:mm", { locale: es }),
                         }));
                         const worksheet = XLSX.utils.json_to_sheet(formattedArray)
                         return worksheet
@@ -129,9 +129,9 @@ export function ExportClient() {
                     const sheetFromArrayOfObjects = (arrayOfObjects: Purchase[]) => {
                         const formattedArray = arrayOfObjects.map((item) => ({
                             "ID": item.id,
-                            "Costo total": item.totalCost,
+                            "Costo total": Number(item.totalCost),
                             "Proveedor": item.supplier,
-                            "Fecha de creación": format(item.createdAt, "dd-MM-yy HH:mm", { locale: es }),
+                            "Fecha de creación": format(item.createdAt, "dd/MM/yy HH:mm", { locale: es }),
                         }));
                         const worksheet = XLSX.utils.json_to_sheet(formattedArray)
                         return worksheet
@@ -182,9 +182,9 @@ export function ExportClient() {
                     const sheetFromArrayOfObjects = (arrayOfObjects: PurchaseItem[]) => {
                         const formattedArray = arrayOfObjects.map((item) => ({
                             "ID de compra": item.purchaseId,
-                            "Costo unitario": item.cost,
-                            "Cantidad": item.quantity,
-                            "Fecha de creación": format(item.createdAt, "dd-MM-yy HH:mm", { locale: es }),
+                            "Costo unitario": Number(item.cost),
+                            "Cantidad": Number(item.quantity),
+                            "Fecha de creación": format(item.createdAt, "dd/MM/yy HH:mm", { locale: es }),
                         }));
                         const worksheet = XLSX.utils.json_to_sheet(formattedArray)
                         return worksheet
@@ -235,10 +235,10 @@ export function ExportClient() {
                     const sheetFromArrayOfObjects = (arrayOfObjects: Sale[]) => {
                         const formattedArray = arrayOfObjects.map((item) => ({
                             "ID": item.id,
-                            "Total": item.totalPrice,
+                            "Total": Number(item.totalPrice),
                             "Método de pago": item.paymentType,
-                            "Descuentos otorgados": item.discount,
-                            "Fecha de creación": format(item.createdAt, "dd-MM-yy HH:mm", { locale: es }),
+                            "Descuentos otorgados": Number(item.discount),
+                            "Fecha de creación": format(item.createdAt, "dd/MM/yy HH:mm", { locale: es }),
                         }));
                         const worksheet = XLSX.utils.json_to_sheet(formattedArray)
                         return worksheet
@@ -288,9 +288,9 @@ export function ExportClient() {
                     const sheetFromArrayOfObjects = (arrayOfObjects: SaleItem[]) => {
                         const formattedArray = arrayOfObjects.map((item) => ({
                             "ID de la venta": item.saleId,
-                            "Precio calculado": item.calculatedPrice,
-                            "Cantidad": item.quantity,
-                            "Fecha de creación": format(item.createdAt, "dd-MM-yy HH:mm", { locale: es }),
+                            "Precio calculado": Number(item.calculatedPrice),
+                            "Cantidad": Number(item.quantity),
+                            "Fecha de creación": format(item.createdAt, "dd/MM/yy HH:mm", { locale: es }),
                         }));
                         const worksheet = XLSX.utils.json_to_sheet(formattedArray)
                         return worksheet
@@ -384,6 +384,7 @@ export function ExportClient() {
                             <b> .JSON </b>
                         </TooltipWrapper>
                         para cargarlos en otra instancia de la aplicación.
+                        O exportarlos en formato de planilla para otros propósitos.
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">

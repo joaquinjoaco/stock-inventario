@@ -41,7 +41,7 @@ export const serializeProducts = (products: Product[]) => {
 };
 
 // Helper to convert a purchase's Decimal fields to numbers
-export const serializePurchase = (purchase: Purchase & { purchaseItems: (PurchaseItem & {product: Product})[] } | null) => {
+export const serializePurchase = (purchase: Purchase & { purchaseItems: (PurchaseItem & { product: Product })[] } | null) => {
   if (!purchase) return null;
   return {
     ...purchase,

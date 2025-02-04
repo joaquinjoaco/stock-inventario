@@ -48,6 +48,7 @@ const ProductsPage = async (props: {
         "ID": product.id,
         "Nombre": product.name,
         "Precio de venta": formatterUYU.format(product.sellingPrice.toNumber()),
+        sellingPrice: product.sellingPrice.toNumber(),
         "Stock": product.stock.toString(),
         "Tipo": product.unitType.toUpperCase(),
         "Marca": product.brand || '-',
@@ -55,7 +56,9 @@ const ProductsPage = async (props: {
         isArchivedText: product.isArchived ? 'Archivado' : '-',
 
         "Fecha de creación": format(product.createdAt, "dd MMMM, yyyy", { locale: es }),
-        "Fecha de actualización": format(product.updatedAt, "dd MMMM, yyyy", { locale: es })
+        "Fecha de actualización": format(product.updatedAt, "dd MMMM, yyyy", { locale: es }),
+        createdAt: format(product.createdAt, "dd/MM/yy HH:mm", { locale: es }),
+        updatedAt: format(product.updatedAt, "dd/MM/yy HH:mm", { locale: es }),
     }));
 
     const breadcrumbs = [

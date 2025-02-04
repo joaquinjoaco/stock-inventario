@@ -9,9 +9,12 @@ export type PurchaseColumn = {
     "ID": string;
     "Productos": string;
     "Costo total": string; // we format it into a string.
+    totalCost: number; // we store the number for calculations.
     "Proveedor": string;
     "Fecha de creación": string;
     "Fecha de actualización": string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export const columns: ColumnDef<PurchaseColumn>[] = [

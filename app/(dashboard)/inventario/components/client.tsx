@@ -38,13 +38,13 @@ export const ProductClient: React.FC<ProductClientProps> = ({
         const sheetFromArrayOfObjects = (arrayOfObjects: ProductColumn[]) => {
             const formattedArray = arrayOfObjects.map((item) => ({
                 "Nombre": item["Nombre"],
-                "Precio de venta": item["Precio de venta"],
-                "Stock": item["Stock"],
+                "Precio de venta": item.sellingPrice,
+                "Stock": Number(item["Stock"]),
                 "Tipo": item["Tipo"],
                 "Marca": item["Marca"],
                 "Archivado": item.isArchivedText,
-                "Fecha de creación": item["Fecha de creación"],
-                "Fecha de actualización": item["Fecha de actualización"],
+                "Fecha de creación": item.createdAt,
+                "Fecha de actualización": item.updatedAt,
             }));
             const worksheet = XLSX.utils.json_to_sheet(formattedArray)
             return worksheet

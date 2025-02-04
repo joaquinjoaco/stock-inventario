@@ -9,6 +9,7 @@ export type ProductColumn = {
     "ID": string;
     "Nombre": string;
     "Precio de venta": string; // we format it into a string.
+    sellingPrice: number;
     "Stock": string;
     "Tipo": string;
     "Marca": string;
@@ -16,6 +17,8 @@ export type ProductColumn = {
     isArchivedText: string;
     "Fecha de creación": string;
     "Fecha de actualización": string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export const columns: ColumnDef<ProductColumn>[] = [

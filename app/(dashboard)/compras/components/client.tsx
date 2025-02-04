@@ -38,16 +38,7 @@ export const PurchaseClient: React.FC<PurchaseClientProps> = ({
     // Calculate the total sum of the purchases from filtered Data using useMemo
     const purchasesTotal = useMemo(() => {
         return filteredData.reduce((acc, purchase) => {
-            // Parse the currency string to number
-            const cleanAmount = purchase["Costo total"]
-                .replace('$', '') // Remove currency symbol
-                .replace(/\s/g, '') // Remove spaces
-                .replace(/\./g, '') // Remove dots (thousand separators)
-                .replace(',', '.') // Replace comma with dot for decimal
-                .trim(); // Remove any remaining whitespace
-
-            const amount = parseFloat(cleanAmount);
-            return acc + amount;
+            return acc + purchase.totalCost
         }, 0);
     }, [filteredData]);
 
@@ -57,23 +48,16 @@ export const PurchaseClient: React.FC<PurchaseClientProps> = ({
             // Re-format the already formatted data prop to readable values for a human in a worksheet.
             const formattedArray = arrayOfObjects.map((item) => ({
                 "Productos": item["Productos"],
-                "Costo total": item["Costo total"],
+                "Costo total": item.totalCost, // Not formatted so the user can perform calculations on the sheet
                 "Proveedor": item["Proveedor"],
-                "Fecha de creación": item["Fecha de creación"],
-                // "Fecha de actualización": item["Fecha de actualización"],
+                "Fecha de creación": item.createdAt,
             }));
 
             // Add total row
             formattedArray.push(
                 {
-                    "Productos": "",
-                    "Costo total": "",
-                    "Proveedor": "",
-                    "Fecha de creación": "",
-                },
-                {
                     "Productos": "TOTALES",
-                    "Costo total": formatterUYU.format(purchasesTotal),
+                    "Costo total": purchasesTotal,
                     "Proveedor": "",
                     "Fecha de creación": "",
                 }

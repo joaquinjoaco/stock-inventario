@@ -91,10 +91,14 @@ const SalesPage = async (
     const formattedProducts: SalesColumn[] = sales.map((sale) => ({
         "ID": sale.id,
         "Total": formatterUYU.format(sale.totalPrice.toNumber()),
+        totalPrice: sale.totalPrice.toNumber(),
         "Método de pago": sale.paymentType.toString(),
         "Descuentos otorgados": formatterUYU.format(sale.discount.toNumber()),
+        discount: sale.discount.toNumber(),
         "Fecha de creación": format(sale.createdAt, "dd MMMM, yyyy HH:mm", { locale: es }),
-        "Fecha de actualización": format(sale.updatedAt, "dd MMMM, yyyy HH:mm", { locale: es })
+        "Fecha de actualización": format(sale.updatedAt, "dd MMMM, yyyy HH:mm", { locale: es }),
+        createdAt: format(sale.createdAt, "dd/MM/yy HH:mm", { locale: es }),
+        updatedAt: format(sale.updatedAt, "dd/MM/yy HH:mm", { locale: es }),
     }))
 
     const breadcrumbs = [
