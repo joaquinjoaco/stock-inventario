@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { Check, Eye, MoreHorizontal, Trash } from "lucide-react";
+import { Check, Eye, MoreHorizontal, Printer, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -102,6 +102,10 @@ export const CellAction: React.FC<CellActionProps> = ({
                     <DropdownMenuItem onClick={() => router.push(`/compras/${data["ID"]}`)}>
                         <Eye className="mr-2 h-4 w-4" />
                         Ver
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => window.open(`/compras/${data["ID"]}/imprimir`)}>
+                        <Printer className="mr-2 h-4 w-4" />
+                        Imprimir
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setOpen(true)}>
                         <Trash className="mr-2 h-4 w-4" />

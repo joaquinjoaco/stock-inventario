@@ -2,14 +2,14 @@
 "use client"
 
 import * as z from "zod"
-import { ArrowLeft, Check, ChevronsUpDown, DollarSign, ExternalLink, Package, PlusCircle, Trash, Trash2 } from "lucide-react"
+import { ArrowLeft, Check, ChevronsUpDown, DollarSign, ExternalLink, Package, PlusCircle, Printer, Trash, Trash2 } from "lucide-react"
 import { useFieldArray, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect, useState } from "react"
 import axios from "axios"
 import { useParams, useRouter } from "next/navigation"
 import { Heading } from "@/components/ui/heading"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import {
     Form,
@@ -238,15 +238,26 @@ export const PurchaseForm: React.FC<PurchaseFormProps> = ({
                     </Button>
 
                     {initialData && (
-                        <Button
-                            disabled={loading}
-                            variant="destructive"
-                            onClick={() => setOpen(true)}
-                            type="button"
-                        >
-                            <Trash className="h-4 w-4 mr-2" />
-                            Eliminar
-                        </Button>
+                        <>
+                            <Button
+                                disabled={loading}
+                                variant="destructive"
+                                onClick={() => setOpen(true)}
+                                type="button"
+                            >
+                                <Trash className="h-4 w-4 mr-2" />
+                                Eliminar
+                            </Button>
+                            <Link
+                                href={`/compras/${initialData.id}/imprimir`}
+                                target="_blank"
+                                className={buttonVariants({ variant: "default" })}
+                            // type="button"
+                            >
+                                <Printer className="h-4 w-4 mr-2" />
+                                Imprimir
+                            </Link>
+                        </>
                     )}
 
                     {!initialData &&
