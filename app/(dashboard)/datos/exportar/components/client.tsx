@@ -1,7 +1,8 @@
 "use client"
 
 import * as React from "react"
-import { CalendarIcon, Download, FileJson, Loader2 } from 'lucide-react'
+import * as XLSX from 'xlsx';
+import { CalendarIcon, Download, FileJson, FileSpreadsheet, Loader2 } from 'lucide-react'
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -22,10 +23,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar"
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 import { ListItemBig } from "@/components/ui/list-item-big";
+import { Product, Purchase, PurchaseItem, Sale, SaleItem } from "@prisma/client"
 
 export function ExportClient() {
 
-    // const [exportType, setExportType] = React.useState("json") // json 
+    const [exportType, setExportType] = React.useState<"json" | "excel">("json") // json | excel
     const [range, setRange] = React.useState("all") // "all" | "last-seven" | "current-month" | "current-quarter" | "current-year" | "custom"
     const [dateFrom, setDateFrom] = React.useState<Date>()
     const [dateTo, setDateTo] = React.useState<Date>()
@@ -42,25 +44,53 @@ export function ExportClient() {
         try {
             let response
             if (range === 'custom') {
-                response = await fetch(`/api/export/inventario?range=${range}&dateFrom=${dateFrom}&dateTo=${dateTo}`)
+                response = await fetch(`/api/export/inventario?range=${range}&dateFrom=${dateFrom}&dateTo=${dateTo}&exportType=${exportType}`)
             } else {
-                response = await fetch(`/api/export/inventario?range=${range}`)
+                response = await fetch(`/api/export/inventario?range=${range}&exportType=${exportType}`)
             }
-            const data = await response.json()
 
-            // JSON file download
-            if (data.filePath) {
-                // Create a link element
-                const link = document.createElement('a')
-                link.href = data.filePath  // The URL to the file
-                link.download = `1_inventario-${format(new Date(), "dd-MM-yy HH-mm", { locale: es })}.json`  // Filename for the download
+            const res = await response.json()
 
-                // Programmatically click the link to trigger the download
-                document.body.appendChild(link) // Append the link to the body
-                link.click()  // Trigger the download
-                document.body.removeChild(link) // Clean up by removing the link element
+            if (res.exportType === "json") {
+                // JSON file download
+                if (res.filePath) {
+                    // Create a link element
+                    const link = document.createElement('a')
+                    link.href = res.filePath  // The URL to the file
+                    link.download = `1_inventario-${format(new Date(), "dd-MM-yy HH-mm", { locale: es })}.json`  // Filename for the download
+
+                    // Programmatically click the link to trigger the download
+                    document.body.appendChild(link) // Append the link to the body
+                    link.click()  // Trigger the download
+                    document.body.removeChild(link) // Clean up by removing the link element
+                } else {
+                    console.log(res.message)
+                }
             } else {
-                console.log(data.message)
+                // EXCEL
+                if (res.data) {
+                    const sheetFromArrayOfObjects = (arrayOfObjects: Product[]) => {
+                        const formattedArray = arrayOfObjects.map((item) => ({
+                            "Nombre": item.name,
+                            "Precio de venta": Number(item.sellingPrice),
+                            "Stock": item.stock,
+                            "Tipo": item.unitType,
+                            "Marca": item.brand ? item.brand : "-",
+                            "Archivado": item.isArchived ? "Archivado" : "-",
+                            "Fecha de creación": format(item.createdAt, "dd-MM-yy HH:mm", { locale: es }),
+                            "Fecha de actualización": format(item.updatedAt, "dd-MM-yy HH:mm", { locale: es }),
+                        }));
+                        const worksheet = XLSX.utils.json_to_sheet(formattedArray)
+                        return worksheet
+                    };
+
+                    const workbook = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(workbook, sheetFromArrayOfObjects(res.data), 'Productos')
+                    XLSX.writeFile(workbook, `inventario-${format(new Date(), "dd-MM-yy HH-mm", { locale: es })}.xlsx`)
+
+                } else {
+                    console.log(res.message)
+                }
             }
         } catch (error) {
             console.log(error)
@@ -71,24 +101,49 @@ export function ExportClient() {
         try {
             let response
             if (range === 'custom') {
-                response = await fetch(`/api/export/compras?range=${range}&dateFrom=${dateFrom}&dateTo=${dateTo}`)
+                response = await fetch(`/api/export/compras?range=${range}&dateFrom=${dateFrom}&dateTo=${dateTo}&exportType=${exportType}`)
             } else {
-                response = await fetch(`/api/export/compras?range=${range}`)
+                response = await fetch(`/api/export/compras?range=${range}&exportType=${exportType}`)
             }
-            const data = await response.json()
 
-            if (data.filePath) {
-                // Create a link element
-                const link = document.createElement('a')
-                link.href = data.filePath  // The URL to the file
-                link.download = `2_compras-${format(new Date(), "dd-MM-yy HH-mm", { locale: es })}.json`  // Filename for the download
+            const res = await response.json()
 
-                // Programmatically click the link to trigger the download
-                document.body.appendChild(link) // Append the link to the body
-                link.click()  // Trigger the download
-                document.body.removeChild(link) // Clean up by removing the link element
+            if (res.exportType === "json") {
+                // JSON file download
+                if (res.filePath) {
+                    // Create a link element
+                    const link = document.createElement('a')
+                    link.href = res.filePath  // The URL to the file
+                    link.download = `2_compras-${format(new Date(), "dd-MM-yy HH-mm", { locale: es })}.json`  // Filename for the download
+
+                    // Programmatically click the link to trigger the download
+                    document.body.appendChild(link) // Append the link to the body
+                    link.click()  // Trigger the download
+                    document.body.removeChild(link) // Clean up by removing the link element
+                } else {
+                    console.log(res.message)
+                }
             } else {
-                console.log(data.message)
+                // EXCEL
+                if (res.data) {
+                    const sheetFromArrayOfObjects = (arrayOfObjects: Purchase[]) => {
+                        const formattedArray = arrayOfObjects.map((item) => ({
+                            "ID": item.id,
+                            "Costo total": item.totalCost,
+                            "Proveedor": item.supplier,
+                            "Fecha de creación": format(item.createdAt, "dd-MM-yy HH:mm", { locale: es }),
+                        }));
+                        const worksheet = XLSX.utils.json_to_sheet(formattedArray)
+                        return worksheet
+                    };
+
+                    const workbook = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(workbook, sheetFromArrayOfObjects(res.data), 'Compras')
+                    XLSX.writeFile(workbook, `compras-${format(new Date(), "dd-MM-yy HH-mm", { locale: es })}.xlsx`)
+
+                } else {
+                    console.log(res.message)
+                }
             }
         } catch (error) {
             console.log(error)
@@ -99,25 +154,49 @@ export function ExportClient() {
         try {
             let response
             if (range === 'custom') {
-                response = await fetch(`/api/export/compras/purchaseItems?range=${range}&dateFrom=${dateFrom}&dateTo=${dateTo}`)
+                response = await fetch(`/api/export/compras/purchaseItems?range=${range}&dateFrom=${dateFrom}&dateTo=${dateTo}&exportType=${exportType}`)
             } else {
-                response = await fetch(`/api/export/compras/purchaseItems?range=${range}`)
+                response = await fetch(`/api/export/compras/purchaseItems?range=${range}&exportType=${exportType}`)
             }
 
-            const data = await response.json()
+            const res = await response.json()
 
-            if (data.filePath) {
-                // Create a link element
-                const link = document.createElement('a')
-                link.href = data.filePath  // The URL to the file
-                link.download = `3_compras_items-${format(new Date(), "dd-MM-yy HH-mm", { locale: es })}.json`  // Filename for the download
+            if (res.exportType === "json") {
+                // JSON file download
+                if (res.filePath) {
+                    // Create a link element
+                    const link = document.createElement('a')
+                    link.href = res.filePath  // The URL to the file
+                    link.download = `3_compras_items-${format(new Date(), "dd-MM-yy HH-mm", { locale: es })}.json`  // Filename for the download
 
-                // Programmatically click the link to trigger the download
-                document.body.appendChild(link) // Append the link to the body
-                link.click()  // Trigger the download
-                document.body.removeChild(link) // Clean up by removing the link element
+                    // Programmatically click the link to trigger the download
+                    document.body.appendChild(link) // Append the link to the body
+                    link.click()  // Trigger the download
+                    document.body.removeChild(link) // Clean up by removing the link element
+                } else {
+                    console.log(res.message)
+                }
             } else {
-                console.log(data.message)
+                // EXCEL
+                if (res.data) {
+                    const sheetFromArrayOfObjects = (arrayOfObjects: PurchaseItem[]) => {
+                        const formattedArray = arrayOfObjects.map((item) => ({
+                            "ID de compra": item.purchaseId,
+                            "Costo unitario": item.cost,
+                            "Cantidad": item.quantity,
+                            "Fecha de creación": format(item.createdAt, "dd-MM-yy HH:mm", { locale: es }),
+                        }));
+                        const worksheet = XLSX.utils.json_to_sheet(formattedArray)
+                        return worksheet
+                    };
+
+                    const workbook = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(workbook, sheetFromArrayOfObjects(res.data), 'Items de compras')
+                    XLSX.writeFile(workbook, `compras_items-${format(new Date(), "dd-MM-yy HH-mm", { locale: es })}.xlsx`)
+
+                } else {
+                    console.log(res.message)
+                }
             }
         } catch (error) {
             console.log(error)
@@ -128,25 +207,50 @@ export function ExportClient() {
         try {
             let response
             if (range === 'custom') {
-                response = await fetch(`/api/export/ventas?range=${range}&dateFrom=${dateFrom}&dateTo=${dateTo}`)
+                response = await fetch(`/api/export/ventas?range=${range}&dateFrom=${dateFrom}&dateTo=${dateTo}&exportType=${exportType}`)
             } else {
-                response = await fetch(`/api/export/ventas?range=${range}`)
+                response = await fetch(`/api/export/ventas?range=${range}&exportType=${exportType}`)
             }
 
-            const data = await response.json()
+            const res = await response.json()
 
-            if (data.filePath) {
-                // Create a link element
-                const link = document.createElement('a')
-                link.href = data.filePath  // The URL to the file
-                link.download = `4_ventas-${format(new Date(), "dd-MM-yy HH-mm", { locale: es })}.json`  // Filename for the download
+            if (res.exportType === "json") {
+                // JSON file download
+                if (res.filePath) {
+                    // Create a link element
+                    const link = document.createElement('a')
+                    link.href = res.filePath  // The URL to the file
+                    link.download = `4_ventas-${format(new Date(), "dd-MM-yy HH-mm", { locale: es })}.json`  // Filename for the download
 
-                // Programmatically click the link to trigger the download
-                document.body.appendChild(link) // Append the link to the body
-                link.click()  // Trigger the download
-                document.body.removeChild(link) // Clean up by removing the link element
+                    // Programmatically click the link to trigger the download
+                    document.body.appendChild(link) // Append the link to the body
+                    link.click()  // Trigger the download
+                    document.body.removeChild(link) // Clean up by removing the link element
+                } else {
+                    console.log(res.message)
+                }
             } else {
-                console.log(data.message)
+                // EXCEL
+                if (res.data) {
+                    const sheetFromArrayOfObjects = (arrayOfObjects: Sale[]) => {
+                        const formattedArray = arrayOfObjects.map((item) => ({
+                            "ID": item.id,
+                            "Total": item.totalPrice,
+                            "Método de pago": item.paymentType,
+                            "Descuentos otorgados": item.discount,
+                            "Fecha de creación": format(item.createdAt, "dd-MM-yy HH:mm", { locale: es }),
+                        }));
+                        const worksheet = XLSX.utils.json_to_sheet(formattedArray)
+                        return worksheet
+                    };
+
+                    const workbook = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(workbook, sheetFromArrayOfObjects(res.data), 'Ventas')
+                    XLSX.writeFile(workbook, `ventas-${format(new Date(), "dd-MM-yy HH-mm", { locale: es })}.xlsx`)
+
+                } else {
+                    console.log(res.message)
+                }
             }
         } catch (error) {
             console.log(error)
@@ -157,24 +261,48 @@ export function ExportClient() {
         try {
             let response
             if (range === 'custom') {
-                response = await fetch(`/api/export/ventas/saleItems?range=${range}&dateFrom=${dateFrom}&dateTo=${dateTo}`)
+                response = await fetch(`/api/export/ventas/saleItems?range=${range}&dateFrom=${dateFrom}&dateTo=${dateTo}&exportType=${exportType}`)
             } else {
-                response = await fetch(`/api/export/ventas/saleItems?range=${range}`)
+                response = await fetch(`/api/export/ventas/saleItems?range=${range}&exportType=${exportType}`)
             }
-            const data = await response.json()
 
-            if (data.filePath) {
-                // Create a link element
-                const link = document.createElement('a')
-                link.href = data.filePath  // The URL to the file
-                link.download = `5_ventas_items-${format(new Date(), "dd-MM-yy HH-mm", { locale: es })}.json`  // Filename for the download
+            const res = await response.json()
+            if (res.exportType === "json") {
+                // JSON file download
+                if (res.filePath) {
+                    // Create a link element
+                    const link = document.createElement('a')
+                    link.href = res.filePath  // The URL to the file
+                    link.download = `5_ventas_items-${format(new Date(), "dd-MM-yy HH-mm", { locale: es })}.json`  // Filename for the download
 
-                // Programmatically click the link to trigger the download
-                document.body.appendChild(link) // Append the link to the body
-                link.click()  // Trigger the download
-                document.body.removeChild(link) // Clean up by removing the link element
+                    // Programmatically click the link to trigger the download
+                    document.body.appendChild(link) // Append the link to the body
+                    link.click()  // Trigger the download
+                    document.body.removeChild(link) // Clean up by removing the link element
+                } else {
+                    console.log(res.message)
+                }
             } else {
-                console.log(data.message)
+                // EXCEL
+                if (res.data) {
+                    const sheetFromArrayOfObjects = (arrayOfObjects: SaleItem[]) => {
+                        const formattedArray = arrayOfObjects.map((item) => ({
+                            "ID de la venta": item.saleId,
+                            "Precio calculado": item.calculatedPrice,
+                            "Cantidad": item.quantity,
+                            "Fecha de creación": format(item.createdAt, "dd-MM-yy HH:mm", { locale: es }),
+                        }));
+                        const worksheet = XLSX.utils.json_to_sheet(formattedArray)
+                        return worksheet
+                    };
+
+                    const workbook = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(workbook, sheetFromArrayOfObjects(res.data), 'Ventas')
+                    XLSX.writeFile(workbook, `ventas_items-${format(new Date(), "dd-MM-yy HH-mm", { locale: es })}.xlsx`)
+
+                } else {
+                    console.log(res.message)
+                }
             }
         } catch (error) {
             console.log(error)
@@ -190,12 +318,12 @@ export function ExportClient() {
                 response = await fetch(`/api/export/negocio?range=${range}`)
             }
 
-            const data = await response.json()
+            const res = await response.json()
 
-            if (data.filePath) {
+            if (res.filePath) {
                 // Create a link element
                 const link = document.createElement('a')
-                link.href = data.filePath  // The URL to the file
+                link.href = res.filePath  // The URL to the file
                 link.download = `6_negocio-${format(new Date(), "dd-MM-yy HH-mm", { locale: es })}.json`  // Filename for the download
 
                 // Programmatically click the link to trigger the download
@@ -203,7 +331,7 @@ export function ExportClient() {
                 link.click()  // Trigger the download
                 document.body.removeChild(link) // Clean up by removing the link element
             } else {
-                console.log(data.message)
+                console.log(res.message)
             }
         } catch (error) {
             console.log(error)
@@ -220,7 +348,9 @@ export function ExportClient() {
             await exportPurchaseItems()
             await exportSales()
             await exportSaleItems()
-            await exportBusinessInfo()
+            if (exportType === 'json') {
+                await exportBusinessInfo()
+            }
         } catch (error) {
             console.error(error)
             toast({
@@ -257,6 +387,28 @@ export function ExportClient() {
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
+                    <div className="space-y-2">
+                        <Label htmlFor="export-type">Formato</Label>
+                        <Select value={exportType} onValueChange={(e) => { setExportType(e as "json" | "excel") }}>
+                            <SelectTrigger id="export-type">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="json" className="cursor-pointer">
+                                    <div className="flex items-center">
+                                        <FileJson className="mr-2 h-4 w-4" />
+                                        JSON (.json)
+                                    </div>
+                                </SelectItem>
+                                <SelectItem value="excel" className="cursor-pointer">
+                                    <div className="flex items-center">
+                                        <FileSpreadsheet className="mr-2 h-4 w-4" />
+                                        Excel (.xlsx)
+                                    </div>
+                                </SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
                     <div className="space-y-2">
                         <Label htmlFor="date-range">Rango de fechas</Label>
                         <Select value={range} onValueChange={setRange}>

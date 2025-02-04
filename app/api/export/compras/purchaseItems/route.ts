@@ -11,6 +11,7 @@ export async function GET(request: NextRequest) {
         // Read the range from query parameters.
         const { searchParams } = new URL(request.url)
         const range = searchParams.get('range')
+        const exportType = searchParams.get('exportType')
 
         let data: PurchaseItem[] = []
 
@@ -159,14 +160,19 @@ export async function GET(request: NextRequest) {
             return new NextResponse("No se encontraron nuevas compras para el día de hoy.", { status: 200 })
         }
 
-        // Convert data to JSON
-        const jsonData = JSON.stringify(data)
+        if (exportType === 'json') {
+            // Convert data to JSON
+            const jsonData = JSON.stringify(data)
 
-        // Write the JSON to a file
-        const filePath = path.join(process.cwd(), 'public', 'compras-items-hoy.json')
-        fs.writeFileSync(filePath, jsonData)
+            // Write the JSON to a file
+            const filePath = path.join(process.cwd(), 'public', 'compras-items-hoy.json')
+            fs.writeFileSync(filePath, jsonData)
 
-        return NextResponse.json({ message: 'Compras exportadas', filePath: `/compras-items-hoy.json` }, { status: 200 })
+            return NextResponse.json({ message: 'Compras exportadas', filePath: `/compras-items-hoy.json`, exportType: exportType }, { status: 200 })
+        } else if (exportType === 'excel') {
+            // EXCEL
+            return NextResponse.json({ message: 'Compras exportadas', data: data, exportType: exportType }, { status: 200 })
+        }
 
     } catch (error) {
         console.error(error)
