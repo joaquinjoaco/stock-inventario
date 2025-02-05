@@ -13,7 +13,6 @@ interface ImprimirCompraClientProps {
 }
 const ImprimirCompraClient: React.FC<ImprimirCompraClientProps> = ({
     data,
-    business,
 }) => {
 
     if (typeof window !== 'undefined') {
