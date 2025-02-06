@@ -6,6 +6,8 @@ export async function POST(req: Request) {
         const body = await req.json()
         const { data } = body
 
+        console.log(data.length)
+
         if (!data) {
             return NextResponse.json({ error: 'No se ha recibido la información.' }, { status: 400 })
         }
@@ -24,13 +26,7 @@ export async function POST(req: Request) {
                         supplier: purchase.supplier
                     },
                 })
-            })
-        )
 
-        // Create all PurchaseItems related to the purchases
-        // Its 1 item per purchase, so the purchaseItem cost will be the purchase total cost
-        await Promise.all(
-            data.map(async (purchase) => {
                 await prismadb.purchaseItem.create({
                     data: {
                         // we let the id autogenerate
@@ -45,8 +41,8 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ message: 'Compras actualizadas' }, { status: 200 })
 
-    } catch (error) {
-        console.error(error)
+    } catch (error: any) {
+        console.error(error.stack)
         return NextResponse.json({ error: 'Ocurrió un error actualizando las compras.' }, { status: 500 })
     }
 }
