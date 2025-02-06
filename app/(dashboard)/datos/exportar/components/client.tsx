@@ -28,7 +28,7 @@ import { Product, Purchase, PurchaseItem, Sale, SaleItem } from "@prisma/client"
 export function ExportClient() {
 
     const [exportType, setExportType] = React.useState<"json" | "excel">("json") // json | excel
-    const [range, setRange] = React.useState("all") // "all" | "last-seven" | "current-month" | "current-quarter" | "current-year" | "custom"
+    const [range, setRange] = React.useState("last-seven") // "all" | "last-seven" | "current-month" | "current-quarter" | "current-year" | "custom"
     const [dateFrom, setDateFrom] = React.useState<Date>()
     const [dateTo, setDateTo] = React.useState<Date>()
     const [isExporting, setIsExporting] = React.useState(false)
@@ -417,11 +417,11 @@ export function ExportClient() {
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="all" className="cursor-pointer">Todos los datos</SelectItem>
                                 <SelectItem value="last-seven" className="cursor-pointer">Últimos 7 días</SelectItem>
                                 <SelectItem value="current-month" className="cursor-pointer">Este mes ({format(date, 'MMMM', { locale: es })})</SelectItem>
                                 <SelectItem value="current-quarter" className="cursor-pointer">Este trimestre ({format(startOfQuarter, 'MMMM', { locale: es })} - {format(endOfQuarter, 'MMMM', { locale: es })})</SelectItem>
                                 <SelectItem value="current-year" className="cursor-pointer">Este año ({format(date, 'yyyy', { locale: es })})</SelectItem>
+                                <SelectItem value="all" className="cursor-pointer">Todos los datos</SelectItem>
                                 <SelectItem value="custom" className="cursor-pointer">Personalizado</SelectItem>
                             </SelectContent>
                         </Select>
