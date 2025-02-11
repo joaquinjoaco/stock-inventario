@@ -69,7 +69,7 @@ export function ExperimentalClient() {
 
                 // Assign the API URL based on the file name
                 // if (file.name.startsWith('1_inventario')) apiUrl = '/api/import/inventario'; // Inventory
-                if (file.name.startsWith('2_compras')) apiUrl = '/api/import/experimental/compras/batches'; // Purchases
+                if (file.name.startsWith('2_compras')) apiUrl = '/api/import/experimental/compras'; // Purchases
                 // if (file.name.startsWith('3_compras_items')) apiUrl = '/api/import/compras/purchaseItems'; // Purchases
                 // if (file.name.startsWith('4_ventas')) apiUrl = '/api/import/ventas'; // Sales
                 // if (file.name.startsWith('5_ventas_items')) apiUrl = '/api/import/ventas/saleItems'; // Sales

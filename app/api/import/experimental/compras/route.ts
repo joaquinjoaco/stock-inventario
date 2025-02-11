@@ -6,8 +6,6 @@ export async function POST(req: Request) {
         const body = await req.json()
         const { data } = body
 
-        console.log(data.length)
-
         if (!data) {
             return NextResponse.json({ error: 'No se ha recibido la información.' }, { status: 400 })
         }
@@ -16,33 +14,65 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Formato inválido, se espera un array de compras' }, { status: 400 })
         }
 
-        // Insert all the purchases following the new format
-        await Promise.all(
-            data.map(async (purchase) => {
-                await prismadb.purchase.create({
-                    data: {
-                        id: purchase.id,
-                        totalCost: purchase.totalCost,
-                        supplier: purchase.supplier
-                    },
-                })
+        // Check for duplicate IDs before starting any database operations
+        const hasDuplicateIds = (data: any[]) => {
+            const uniqueIds = new Set(data.map(item => item.id))
+            return uniqueIds.size !== data.length
+        }
 
-                await prismadb.purchaseItem.create({
-                    data: {
-                        // we let the id autogenerate
-                        cost: purchase.totalCost / purchase.amount,
-                        quantity: purchase.amount,
-                        productId: purchase.productId,
-                        purchaseId: purchase.id,
-                    },
-                })
-            })
-        )
+        if (hasDuplicateIds(data)) {
+            return NextResponse.json({ error: 'IDs duplicados detectados' }, { status: 400 })
+        }
 
-        return NextResponse.json({ message: 'Compras actualizadas' }, { status: 200 })
+        // Use a transaction to ensure all-or-nothing operations
+        const result = await prismadb.$transaction(async (tx) => {
+            const results = []
+
+            for (const purchase of data) {
+                try {
+                    const createdPurchase = await tx.purchase.create({
+                        data: {
+                            id: purchase.id,
+                            totalCost: purchase.totalCost,
+                            supplier: purchase.supplier
+                        },
+                    })
+
+                    const createdPurchaseItem = await tx.purchaseItem.create({
+                        data: {
+                            cost: purchase.totalCost / purchase.amount,
+                            quantity: purchase.amount,
+                            productId: purchase.productId,
+                            purchaseId: purchase.id,
+                        },
+                    })
+
+                    results.push({
+                        success: true,
+                        purchase: createdPurchase,
+                        purchaseItem: createdPurchaseItem
+                    })
+                } catch (error: any) {
+                    // Log the error with the specific purchase that failed
+                    console.error(`Error al crear la compra: ${purchase.id}`, ' Código', error.code);
+                    // Throw error to trigger transaction rollback
+                    throw error;
+                }
+            }
+
+            return results;
+        });
+
+        return NextResponse.json({
+            message: 'Compras actualizadas',
+            results: result
+        }, { status: 200 });
 
     } catch (error: any) {
-        console.error(error.stack)
-        return NextResponse.json({ error: 'Ocurrió un error actualizando las compras.' }, { status: 500 })
+        console.error('Error en la transacción:', error.stack);
+        return NextResponse.json({
+            error: 'Ocurrió un error actualizando las compras.',
+            details: error.message
+        }, { status: 500 });
     }
 }
