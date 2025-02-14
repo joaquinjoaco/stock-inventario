@@ -27,6 +27,7 @@ export async function POST(req: Request) {
         for (let i = 0; i < data.length; i += batchSize) {
             const batch = data.slice(i, i + batchSize);
 
+            // One transaction for every item
             await Promise.allSettled(
                 batch.map(async (purchase) => {
                     try {

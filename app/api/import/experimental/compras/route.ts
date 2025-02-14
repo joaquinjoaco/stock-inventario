@@ -7,11 +7,11 @@ export async function POST(req: Request) {
         const { data } = body
 
         if (!data) {
-            return NextResponse.json({ error: 'No se ha recibido la información.' }, { status: 400 })
+            return NextResponse.json({ error: '[CONVERTER] No se ha recibido la información.' }, { status: 400 })
         }
 
         if (!Array.isArray(data)) {
-            return NextResponse.json({ error: 'Formato inválido, se espera un array de compras' }, { status: 400 })
+            return NextResponse.json({ error: '[CONVERTER] Formato inválido, se espera un array de compras' }, { status: 400 })
         }
 
         // Check for duplicate IDs before starting any database operations
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
         }
 
         if (hasDuplicateIds(data)) {
-            return NextResponse.json({ error: 'IDs duplicados detectados' }, { status: 400 })
+            return NextResponse.json({ error: '[CONVERTER] IDs duplicados detectados' }, { status: 400 })
         }
 
         // Use a transaction to ensure all-or-nothing operations
@@ -54,7 +54,7 @@ export async function POST(req: Request) {
                     })
                 } catch (error: any) {
                     // Log the error with the specific purchase that failed
-                    console.error(`Error al crear la compra: ${purchase.id}`, ' Código', error.code);
+                    console.error(`[CONVERTER] Error al crear la compra: ${purchase.id}`, ' Código', error.code);
                     // Throw error to trigger transaction rollback
                     throw error;
                 }
@@ -64,14 +64,14 @@ export async function POST(req: Request) {
         });
 
         return NextResponse.json({
-            message: 'Compras actualizadas',
+            message: '[CONVERTER] Compras actualizadas',
             results: result
         }, { status: 200 });
 
     } catch (error: any) {
-        console.error('Error en la transacción:', error.stack);
+        console.error('[CONVERTER] Error en la transacción:', error.stack);
         return NextResponse.json({
-            error: 'Ocurrió un error actualizando las compras.',
+            error: '[CONVERTER] Ocurrió un error actualizando las compras.',
             details: error.message
         }, { status: 500 });
     }
