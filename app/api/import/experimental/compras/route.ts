@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import prismadb from '@/lib/prismadb';
 import { NextResponse } from 'next/server';
 
