@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 
 import prismadb from "@/lib/prismadb";
+import { formatterUYU } from "@/lib/utils";
 
 type Params = Promise<{ purchaseId: string }>
 
@@ -22,38 +23,54 @@ export async function DELETE(
         const purchaseItems = await prismadb.purchaseItem.findMany({
             where: {
                 purchaseId: purchaseId,
+            },
+            include: {
+                product: true,
             }
         })
 
-        // 1. Subtract the stock.
-        await Promise.all(
-            purchaseItems.map((item) => {
-                return prismadb.product.update({
-                    where: {
-                        id: item.productId
-                    },
-                    data: {
-                        stock: {
-                            decrement: item.quantity
+        const purchase = await prismadb.$transaction(async (tx) => {
+            // 1. Subtract the stock.
+            await Promise.all(
+                purchaseItems.map((item) => {
+                    return tx.product.update({
+                        where: {
+                            id: item.productId
+                        },
+                        data: {
+                            stock: {
+                                decrement: item.quantity
+                            }
                         }
-                    }
+                    })
                 })
+            )
+
+            // 2. Delete all related purchaseItems. 
+            await tx.purchaseItem.deleteMany({
+                where: {
+                    purchaseId: purchaseId,
+                }
             })
-        )
 
-        // 2. Delete all related purchaseItems. 
-        await prismadb.purchaseItem.deleteMany({
-            where: {
-                purchaseId: purchaseId,
-            }
-        });
+            // 3. Delete the purchase.
+            const deletedPurchase = await tx.purchase.delete({
+                where: {
+                    id: purchaseId,
+                }
+            })
 
-        // 3. Delete the purchase.
-        const purchase = await prismadb.purchase.delete({
-            where: {
-                id: purchaseId,
-            }
-        });
+            // 4. Log the action.
+            await tx.log.create({
+                data: {
+                    action: "ELIMINAR_COMPRA",
+                    entityId: deletedPurchase.id,
+                    details: `Compra de${purchaseItems.map((item) => ` (${item.quantity}) ${item.product.name} ${item.product.brand}`)} por un total de ${formatterUYU.format(Number(deletedPurchase.totalCost))}`,
+                    // detailsJSON: deletedPurchase
+                },
+            })
+            return deletedPurchase
+        })
 
         return NextResponse.json(purchase);
     } catch (error: any) {

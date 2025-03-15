@@ -68,8 +68,8 @@ export const PurchaseForm: React.FC<PurchaseFormProps> = ({
 
     const { toast } = useToast()
 
-    const title = initialData ? "Editar compra" : "Registrar compra"
-    const description = initialData ? "Editar la compra" : "Se sumará la cantidad especificada al stock del producto"
+    const title = initialData ? `Compra ${format(initialData.createdAt, "dd/MM/yy HH:mm", { locale: es })}` : "Registrar compra"
+    const description = initialData ? "Registro de la compra" : "Se sumará la cantidad especificada al stock del producto"
     const toastMessage = initialData ? "Compra actualizada." : "Compra registrada"
     const action = initialData ? "Guardar cambios" : "Registrar compra"
 

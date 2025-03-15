@@ -33,16 +33,30 @@ export async function PATCH(
             return new NextResponse("name is required", { status: 400 })
         }
 
-        const businessInfo = await prismadb.business.update({
-            where: {
-                id: id,
-            },
-            data: {
-                name,
-                RUT,
-                address,
-                phone,
-            }
+        const businessInfo = await prismadb.$transaction(async (tx) => {
+            const business = await tx.business.update({
+                where: {
+                    id: id,
+                },
+                data: {
+                    name,
+                    RUT,
+                    address,
+                    phone,
+                }
+            })
+
+            // Log the action.
+            await tx.log.create({
+                data: {
+                    action: "ACTUALIZAR_NEGOCIO",
+                    entityId: business.id,
+                    details: `Actualización de la información del negocio`,
+                    // detailsJSON: newPurchase
+                },
+            })
+
+            return business
         })
 
         return NextResponse.json(businessInfo);

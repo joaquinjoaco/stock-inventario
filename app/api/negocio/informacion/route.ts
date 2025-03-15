@@ -22,34 +22,48 @@ export async function POST(
 
         // Find the first and only row.
         const business = await prismadb.business.findFirst({})
-        let businessInfo
 
-        if (!business) {
-            // If no such row exists then it might be the first time the user is setting up the business information.
-            businessInfo = await prismadb.business.create({
+        const businessInformation = await prismadb.$transaction(async (tx) => {
+            let businessInfo
+            if (!business) {
+                // If no such row exists then it might be the first time the user is setting up the business information.
+                businessInfo = await tx.business.create({
+                    data: {
+                        name,
+                        RUT,
+                        address,
+                        phone,
+                    }
+                })
+            } else {
+                // If the row exists then we update the existing row.
+                businessInfo = await tx.business.update({
+                    where: {
+                        id: business.id
+                    },
+                    data: {
+                        name,
+                        RUT,
+                        address,
+                        phone,
+                    }
+                })
+            }
+
+            // Log the action.
+            await tx.log.create({
                 data: {
-                    name,
-                    RUT,
-                    address,
-                    phone,
-                }
-            })
-        } else {
-            // If the row exists then we update the existing row.
-            businessInfo = await prismadb.business.update({
-                where: {
-                    id: business.id
+                    action: "ACTUALIZAR_NEGOCIO",
+                    entityId: businessInfo.id,
+                    details: `Actualización de la información del negocio`,
+                    // detailsJSON: newPurchase
                 },
-                data: {
-                    name,
-                    RUT,
-                    address,
-                    phone,
-                }
             })
-        }
 
-        return NextResponse.json(businessInfo);
+            return businessInfo
+        })
+
+        return NextResponse.json(businessInformation);
 
     } catch (error: any) {
         console.log('[NEGOCIO_INFORMACION_POST]', error)

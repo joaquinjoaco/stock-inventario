@@ -5,6 +5,7 @@ import {
     BookOpen,
     FileDown,
     FileUp,
+    History,
     Package,
     Settings2,
     Store,
@@ -93,27 +94,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             {
                 title: "Importar datos",
                 url: "/datos/importar",
-                onClick: null,
+                // onClick: null,
                 icon: FileUp,
             },
             {
                 title: "Exportar datos",
                 url: "/datos/exportar",
-                onClick: null,
+                // onClick: null,
                 icon: FileDown,
-                // onClick: async () => {
-                //     await exportInventory();
-                //     await exportPurchases();
-                //     await exportSales();
-                //     await exportSaleItems();
-                //     await exportBusinessInfo();
-                //     toast({
-                //         title: <div className="flex items-center text-green-500">
-                //             <Check className="h-4 w-4 mr-2" />
-                //             Datos exportados
-                //         </div>
-                //     })
-                // },
+            },
+            {
+                title: "Registros",
+                url: "/datos/registros",
+                // onClick: null,
+                icon: History,
             },
         ],
     }

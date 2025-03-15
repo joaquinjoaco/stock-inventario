@@ -14,6 +14,28 @@ enum PaymentType {
   CREDITO
 }
 
+enum LogAction {
+  CREAR_PRODUCTO
+  ACTUALIZAR_PRODUCTO
+  ELIMINAR_PRODUCTO
+  CREAR_VENTA
+  ACTUALIZAR_VENTA
+  ELIMINAR_VENTA
+  CREAR_COMPRA
+  ACTUALIZAR_COMPRA
+  ELIMINAR_COMPRA
+  ACTUALIZAR_NEGOCIO
+}
+
+model Log {
+  id          String    @id @default(uuid())
+  action      LogAction
+  entityId    String
+  details     String
+  detailsJSON Json?
+  createdAt   DateTime  @default(now())
+}
+
 model Business {
   id        String   @id @default(uuid())
   name      String

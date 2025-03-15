@@ -84,7 +84,7 @@ export const SaleForm: React.FC<SaleFormProps> = ({
     const { toast } = useToast()
 
     const title = initialData ? `Venta ${format(initialData.createdAt, "dd MMMM, yyyy HH:mm", { locale: es })}` : "Registrar venta"
-    const description = initialData ? "Vista de la venta" : "Se restará la cantidad especificada al stock del producto"
+    const description = initialData ? "Registro de la venta" : "Se restará la cantidad especificada al stock del producto"
     const toastMessage = initialData ? "Venta actualizada." : "Venta registrada"
     const action = initialData ? "Guardar cambios" : "Registrar venta"
 

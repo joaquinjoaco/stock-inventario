@@ -25,34 +25,47 @@ export async function DELETE(
             }
         })
 
-        // 1. Re-add the stock.
-        await Promise.all(
-            saleItems.map((item) => {
-                return prismadb.product.update({
-                    where: {
-                        id: item.productId
-                    },
-                    data: {
-                        stock: {
-                            increment: item.quantity
+        const sale = await prismadb.$transaction(async (tx) => {
+            // 1. Re-add the stock.
+            await Promise.all(
+                saleItems.map((item) => {
+                    return tx.product.update({
+                        where: {
+                            id: item.productId
+                        },
+                        data: {
+                            stock: {
+                                increment: item.quantity
+                            }
                         }
-                    }
+                    })
                 })
+            )
+
+            // 2. Delete all related SaleItems.
+            await tx.saleItem.deleteMany({
+                where: {
+                    saleId: saleId,
+                }
+            });
+
+            // 3. Delete the sale.
+            const sale = await tx.sale.delete({
+                where: {
+                    id: saleId
+                }
             })
-        )
 
-        // 2. Delete all related SaleItems.
-        await prismadb.saleItem.deleteMany({
-            where: {
-                saleId: saleId,
-            }
-        });
+            // 3. Log the action.
+            await tx.log.create({
+                data: {
+                    action: "ELIMINAR_VENTA",
+                    entityId: sale.id,
+                    details: "Eliminación de la venta",
+                },
+            })
 
-        // 3. Delete the sale.
-        const sale = await prismadb.sale.delete({
-            where: {
-                id: saleId
-            }
+            return sale
         })
         return NextResponse.json(sale);
     } catch (error: any) {

@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server"
 
 import prismadb from "@/lib/prismadb"
+import { formatterUYU } from "@/lib/utils";
 
 export async function POST(
     req: Request,
@@ -38,45 +39,58 @@ export async function POST(
         }
 
 
-        // 1. If all the checks were passed, we can create the purchase.
-        const purchase = await prismadb.purchase.create({
-            data: {
-                totalCost,
-                supplier,
-                purchaseItems: {
-                    create: selectedProducts.map((product: { cost: number, quantity: number, name: string, brand: string, unitType: string, productId: string, }) => ({
-                        cost: product.cost,
-                        quantity: product.quantity,
-                        product: {
-                            connect: {
-                                id: product.productId
+        // If all the checks were passed, we can create the purchase.
+        const purchase = await prismadb.$transaction(async (tx) => {
+            // 1. Create the purchase.
+            const newPurchase = await tx.purchase.create({
+                data: {
+                    totalCost,
+                    supplier,
+                    purchaseItems: {
+                        create: selectedProducts.map((product: { cost: number, quantity: number, name: string, brand: string, unitType: string, productId: string, }) => ({
+                            cost: product.cost,
+                            quantity: product.quantity,
+                            product: {
+                                connect: {
+                                    id: product.productId
+                                }
                             }
-                        }
-                    }))
+                        }))
+                    },
                 },
-            },
+            })
+
+            // 2. Add the product stock.
+            // Add stock for all products in selectedProducts.
+            await Promise.all(
+                selectedProducts.map(async (product) => {
+                    // Decrease the stock for the product
+                    await tx.product.update({
+                        where: { id: product.productId },
+                        data: {
+                            stock: {
+                                increment: product.quantity, // Decrease stock by the quantity sold.
+                            },
+                        },
+                    });
+                })
+            )
+            // 3. Log the action.
+            await tx.log.create({
+                data: {
+                    action: "CREAR_COMPRA",
+                    entityId: newPurchase.id,
+                    details: `Compra de${selectedProducts.map((product) => ` (${product.quantity}) ${product.name} ${product.brand}`)} por un total de ${formatterUYU.format(totalCost)}`,
+                    // detailsJSON: newPurchase
+                },
+            })
+
+            return newPurchase
         })
 
-        // 2. Add the product stock.
-        // Add stock for all products in selectedProducts.
-        await Promise.all(
-            selectedProducts.map(async (product) => {
-                // Decrease the stock for the product
-                await prismadb.product.update({
-                    where: { id: product.productId },
-                    data: {
-                        stock: {
-                            increment: product.quantity, // Decrease stock by the quantity sold.
-                        },
-                    },
-                });
-            })
-        );
-
         return NextResponse.json(purchase)
-
     } catch (error: any) {
-        console.log('[COMPRAS_POST]', error)
+        console.log('[COMPRAS_POST]', error.stack)
         if (error.code === 'P2002') {
             return new NextResponse("Unique constraint failed", { status: 409 }) // likely unique constraint failed.
         }

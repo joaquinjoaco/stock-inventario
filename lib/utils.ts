@@ -24,7 +24,7 @@ export const serializeProduct = (product: Product | null) => {
     ...product,
     sellingPrice: product.sellingPrice.toNumber(), // Convert Decimal to number
     stock: product.stock.toNumber(), // Convert Decimal to number
-    brand: product.brand || "sin marca"
+    brand: product.brand || ""
   };
 };
 
@@ -35,7 +35,7 @@ export const serializeProducts = (products: Product[]) => {
       ...product,
       sellingPrice: product.sellingPrice.toNumber(), // Convert Decimal to number
       stock: product.stock.toNumber(), // Convert Decimal to number
-      brand: product.brand || "sin marca"
+      brand: product.brand || ""
     };
   });
 };

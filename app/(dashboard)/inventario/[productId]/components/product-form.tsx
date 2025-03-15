@@ -85,13 +85,14 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     const { watch } = form
 
     const onSubmit = async (data: ProductFormValues) => {
+        console.log(data)
         try {
             setLoading(true)
             if (initialData) {
-                // Update the book.
+                // Update the product.
                 await axios.patch(`/api/inventario/${params.productId}`, data)
             } else {
-                // Create the book.
+                // Create the product.
                 await axios.post(`/api/inventario`, data)
             }
 

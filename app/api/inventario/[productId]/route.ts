@@ -47,21 +47,34 @@ export async function PATCH(
             return new NextResponse("unitType is required", { status: 400 });
         }
 
-        // Update the product.
-        const product = await prismadb.product.update({
-            where: {
-                id: productId
-            },
-            data: {
-                name,
-                description,
-                brand,
-                sellingPrice,
-                unitType,
-                stock,
-                isArchived
-            }
-        });
+        const product = await prismadb.$transaction(async (tx) => {
+            // 1. Update the product.
+            const newProduct = await prismadb.product.update({
+                where: {
+                    id: productId
+                },
+                data: {
+                    name,
+                    description,
+                    brand,
+                    sellingPrice,
+                    unitType,
+                    stock,
+                    isArchived
+                }
+            })
+
+            // 2. Log the action.
+            await tx.log.create({
+                data: {
+                    action: "ACTUALIZAR_PRODUCTO",
+                    entityId: newProduct.id,
+                    details: `Actualización de ${newProduct.name} ${newProduct.brand} ${newProduct.unitType}`,
+                },
+            })
+
+            return newProduct
+        })
 
         return NextResponse.json(product);
 

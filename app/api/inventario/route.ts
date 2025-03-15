@@ -30,17 +30,31 @@ export async function POST(
             return new NextResponse("unitType is required", { status: 400 })
         }
 
-        // If all the checks were passed, we can create the book.
-        const product = await prismadb.product.create({
-            data: {
-                name,
-                description,
-                brand,
-                sellingPrice,
-                unitType,
-                stock,
-                isArchived
-            }
+        // If all the checks were passed, we can create the product.
+        const product = await prismadb.$transaction(async (tx) => {
+            // 1. Create the product.
+            const newProduct = await prismadb.product.create({
+                data: {
+                    name,
+                    description,
+                    brand,
+                    sellingPrice,
+                    unitType,
+                    stock,
+                    isArchived
+                }
+            })
+
+            // 2. Log the action.
+            await tx.log.create({
+                data: {
+                    action: "CREAR_PRODUCTO",
+                    entityId: newProduct.id,
+                    details: `Registro de un nuevo producto (${newProduct.name} ${newProduct.brand} ${newProduct.unitType})`,
+                },
+            })
+
+            return newProduct
         })
 
         return NextResponse.json(product)
