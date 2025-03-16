@@ -102,19 +102,33 @@ export async function DELETE(
             return new NextResponse("productId is required", { status: 400 });
         }
 
-        const product = await prismadb.product.deleteMany({
-            where: {
-                id: productId,
-            }
-        });
+        const product = await prismadb.$transaction(async (tx) => {
+            // 1. Delete the product.
+            const deletedProduct = await tx.product.delete({
+                where: {
+                    id: productId,
+                }
+            })
 
-        return NextResponse.json(product);
+            // 2. Log the action.
+            await tx.log.create({
+                data: {
+                    action: "ELIMINAR_PRODUCTO",
+                    entityId: deletedProduct.id,
+                    details: `Eliminación de ${deletedProduct.name} ${deletedProduct.brand} ${deletedProduct.unitType}`,
+                },
+            })
+
+            return deletedProduct
+        })
+
+        return NextResponse.json(product)
     } catch (error: any) {
-        console.log('[INVENTARIO_DELETE]', error);
+        console.log('[INVENTARIO_DELETE]', error)
         if (error.code === 'P2003') {
-            return new NextResponse("fk-constraint-failed", { status: 409 }); // FK constraint failed.
+            return new NextResponse("fk-constraint-failed", { status: 409 }) // FK constraint failed.
         }
-        return new NextResponse("Internal error", { status: 500 });
+        return new NextResponse("Internal error", { status: 500 })
     }
 
 }

@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 
 import prismadb from "@/lib/prismadb";
+import { formatterUYU } from "@/lib/utils";
 
 type Params = Promise<{ saleId: string }>
 
@@ -22,6 +23,9 @@ export async function DELETE(
         const saleItems = await prismadb.saleItem.findMany({
             where: {
                 saleId: saleId,
+            },
+            include: {
+                product: true
             }
         })
 
@@ -61,7 +65,8 @@ export async function DELETE(
                 data: {
                     action: "ELIMINAR_VENTA",
                     entityId: sale.id,
-                    details: "Eliminación de la venta",
+                    details: `Eliminación de la venta de${saleItems.map((item) => ` (${item.quantity} ${item.product.unitType}) ${item.product.name} ${item.product.brand}`)} por un total de ${formatterUYU.format(Number(sale.totalPrice))}`,
+
                 },
             })
 

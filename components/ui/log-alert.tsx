@@ -30,7 +30,7 @@ export const LogAlert: React.FC<LogAlertProps> = ({
         <Alert className="mt-4">
             <AlertTitle className="flex justify-between gap-x-2">
                 <div className="flex items-center gap-x-2">
-                    {titleSplit.toUpperCase()}
+                    <p className="mr-2">{titleSplit.toUpperCase()}</p>
                     <Badge variant={badgeVariant}>
                         {badgeText}
                     </Badge>
